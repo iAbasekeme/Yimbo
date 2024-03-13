@@ -2,9 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 from . import Base
-from models import users
+from models.users import User
 
-classes = {'users': users}
+classes = {'Users': User}
 
 
 class DatabaseStorage():
