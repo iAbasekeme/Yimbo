@@ -1,5 +1,5 @@
 from . import db
-from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, time
+from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, time, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -12,7 +12,7 @@ class Album(db.Model):
     artists_id = mapped_column(Integer, ForeignKey(Artist.id))
     release_date = mapped_column(Date)
     views = mapped_column(Integer)
-    release_year = mapped_column(Integer, nullable=False)
+    release_year = mapped_column(DateTime, nullable=False)
     duration = mapped_column(Time)
 
 
