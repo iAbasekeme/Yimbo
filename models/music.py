@@ -1,20 +1,23 @@
 from . import db
 from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, Time, DateTime
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Column, relationship
+from models.artists import Artist
+from models.albums import Album
 
 
 class Music(db.Model):
     '''A tracks model'''
     __tablename__ = 'Tracks'
 
-    id = mapped_column(Integer, pimary_key=True)
-    title = mapped_column(String(60), nullable=False)
-    artists_id = mapped_column(Integer, ForeignKey(Artist.id))
-    album_id = mapped_column(Integer, ForeignKey(Album.id))
-    genre = mapped_column(String(30))
-    duration = mapped_column(Time)
-    release_year = mapped_column(DateTime, nullable=False)
-    views = mapped_column(Integer)
+    id = Column(Integer, pimary_key=True)
+    title = Column(String(60), nullable=False)
+    artists_id = Column(Integer, ForeignKey(Artist.id))
+    artist = relationship('Artist')
+    album_id = Column(Integer, ForeignKey(Album.id))
+    genre = Column(String(30))
+    duration = Column(Time)
+    release_year = Column(DateTime, nullable=False)
+    views = Column(Integer)
 
 
 with app.app_context():
