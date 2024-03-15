@@ -14,3 +14,5 @@ class User(Base):
     password = Column(String(128), nullable=False, unique=True)
     birthday = Column(Date, nullable=False)
     phone_number =  Column(Integer, nullable=True) # Optional
+    subscribed_artists = relationship(
+        'Artist', secondary=ArtistSubscriber, back_populates='subscribers')
