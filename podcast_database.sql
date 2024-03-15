@@ -15,27 +15,32 @@ INSERT INTO category (name) VALUES ("Tech & Science"), ("Celebrity & Entertainme
 
 CREATE TABLE IF NOT EXISTS Region (
 	id 	int NULL AUTO_INCREMENT,
-	name VARCHAR(256) NOT NULL,
+	name VARCHAR(65) NOT NULL,
 	PRIMARY KEY(id)
 );
 INSERT INTO Region (name) VALUES ("South Africa"), ("East Africa"), ("North Africa"), ("West Africa")
 
 CREATE TABLE IF NOT EXISTS country (
 	id int NULL AUTO_INCREMENT,
-	name VARCHAR(256) NOT NULL),
+	name VARCHAR(65) NOT NULL),
+	region_id INT NOT NULL,
 	PRIMARY KEY(id),
+	FOREIGN KEY(region_id) REFERENCE Region(id)
 );
-INSERT INTO country (name) VALUES ("south Africa"), ("kenya"), ("Ethiopia"), ("Egypt"), ("morocco"), ("Nigeria"), ("senegal")
+INSERT INTO country (region_id, name)
+VALUES (1, "south Africa"), (2, "kenya"), (2, "Ethiopia"), (3, "Egypt"), (3, "morocco"), (4, "Nigeria"), (4, "senegal")
 
 CREATE TABLE IF NOT EXISTS podcast (
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(256) NOT NULL,
   description VARCHAR NOT NULL,
   category_id INT NOT NULL,
-  Region_id INT NOT NULL
+  region_id INT NOT NULL,
+  country_id INT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY(category_id) REFERENCES category(id)
-  FOREIGN KEY(Region_id) REFERENCE Region(id)
+  FOREIGN KEY(country_id) REFERENCES country(id)
+  FOREIGN KEY(region_id) REFERENCE Region(id)
 );
 
 INSERT INTO podcast (category_id, region_id,  country_id, name, description)
@@ -50,7 +55,7 @@ VALUES
 INSERT INTO podcast (category_id, region_id, country_id, name, description)
 VALUES
   (2, 4, 4, 'My Dad Wrote A Porno', 'Hilariously dissects absurd erotic fiction.'),
-  (2, 3, 4, 'The Joe Rogan Experience', 'Features comedian Joe Rogan'\s' long-form, humorous conversations.'),
+  (2, 3, 4, 'The Joe Rogan Experience', 'Features comedian Joe Rogan'''s' long-form, humorous conversations.'),
   (2, 2, 5, '2 Dope Queens', 'Stand-up performances, storytelling, and interviews with comedians.'),
   (2, 1, 5, 'The Dollop with Dave Anthony and Gareth Reynolds', 'Comedians explore weird historical stories.'),
   (2, 2, 7, 'Conan O''Brien Needs A Friend', 'Conan O''Brien interviews celebrities for genuine friendship.');
