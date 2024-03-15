@@ -1,57 +1,96 @@
 #!/usr/bin/python3
 """podcast model"""
-from sqlachemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlachemy.orm import relationship
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import ProgrammingError
+from sqlalchemy import inspect
 
-# create the engine
-engine = create_engine('sqlite:///podcast.db', echo=True)
+# Create engine and session
+engine = create_engine('sqlite:///podcast_database.db')
+Session = sessionmaker(bind=engine)
+session = Session()
 
 Base = declarative_base()
 
-class PodcastCategory(Base):
-    """ create a table for category"""
-    __tablename__ = "Category_pod"
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    
-    # this representation methodis solely for the purpose of debuddng and
-    # --understanding the program execution
-    def __repr__(self):
-        """ print string format of the table"""
-        return "Category: {}:{}".format(self.id, self.name)
 
+# Define the Podcast model
 class Podcast(Base):
-    """ create a table for podcast """
-    __tablename__ = "Podcast"
-    id = Column(Interger, primary_key=True)
-    title = Column(String)
-    description = Column(string, nullable=False)
-    podcast_category = Column(String, nullable=False)
-    category_id = (Integer, ForeignKey("category.id"))
-    category = relationship("Category", back_populates="podcasts")
-    
-    # this method is just for debugging and undestanding the process
+    __tablename__ = 'podcast'
+
+    category_id = Column(Integer, primary_key=True)
+    category_name = Column(String(255), primary_key=True)
+    podcast_name = Column(String(255), primary_key=True)
+    description = Column(Text, nullable=False)
 
     def __repr__(self):
-        """ print string format of the table"""
-        # iterate throuh the Category_pod table
-        for pod in podcastCategory.name:
-            
-            # check if the name is same with podcast_category
-            if pod == podcast_category:
-                new_podcast_category.append(pod)
+        return "<Podcast(category='{0}', name='{1}')>".format(self.category_name, self.podcast_name)
 
-            # if the podcast.podcast_category not find in the Category_pod table
-            if podcast_category not in PodcastCategory.name:
-                print("invalid category name, please provide a valid name")
 
-        return "<Podcast( {} (title= {}, description= {}".format(
-                self.podcast_category, self.title, self.descrition)
+# Check if the database exists
+def check_database_exists():
+    insp = inspect(engine)
+    return insp.has_table('podcast')
 
-    Category.podcasts = relationship("Podcast", order_by=Podcast.id, 
-    back_populates="category"
-    )
+# Check if the table exists
+def check_table_exists():
+    insp = inspect(engine)
+    return insp.has_table('podcast')
 
-# Create tables
-Base.meta.create_all(engine)
+# Method to print podcasts based on category
+def print_podcasts_by_category(category):
+    podcasts = session.query(Podcast).filter_by(category_name=category).all()
+    if podcasts:
+        print("Podcasts in category '{}':".format(category))
+        for podcast in podcasts:
+            print("- {}: {}".format(podcast.podcast_name, podcast.description))
+    else:
+        print("No podcasts found in category '{}'.".format(category))
+
+
+# Method to add a new podcast to a category in the database
+def add_podcast_to_category(category_id, category_name, podcast_name, description):
+    new_podcast = Podcast(category_id=category_id, category_name=category_name,
+                          podcast_name=podcast_name, description=description)
+    session.add(new_podcast)
+    session.commit()
+
+
+# Method to delete a podcast from a category
+def delete_podcast_from_category(podcast_name, category_name):
+    podcast_to_delete = session.query(Podcast).filter_by\
+                        (podcast_name=podcast_name, category_name=category_name).first()
+    if podcast_to_delete:
+        session.delete(podcast_to_delete)
+        session.commit()
+        print("Podcast '{}' deleted from category '{}'.".format(
+               podcast_name, category_name))
+    else:
+        print("Podcast '{}' not found in category '{}'.".format(
+               podcast_name, category_name))
+
+
+if __name__ == "__main__":
+    # Check if the database exists
+    if not check_database_exists():
+        print("Database does not exist.")
+    else:
+        # Check if the table exists
+        if not check_table_exists():
+            print("Table 'podcast' does not exist.")
+        else:
+            # Example usage
+            # Print podcasts in the 'Tech/Science' category
+            print_podcasts_by_category('Tech/Science')
+
+            # Add a new podcast to the 'Tech/Science' category
+            add_podcast_to_category(1, 'Tech/Science', 'New Tech Podcast', 'Description of the new tech podcast.')
+
+            # Print podcasts in the 'Tech/Science' category after adding the new podcast
+            print_podcasts_by_category('Tech/Science')
+
+            # Delete a podcast from a category
+            delete_podcast_from_category('Reply All', 'Tech/Science')
+
+            # Print podcasts in the 'Tech/Science' category after deleting the podcast
+            print_podcasts_by_category('Tech/Science')
