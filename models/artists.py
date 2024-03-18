@@ -1,20 +1,24 @@
 from . import db
-from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, time, DateTime
-from sqlalchemy.orm import Column, relationship
 
 
-class Artist(db.Model):
+class Artists(db.Model):
     '''A artists model'''
-    __tablename__ = 'Artist'
+    __tablename__ = 'artists'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(60), nullable=False)
-    about = Column(String(60), nullable=False)
-    playlists = relationship('Playlist', back_populates="artist")
-    albums = relationship('Album', back_populates="artist")
-    tracks = relationship('Tracks', backref="artist")
-    subscribers = relationship(
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    about = db.Column(db.String(60), nullable=False)
+    # playlists = db.relationship('Playlist', back_populates="artist")
+    albums = db.relationship('albums', backref="artist", lazy=True)
+    tracks = db.relationship('Tracks', backref="artist", lazy=True)
+    image_file = db.Column(db.String(20), nullable=False,
+                           default='default.jpg')
+    subscribers = db.relationship(
         'User', secondary=ArtistSubscriber, back_populates='subscribed_artists')
+
+    def __repr__(self):
+        """Str representation"""
+        return f"User's {self.name} {self.about}"
 
 
 with app.app_context():
