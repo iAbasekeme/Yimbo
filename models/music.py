@@ -1,7 +1,6 @@
 from . import db
-from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, Time, DateTime
-from sqlalchemy.orm import Column, relationship
-from models.artists import Artist
+from sqlalchemy import create_engine, ForeignKey, DateTime
+# from models.artists import artists
 from models.albums import Album
 
 
@@ -9,16 +8,19 @@ class Music(db.Model):
     '''A tracks model'''
     __tablename__ = 'Tracks'
 
-    id = Column(Integer, pimary_key=True)
-    title = Column(String(60), nullable=False)
-    artists_id = Column(Integer, ForeignKey(Artist.id))
-    artist = relationship('Artist')
-    album_id = Column(Integer, ForeignKey(Album.id))
-    genre = Column(String(30))
-    duration = Column(Time)
-    release_year = Column(DateTime, nullable=False)
-    views = Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(60), nullable=False)
+    artists_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
+    artist = db.relationship('artists', back_populates='tracks')
+    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
+    album = db.relationship('Album', backref="Tracks")
+    genre = db.Column(db.String(30), nullable=False)
+    duration = db.Column(db.Time)
+    release_year = db.Column(db.Integer, nullable=False)
+    views = db.Column(db.Integer)
 
+    def __repr__(self):
+        return f"{self.title} {self.artist} {self.album}"
 
 with app.app_context():
     db.create_all()
