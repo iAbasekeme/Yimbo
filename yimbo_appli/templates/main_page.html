@@ -18,15 +18,25 @@
 				<li>
                 	<a href="">Radio</a>
             	</li>
-				<li class="signs">
-                	<!--<button type="submit">Sign-in</button>-->
-					<a href={{ url_for('login') }}>Sign-in</a>
-            	</li>
-				<li class="signs">
-                	<!--<button type="submit">Sign-up as Artist</button>-->
-					<a href={{ url_for('register') }}>Sign-up</a>
-					 
-            	</li>
+				{% if current_user.is_authenticated %}
+					<li class="signs">
+						<a href={{ url_for('logout') }}>Logout</a>
+            		</li>
+					{% elif session %}
+						<li class="signs">
+							<a href={{ url_for('logout_google') }}>Logout</a>
+						</li>
+				{% else %}
+					<li class="signs">
+						<!--<button type="submit">Sign-in</button>-->
+						<a href={{ url_for('login') }}>Sign-in</a>
+					</li>
+					<li class="signs">
+						<!--<button type="submit">Sign-up as Artist</button>-->
+						<a href={{ url_for('register') }}>Sign-up</a>
+						
+					</li>
+				{% endif %}
 
 			</ul>
 		</nav>

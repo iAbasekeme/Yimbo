@@ -1,24 +1,71 @@
 #!/usr/bin/python3
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, session, abort
 from yimbo_appli import app, db, bcrypt
 from yimbo_appli.forms import RegistrationForm, LoginForm
 from yimbo_appli.models import User
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
+
+# import json
+# import requests
+from authlib.integrations.flask_client import OAuth
+
+appConf = {
+    "OAUTH2_CLIENT_ID": "314669533693-2knn1uneiluckdlp3n8pqrtq0eb63jam.apps.googleusercontent.com",
+    "OAUTH2_CLIENT_SECRET": "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",
+    "OAUTH2_META_URL": "https://accounts.google.com/.well-known/openid-configuration",
+    "FLASK_SECRET": "80ab528d4604e4d073b613216f6a0822"
+}
+
+
+app.secret_key = appConf.get("FLASK_SECRET")
+oauth = OAuth(app)
+
+oauth.register(
+    "Yimbo",
+    client_id=appConf.get("OAUTH2_CLIENT_ID"),
+    client_secret=appConf.get("OAUTH2_CLIENT_SECRET"),
+    client_kwargs={
+        "scope": "openid profile email"
+    },
+    server_metadata_url=f'{appConf.get("OAUTH2_META_URL")}',
+)
+
 @app.route('/')
 @app.route('/home')
 def home_page():
     """
     route for the landing page define by wisdom
     """
-    return render_template('main_page.html')
+    return render_template('main_page.html', session=session.get('user'))
+
+@app.route('/google-login')
+def googleLogin():
+    """
+    method to login using google account
+    """
+    return  oauth.Yimbo.authorize_redirect(redirect_uri=url_for('googleCallback', _external=True))
+
+@app.route('/sigin_google')
+def googleCallback():
+    """
+    the callback function
+    """
+    token = oauth.Yimbo.authorize_access_token()
+    session['user'] = token
+    return redirect(url_for("home_page"))
+
+@app.route('/logout_google')
+def logout_google():
+    session.pop('user', None)
+    return redirect(url_for('home_page'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """
-    method for registration
+    method for registration"""
     
     if  current_user.is_authenticated:
-        return  redirect(url_for('home_page'))"""
+        return  redirect(url_for('home_page'))
     form = RegistrationForm()
     if form.validate_on_submit():
         # let's crypt password to avoid  storing it as plain text in database
@@ -33,17 +80,24 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    route for the login
+    route for the login"""
     
     if  current_user.is_authenticated:
-        return  redirect(url_for('home_page'))"""
+        return  redirect(url_for('home_page'))
     form = LoginForm()
     if form.validate_on_submit():
         data = User.query.all()
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
-            return redirect(url_for('home_page'))
+            return redirect(url_for('home_page', user=user))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('new_login.html',form=form)
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    """
+    logout method
+    """
+    logout_user()
+    return  redirect(url_for("home_page"))
