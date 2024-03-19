@@ -9,9 +9,13 @@ from flask_login import login_user, current_user, logout_user
 # import requests
 from authlib.integrations.flask_client import OAuth
 
+import os
+
+google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
+google_client_secret = os.environ.get('GOOGLE_CLIENT_SECRET')
 appConf = {
-    "OAUTH2_CLIENT_ID": "314669533693-2knn1uneiluckdlp3n8pqrtq0eb63jam.apps.googleusercontent.com",
-    "OAUTH2_CLIENT_SECRET": "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",
+    "OAUTH2_CLIENT_ID": google_client_id,
+    "OAUTH2_CLIENT_SECRET": google_client_secret,
     "OAUTH2_META_URL": "https://accounts.google.com/.well-known/openid-configuration",
     "FLASK_SECRET": "80ab528d4604e4d073b613216f6a0822"
 }
