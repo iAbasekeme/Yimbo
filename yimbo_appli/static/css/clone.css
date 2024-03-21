@@ -61,7 +61,8 @@ font-weight: 100;
 .display_content {
 display: grid;
 text-align: center;
-background-color: #eaf3da;
+background-color:  #303841;
+/*background-color: #eaf3da;*/
 padding: 8rem 2rem;
 margin: 0;
 }

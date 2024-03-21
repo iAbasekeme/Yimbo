@@ -4,9 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Streaming Service</title>
-    <link rel="stylesheet" type="text/css" href="css/clone.css" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/clone.css') }}"/>
 </head>
 <body style="margin:0; padding:0; background:#121212; font-family:Arial, sans-serif; color:#fff;">
+    <script>
+        // Handle navbar hide/show on scroll
+        var pos1 = window.pageYOffset;
+        window.onscroll = function() {
+          var pos2 = window.pageYOffset;
+          if (pos1 > pos2) {
+            document.getElementById("navbar").style.top = "0";
+          } else {
+            document.getElementById("navbar").style.top = "-50px";
+          }
+          pos1 = pos2;
+        }
+    </script>
         <!-- Spotify Logo -->
 			<!-- Welcome User -->
 	<nav id="navbar">
@@ -20,14 +33,28 @@
 			<li>
                 <a href="">Radio</a>
             </li>
-			<li class="signs">
-            	<a href="">Radio</a>
-            </li>
-			<li class="signs">
-				<a href="">Radio</a>
-            </li>
-
-			</ul>
+            {% if current_user.is_authenticated %}
+					<li class="signs">
+						<a href={{ url_for('logout') }}>Logout</a>
+						<a href="#">Account</a>
+            		</li>
+					{% elif session %}
+						<li class="signs">
+							<a href={{ url_for('logout_google') }}>Logout</a>
+							<a href="#">Account</a>
+						</li>
+				{% else %}
+					<li class="signs">
+						<!--<button type="submit">Sign-in</button>-->
+						<a href={{ url_for('login') }}>Sign-in</a>
+					</li>
+					<li class="signs">
+						<!--<button type="submit">Sign-up as Artist</button>-->
+						<a href={{ url_for('register') }}>Sign-up</a>
+						
+					</li>
+				{% endif %}
+		</ul>
 	</nav>
 
 	<!-- The main graphic section -->
