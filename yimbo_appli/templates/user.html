@@ -3,9 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User_page</title>
+    <title>User Page - Your Music App</title>
+    <link rel="stylesheet" href="styles.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+    }
+    
+    header h1 {
+        margin: 0;
+    }
+    
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    nav ul li {
+        display: inline;
+        margin-right: 20px;
+    }
+    
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    main {
+        padding: 20px;
+    }
+    
+    .user-profile {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .user-profile img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+    }
+    
+    .user-playlists {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .playlist {
+        text-align: center;
+    }
+    
+    .playlist img {
+        width: 100%;
+        border-radius: 5px;
+    }
+    
+    footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+    }
+    
+</style>
 </head>
 <body>
-    <h1> Welcome {{user.username.data}} to Yimbo!</h2>
+    <header>
+        <h1>Welcome to Your Music App</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Browse</a></li>
+                <li><a href="#">Playlists</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href={{url_for('logout')}}>Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- 
+        <section class="user-profile">
+            <img src="profile_picture.jpg" alt="Profile Picture">
+            <h2>User Name</h2>
+            <p>Email: user@example.com</p>
+        </section>
+        <section class="user-playlists">
+            <h2>Your Playlists</h2>
+
+            <div class="playlist">
+                <img src="playlist_cover.jpg" alt="Playlist Cover">
+                <h3>Senegal </h3>
+                <button class="btn btn-primary play">Play</button>
+                <button class="btn btn-secondary add">Add to Library</button>
+            </div>
+            </div>
+            
+        </section>
+        -->
+    </main>
+    <footer>
+        <p>&copy; 2024 Your Music App</p>
+    </footer>
 </body>
 </html>

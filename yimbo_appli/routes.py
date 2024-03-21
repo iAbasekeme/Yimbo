@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from flask import render_template, url_for, flash, redirect, session, abort
+from flask import render_template, url_for, flash, redirect, session
 from yimbo_appli import app, db, bcrypt
 from yimbo_appli.forms import RegistrationForm, LoginForm
 from yimbo_appli.models import User
@@ -56,12 +56,13 @@ def googleCallback():
     """
     token = oauth.Yimbo.authorize_access_token()
     session['user'] = token
-    return redirect(url_for("home_page"))
-
+    return redirect(url_for('account')) 
+    #return redirect(url_for("home_page"))
+"""
 @app.route('/logout_google')
 def logout_google():
     session.pop('user', None)
-    return redirect(url_for('home_page'))
+    return redirect(url_for('home_page'))"""
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -81,6 +82,8 @@ def register():
         flash(f'Your account has been succefully  created!, You are now able to log in ', 'sucess')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
@@ -94,14 +97,25 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
-            return redirect(url_for('home_page', user=user))
+            #return redirect(url_for('home_page', user=user))
+            return redirect(url_for('account', user=user))
+            
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('new_login.html',form=form)
+
+@app.route('/account')
+def account():
+    return render_template('user.html')
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     """
     logout method
     """
-    logout_user()
-    return  redirect(url_for("home_page"))
+    if current_user.is_authenticated:
+        # If user is signed in with a standard account
+        logout_user()
+    elif 'user' in session:
+        # If user is signed in with Google
+        session.pop('user', None)
+    return redirect(url_for('home_page'))

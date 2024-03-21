@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main_land.css') }}">
 	</head>
 	<body>
+
 		<nav id="navbar">
 			<ul id="nav-list">
 				<li>
@@ -21,10 +22,12 @@
 				{% if current_user.is_authenticated %}
 					<li class="signs">
 						<a href={{ url_for('logout') }}>Logout</a>
+						<a href="#">Account</a>
             		</li>
 					{% elif session %}
 						<li class="signs">
 							<a href={{ url_for('logout_google') }}>Logout</a>
+							<a href="#">Account</a>
 						</li>
 				{% else %}
 					<li class="signs">
@@ -42,6 +45,12 @@
 		</nav>
 		<section id="welcome-section" class="welcome-section">
 			<h1>Yimbo</h1>
+			<!-- Dsiplay message when loggin
+			{% if current_user.is_authenticated %}
+				<h2>welcome to Yimbo!</h2>
+				<p>You are logged  in as {{current_user.username}}.</p>
+			{% endif %}
+			-->
 			<p><i>connecting Africa through Rhythms</i></p>
 		</section>
 		<section id="projects" class="projects">
