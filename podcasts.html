@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcasts</title>
+</head>
+<body>
+    <h1>Podcasts</h1>
+    <ul>
+        {% for podcast in podcasts %}
+        <li>
+            <h2>{{ podcast.title }}</h2>
+            <p><strong>Location:</strong> {{ podcast.location }}</p>
+            <p><strong>Social Life:</strong> {{ "Yes" if podcast.social_life else "No" }}</p>
+            <p><strong>Tech:</strong> {{ "Yes" if podcast.tech else "No" }}</p>
+            <p><strong>Trending:</strong> {{ "Yes" if podcast.trending else "No" }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
