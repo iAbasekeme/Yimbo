@@ -19,3 +19,5 @@ from yimbo_appli import routes
 
 with app.app_context():
     db.create_all()
+from yimbo_appli import routes
+
