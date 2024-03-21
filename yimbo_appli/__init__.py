@@ -11,5 +11,4 @@ app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///yimbo.db'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-
 from yimbo_appli import routes
