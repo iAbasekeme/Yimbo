@@ -40,7 +40,8 @@ def home_page():
     """
     route for the landing page define by wisdom
     """
-    return render_template('main_page.html', session=session.get('user'))
+    return  render_template('two_clone.html',  session=session.get('user'))
+    # return render_template('main_page.html', session=session.get('user'))
 
 @app.route('/google-login')
 def googleLogin():
@@ -101,7 +102,7 @@ def login():
             return redirect(url_for('account', user=user))
             
         else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
+            flash('Login Unsuccessful. Please check your email and your password', 'danger')
     return render_template('new_login.html',form=form)
 
 @app.route('/account')
