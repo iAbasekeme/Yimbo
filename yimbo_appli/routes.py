@@ -4,9 +4,8 @@ from yimbo_appli import app, db, bcrypt
 from yimbo_appli.forms import RegistrationForm, LoginForm
 from yimbo_appli.models import User
 from flask_login import login_user, current_user, logout_user
-
-# import json
-# import requests
+import json
+import requests
 from authlib.integrations.flask_client import OAuth
 
 import os
@@ -120,3 +119,40 @@ def logout():
         # If user is signed in with Google
         session.pop('user', None)
     return redirect(url_for('home_page'))
+
+
+def african_music():
+    """
+    usign api display african music
+    """
+    url_2 = "https://spotify-scraper.p.rapidapi.com/v1/playlist/contents"
+
+    querystring_2 = {"playlistId":"37i9dQZF1DWYkaDif7Ztbp"}
+
+    headers_2 = {
+        "X-RapidAPI-Key": "ed409927fbmshac747d2cc471246p199491jsn4eb168a0cb9b",
+        "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"
+    }
+
+    response_2 = requests.get(url_2, headers=headers_2, params=querystring_2)
+    music_list = []
+    music_info = {}
+    music_data = response_2.json()
+    if 'contents' in music_data:
+        info_2 = music_data.get('contents')
+        # music = info_2.get('items')[0]
+        for music in info_2.get('items'):
+            music_info = {
+                "type": music.get('type'),
+                'name': music.get('name'),
+                'durationText': music.get('durationText'),
+                'artist_name': music.get('artists')[0].get('name'),
+                'artist_id': music.get('artists')[0].get('id'),
+                'music_url': music.get('shareUrl')}
+            music_list.append(music_info)
+
+    return music_list
+@app.route('/music')
+def music():
+    musics = african_music()
+    return render_template('music.html', musics=musics)
