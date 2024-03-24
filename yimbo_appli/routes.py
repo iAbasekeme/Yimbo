@@ -159,14 +159,14 @@ def music():
     return render_template('music.html', musics=musics)
 
 
-@app.route('/artist/artist_id', methods=['GET'])
+@app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
 def get_track(artist_id):
     key = os.environ.get('MY_API_KEY')
     headers = {"Authorization": f"Bearer {key}"}
 
-    if api_key is None:
+    if key is None:
         print("Error: API key not found in environment variables.")
-    headers = {"Authorization": f"Bearer {api_key}"}
+    headers = {"Authorization": f"Bearer {key}"}
 
     api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={artist_id}"
     try:
