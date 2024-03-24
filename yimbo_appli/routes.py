@@ -159,7 +159,7 @@ def music():
     return render_template('music.html', musics=musics)
 
 
-@app.route('/artist/artist_id', Methods=['GET'])
+@app.route('/artist/artist_id', methods=['GET'])
 def get_track(artist_id):
     key = os.environ.get('MY_API_KEY')
     headers = {"Authorization": f"Bearer {key}"}
