@@ -5,6 +5,7 @@ from yimbo_appli.forms import RegistrationForm, LoginForm
 from yimbo_appli.models import User
 from flask_login import login_user, current_user, logout_user
 import json
+from flask import request, jsonify
 import requests
 from authlib.integrations.flask_client import OAuth
 
@@ -156,3 +157,25 @@ def african_music():
 def music():
     musics = african_music()
     return render_template('music.html', musics=musics)
+
+
+@app.route('/artist/artist_id', Methods=['GET'])
+def get_track(artist_id):
+    key = os.environ.get('MY_API_KEY')
+    headers = {"Authorization": f"Bearer {key}"}
+
+    if api_key is None:
+        print("Error: API key not found in environment variables.")
+    headers = {"Authorization": f"Bearer {api_key}"}
+
+    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={artist_id}"
+    try:
+        response = requests.get(api_endpoint, headers=headers)
+        response.raise_for_status()  # Raise an exception for non-200 status codes
+
+        data = response.json()
+        return data  # Return the JSON data as the response
+
+    except requests.exceptions.RequestException as e:
+        # Return a specific error message and status code
+        return "API request failed:", e, 503
