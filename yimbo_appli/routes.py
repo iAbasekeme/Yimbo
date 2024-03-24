@@ -162,20 +162,15 @@ def music():
 @app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
 def get_track(artist_id):
     key = os.environ.get('MY_API_KEY')
-    headers = {"Authorization": f"Bearer {key}"}
-
     if key is None:
         print("Error: API key not found in environment variables.")
+
+    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={artist_id}&apikey={key}"
     headers = {"Authorization": f"Bearer {key}"}
-
-    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={artist_id}"
-    try:
-        response = requests.get(api_endpoint, headers=headers)
-        response.raise_for_status()  # Raise an exception for non-200 status codes
-
-        data = response.json()
-        return data  # Return the JSON data as the response
-
-    except requests.exceptions.RequestException as e:
-        # Return a specific error message and status code
-        return "API request failed:", e, 503
+    response = requests.get(api_endpoint, headers=headers)
+    if response.status_code == 200:
+        artist_info = response.json()
+        # Process artist information
+        print(artist_info)
+    else:
+        print("Error:", response.status_code)
