@@ -98,63 +98,48 @@
       </div>
     </header>
     
-    <!-- Popular Tracks Section -->
-	<div class="p-5">
-      <br>
-      <h2 class="text-2xl font-bold mb-4">Podcasts</h2>
-	  {% for name in table_name %}
-	  	<div class="category">
-	  		<h3><b>{{ name }}</b></h3>
-			{% for category in category_name %}
-				<a href="#" class="sidebar-link active">
-            		<span class="sidebar-link-icon">{{ category }}</span>
-        		</a>
-			{% endfor %}
-		</div>
-	  {% endfor %}
-		
-		<div class="Region">
-        	<h3><b>{{ name }}</b></h3>
-			{% for region in region_name %}
-        		<a href="#" class="sidebar-link active">
-            		<span class="sidebar-link-icon">{{ region }}</span>
-        		</a>
-		</div>
-	</div>
+		<!-- Popular Tracks Section -->
+	<h2 class="text-2xl font-bold mb-4">Podcasts</h2>
+	<section class="display_content">
+		<h3><b>{{ table_name[1] }}</h3>
+		<nav class="category">
+			<ul>
+				{% for category in category_name %}
+					<li>
+						<a href="#">{{ category }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</nav>
+	</section>
+
+	 <section class="display_content">
+        <h3><b>{{ table_name[0] }}</h3>
+        <nav class="category">
+            <ul>
+                {% for region in region_name %}
+                    <li>
+                        <a href="#">{{ region }}</a>
+                    </li>
+				{% endfor %}
+            </ul>
+        </nav>
+    </section>
+	
+	 <section class="display_content">
+        <h3><b>{{ table_name[2] }}</h3>
+        <nav class="category">
+            <ul>
+                {% for country in country_name %}
+                    <li>
+                        <a href="#">{{ country }}</a>
+                    </li>
+				{% endfor %}
+            </ul>
+        </nav>
+    </section>
 
 
-	</div>
-
-	  <div class="Region">
-        <h3><b>Region</b></h3>
-        <a href="#" class="sidebar-link active">
-            <span class="sidebar-link-icon"></span>
-        </a>
-        <a href="#" class="sidebar-link">
-            <span class="sidebar-link-text"></span>
-        </a>
-        <a href="#" class="sidebar-link"/>
-            <span class="sidebar-link-text"></span>
-        </a>
-      </div>
-
-	  <div class="location">
-        <h3><b>Location</b></h3>
-        <a href="#" class="sidebar-link active">
-            <span class="sidebar-link-icon"></span>
-        </a>
-        <a href="#" class="sidebar-link">
-            <span class="sidebar-link-text"></span>
-        </a>
-        <a href="#" class="sidebar-link"/>
-            <span class="sidebar-link-text"></span>
-        </a>
-      </div>
-
-
-	 
-    </div>
-    
   </div>
 
 </body>

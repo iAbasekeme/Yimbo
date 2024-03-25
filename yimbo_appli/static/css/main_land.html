@@ -4,10 +4,9 @@
 		<meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Yimbo connecting Africa through rythm</title>
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/main_land.css') }}">
+		<link rel="stylesheet" href="main_land.css">
 	</head>
 	<body>
-
 		<nav id="navbar">
 			<ul id="nav-list">
 				<li>
@@ -19,39 +18,19 @@
 				<li>
                 	<a href="">Radio</a>
             	</li>
-				{% if current_user.is_authenticated %}
-					<li class="signs">
-						<a href={{ url_for('logout') }}>Logout</a>
-						<a href="#">Account</a>
-            		</li>
-					{% elif session %}
-						<li class="signs">
-							<a href={{ url_for('logout_google') }}>Logout</a>
-							<a href="#">Account</a>
-						</li>
-				{% else %}
-					<li class="signs">
-						<!--<button type="submit">Sign-in</button>-->
-						<a href={{ url_for('login') }}>Sign-in</a>
-					</li>
-					<li class="signs">
-						<!--<button type="submit">Sign-up as Artist</button>-->
-						<a href={{ url_for('register') }}>Sign-up</a>
-						
-					</li>
-				{% endif %}
+				<li class="signs">
+                	<button type="submit">Sign-in</button>
+            	</li>
+				<li class="signs">
+                	 <button type="submit">Sign-up as Artist</button>
+            	</li>
 
 			</ul>
 		</nav>
 		<section id="welcome-section" class="welcome-section">
 			<h1>Yimbo</h1>
-			<!-- Dsiplay message when loggin
-			{% if current_user.is_authenticated %}
-				<h2>welcome to Yimbo!</h2>
-				<p>You are logged  in as {{current_user.username}}.</p>
-			{% endif %}
-			-->
 			<p><i>connecting Africa through Rhythms</i></p>
+			<li></li>
 		</section>
 		<section id="projects" class="projects">
 			<h2>These are some of my projects</h2>
@@ -95,3 +74,4 @@
 
 	</body>
 </html>
+

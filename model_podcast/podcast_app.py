@@ -6,7 +6,7 @@ from model import Category, Region, Country, Podcast
 from podcast_model import get_db
 from sqlalchemy import inspect
 
-app = Flask(__name__)  # Create the Flask app instance
+app = Flask(__name__)
 
 def category_name():
     """retrieve the category name"""
