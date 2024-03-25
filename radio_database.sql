@@ -1,5 +1,5 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS radio_database;
+CREATE DATABASE IF NOT EXISTS podcast_database;
 
 -- Use the created database
 USE podcast_database;

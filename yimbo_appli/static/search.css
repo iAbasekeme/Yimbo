@@ -1,0 +1,218 @@
+.user-profile {
+  position: relative; /* Required for dropdown positioning */
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none; /* Remove default button styling */
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dropdown-toggle i {
+  /* Style your dropdown icon here */
+}
+
+.dropdown-menu {
+  position: absolute; /* Position the dropdown below the button */
+  top: 100%; /* Offset from the button */
+  left: 0;
+  background-color: #fff;
+  list-style: none;
+  padding: 0;
+  display: none; /* Initially hide the dropdown */
+}
+
+.dropdown-menu li {
+  padding: 5px 10px;
+}
+
+.dropdown-menu a {
+  text-decoration: none;
+  color: #000;
+}
+
+.user-profile:hover .dropdown-menu {
+  display: block; /* Show the dropdown on hover */
+}
+
+
+
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .sidebar {
+    flex-basis: 250px;
+    flex-shrink: 0;
+  }
+
+  .main-content {
+    flex-grow: 1;
+  }
+}
+
+
+
+ /* Sidebar Styles */
+ .sidebar {
+  background-color: #000;
+  width: 240px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navigation Sidebar Styles */
+.sidebar {
+  color: #b3b3b3;
+  padding: 25px 10px;
+  font-size: 14px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 5px 15px;
+  margin: 10px 0;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background-color: #282828;
+}
+
+/* Sidebar Styles */
+
+
+/* Sidebar Bottom Section Styles */
+.sidebar-section {
+  background: #181818;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 9px;
+  overflow: hidden;
+}
+
+.sidebar-link {
+  color: #b3b3b3;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  color: #fff;
+}
+
+.sidebar-link-icon {
+  margin-right: 15px;
+  display: inline-block;
+  width: 24px; /* Adjust size as needed */
+  text-align: center;
+}
+
+.sidebar-link-text {
+  flex-grow: 1;
+}
+
+.sidebar-link-subtext {
+  margin-left: 10px;
+  background-color: #b3b3b3;
+  color: #000;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+    /* Search Bar Styles */
+    .search-bar {
+      background-color: #fff;
+      border-radius: 4px;
+      padding: 10px 15px;
+      margin: 20px 0;
+  }
+
+
+
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2a2a2a;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 0 0px;
+}
+
+.search-bar input[type="search"] {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #fff;
+    font-size: 18px; /* Increase font size for bigger appearance */
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.search-title {
+    color: #fff;
+    font-size: 22px;
+    padding-top: 20px;
+	}
+
+.display_content{
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define grid columns */
+gap: 20px; /* Gap between grid items */
+background-color: #45567d;
+padding: 8rem 2rem;
+margin: 0;
+}
+
+.category {
+font : bold 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+margin: 5px;
+text-transform: uppercase;
+}
+
+.category > li {
+display: inline-block;
+}
+
+.category a {
+  background: #395870;
+  background: linear-gradient(#49708f, #293f50);
+  border-right: 1px solid rgba(0, 0, 0, .3);
+  color: #fff;
+  padding: 12px 20px;
+  text-decoration: none;
+}
+.category a:hover {
+  background: #314b60;
+  box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, .3);
+}
+.category li:first-child a {
+  border-radius: 4px 0 0 4px;
+}
+.category li:last-child a {
+  border-right: 0;
+  border-radius: 0 4px 4px 0;
+}

@@ -2,34 +2,52 @@
 """ podcast flask app"""
 
 from flask import Flask, render_template, request, url_for
-from podcast_model import Category, Region, Country, Podcast, get_db
+from model import Category, Region, Country, Podcast
+from podcast_model import get_db
+from sqlalchemy import inspect
 
 app = Flask(__name__)
 
-@app.route("/")
-def index():
-    """Render the main page with the navigation and dropdown bars"""
-    return render_template("yimbo.html")
-
-@app.route("/podcasts/")
-@app.route("/podcasts/<string:option>")
-def podcasts(option=None):
-    """Handles podcast selections (by category, region, or country)"""
+def category_name():
+    """retrieve the category name"""
     with get_db() as db:
-        if option == "General":
-            all_podcast = db().query(Podcast).all()
-            return render_template("general.html", podcasts=all_podcast)
-        elif option == "Category":
-            categories = db().query(Category).all()
-            return render_template("category.html", categories=categories)
-        elif option == "Country":
-            countries = db().query(Country).all()
-            return render_template("country.html", countries=countries)
-        elif option == "Region":
-            regions = db().query(Region).all()
-            return render_template("region.html", regions=regions)
+        # query the db and get all the values from the name column
+        category_names = db.query(Category.name).all()
+        return category_names
+
+def region_name():
+    """retrieve the region name"""
+    with get_db() as db:
+        # query the region table and get all the values of the name column
+        region_names = db.query(Region.name).all()
+        return region_names
+
+def country_name():
+    """retrieve the country name"""
+    with get_db() as db:
+        country_names = db.query(Country.name).all()
+        if not country_names:
+            return None  # Or raise a specific exception like NotFound
         else:
-            return render_template("error.html", message="Invalid selection")
+            return country_names
+ 
+def get_table_name():
+    """retrieve the table name of the database"""
+    with get_db() as db:
+        table_names = inspect(db.get_bind()).get_table_names()
+    return table_names
+
+@app.route("/", methods=["GET", "POST"], strict_slashes=False)
+def podcast():
+    category_names = category_name()
+
+    table_names = get_table_name()
+    country_names = country_name()
+    region_names = region_name()
+
+    return render_template("podcast_page.html",  category_name=category_names,
+                           table_name=table_names, country_name=country_names,
+                           region_name=region_names)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
