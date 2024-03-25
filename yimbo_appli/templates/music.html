@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/music.css') }}">
+</head>
+<body>
+    <header>
+        <h1>My Music Page</h1>
+    </header>
+    <nav>
+        <ul class="navbar">
+            <li><a href="{{  url_for('home_page')}}">Home</a></li>
+            <li><a href="#">Playlist</a></li>
+            <li><a href="#">Album</a></li>
+            <li><a href="#">Genre</a></li>
+        </ul>
+    </nav>
+    <main>
+         <!--<section id="display_content" class="display_content">-->
+        <section class="music-list">
+            <h2>African musics</h2>
+            <div class="browse_all">
+                {% for music in musics %}
+                <!-- Artist Section -->
+                    <div class="artist-card">
+                        <img src="{{ music['picture'] }}" alt="{{ music['name'] }}" style="width:150px; height:150px; border-radius:50%;">
+                        <div class="artist-info">
+                             <a href='https://open.spotify.com/intl-fr/track/{{ music.track_id }}'>
+                            <div class="artist-name">{{ music['name'] }}</div>
+                            <div class="artist-title">{{ music['artist'] }}</div>
+                            <div class="artist-title">{{ music['duration'] }}</div>
+                             </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 My Music Page</p>
+    </footer>
+</body>
+</html>

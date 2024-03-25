@@ -12,13 +12,23 @@ from sqlalchemy import inspect
 
 # import json
 # import requests
+
+import json
+from flask import request, jsonify
+import requests
 from authlib.integrations.flask_client import OAuth
-
+from main import get_music
+from dotenv import load_dotenv
 import os
-
 
 google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
 google_client_secret = os.environ.get('GOOGLE_CLIENT_SECRET')
+
+load_dotenv()
+
+google_client_id = os.getenv('GOOGLE_CLIENT_ID')
+google_client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+
 appConf = {
     "OAUTH2_CLIENT_ID": google_client_id,
     "OAUTH2_CLIENT_SECRET": google_client_secret,
@@ -65,11 +75,6 @@ def googleCallback():
     session['user'] = token
     return redirect(url_for('account')) 
     #return redirect(url_for("home_page"))
-"""
-@app.route('/logout_google')
-def logout_google():
-    session.pop('user', None)
-    return redirect(url_for('home_page'))"""
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -127,6 +132,7 @@ def logout():
         session.pop('user', None)
     return redirect(url_for('home_page'))
 
+
 # for podcast
 def category_name():
     """retrieve the category name"""
@@ -168,3 +174,29 @@ def podcast():
     return render_template("podcast_page.html",  category_name=category_names,
                            table_name=table_names, country_name=country_names,
                            region_name=region_names)
+
+@app.route('/music')
+def music():
+    """
+    route for the music page
+    """
+    musics = get_music()
+    return render_template('music.html', musics=musics)
+
+
+@app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
+def get_track(artist_id):
+    key = os.environ.get('MY_API_KEY')
+    if key is None:
+        print("Error: API key not found in environment variables.")
+
+    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={artist_id}&apikey={key}"
+    headers = {"Authorization": f"Bearer {key}"}
+    response = requests.get(api_endpoint, headers=headers)
+    if response.status_code == 200:
+        artist_info = response.json()
+        # Process artist information
+        print(artist_info)
+    else:
+        print("Error:", response.status_code)
+
