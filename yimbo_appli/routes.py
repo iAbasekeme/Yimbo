@@ -21,13 +21,12 @@ from main import get_music
 from dotenv import load_dotenv
 import os
 
-google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
-google_client_secret = os.environ.get('GOOGLE_CLIENT_SECRET')
-
 load_dotenv()
+google_client_id = "314669533693-2knn1uneiluckdlp3n8pqrtq0eb63jam.apps.googleusercontent.com"
+google_client_secret = "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"
 
-google_client_id = os.getenv('GOOGLE_CLIENT_ID')
-google_client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+# google_client_id = os.getenv('GOOGLE_CLIENT_ID')
+# google_client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
 
 appConf = {
     "OAUTH2_CLIENT_ID": google_client_id,
