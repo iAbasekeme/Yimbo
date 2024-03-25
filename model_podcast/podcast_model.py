@@ -1,55 +1,29 @@
 #!/usr/bin/python3
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-# Database connection details (replace with yours)
-DATABASE_URI = "mysql+pymysql://my_username:my_password@localhost:3306/podcast_database"
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from model import Base
+from contextlib import contextmanager
 
-engine = create_engine(DATABASE_URI)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+# Create an engine to connect to the database
+engine = create_engine('mysql+mysqldb://root:password@localhost:3306/podcast_database')
 
+# Create a sessionmaker
+SessionLocal = sessionmaker(bind=engine)
 
-class Category(Base):
-    __tablename__ = "category"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(256), nullable=False)
-
-    podcasts = relationship("Podcast", backref="category")
-
-class Region(Base):
-    __tablename__ = "Region"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(65), nullable=False)
-
-    countries = relationship("Country", backref="region")
-
-class Country(Base):
-    __tablename__ = "country"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(65), nullable=False)
-    region_id = Column(Integer, ForeignKey("Region.id"), nullable=False)
-
-    podcasts = relationship("Podcast", backref="country")
-
-class Podcast(Base):
-    __tablename__ = "podcast"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(256), nullable=False)
-    description = Column(String, nullable=False)
-    category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
-    region_id = Column(Integer, ForeignKey("Region.id"), nullable=False)
-    country_id = Column(Integer, ForeignKey("country.id"), nullable=False)
-
-
+@contextmanager
 def get_db():
+    """Provide a transactional scope around a series of operations."""
     db = SessionLocal()
     try:
         yield db
+        db.commit()
+    except:
+        db.rollback()
+        raise
     finally:
         db.close()
 
-
 def create_tables():
+    """Create all tables in the database."""
     Base.metadata.create_all(engine)
