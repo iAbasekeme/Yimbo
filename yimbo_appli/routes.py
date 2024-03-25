@@ -21,8 +21,6 @@ from main import get_music
 from dotenv import load_dotenv
 import os
 
-google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
-google_client_secret = os.environ.get('GOOGLE_CLIENT_SECRET')
 
 load_dotenv()
 
