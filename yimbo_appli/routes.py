@@ -5,6 +5,7 @@ from yimbo_appli.forms import RegistrationForm, LoginForm
 from yimbo_appli.models import User
 from flask_login import login_user, current_user, logout_user
 import json
+from flask import request, jsonify
 import requests
 from authlib.integrations.flask_client import OAuth
 from main import get_music
@@ -120,5 +121,25 @@ def logout():
 
 @app.route('/music')
 def music():
+    """
+    route for the music page
+    """
     musics = get_music()
     return render_template('music.html', musics=musics)
+
+
+@app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
+def get_track(artist_id):
+    key = os.environ.get('MY_API_KEY')
+    if key is None:
+        print("Error: API key not found in environment variables.")
+
+    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={artist_id}&apikey={key}"
+    headers = {"Authorization": f"Bearer {key}"}
+    response = requests.get(api_endpoint, headers=headers)
+    if response.status_code == 200:
+        artist_info = response.json()
+        # Process artist information
+        print(artist_info)
+    else:
+        print("Error:", response.status_code)
