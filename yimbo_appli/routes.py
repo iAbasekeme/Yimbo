@@ -23,11 +23,9 @@ import os
 
 
 load_dotenv()
-google_client_id = "314669533693-2knn1uneiluckdlp3n8pqrtq0eb63jam.apps.googleusercontent.com"
-google_client_secret = "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"
 
-# google_client_id = os.getenv('GOOGLE_CLIENT_ID')
-# google_client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
+google_client_id = os.getenv('GOOGLE_CLIENT_ID')
+google_client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
 
 appConf = {
     "OAUTH2_CLIENT_ID": google_client_id,
@@ -118,7 +116,8 @@ def login():
 
 @app.route('/account')
 def account():
-    return render_template('user.html')
+    # return render_template('user.html')
+    return render_template('new_user_page.html')
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     """
@@ -183,7 +182,13 @@ def music():
     musics = get_music()
     return render_template('music.html', musics=musics)
 
-
+@app.route('/account/music')
+def account_music():
+    """
+    route for the music page
+    """
+    musics = get_music()
+    return render_template('user_music.html', musics=musics)
 @app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
 def get_track(artist_id):
     key = os.environ.get('MY_API_KEY')
