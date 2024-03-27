@@ -55,6 +55,8 @@
             <div class="form-group">
                 {{ form.submit(class="btn btn-primary") }}
             </div>
+        </form>
+        <small>Forgot Password? <a href="{{ url_for('reset_request') }}">Reset Password</a></small>
             <div class="social">
                 <div class="go"><i class="fab fa-google"></i>  <a href="{{ url_for('googleLogin') }}">Google</a></div>
                 <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
@@ -62,7 +64,6 @@
             <small>
                 Don't Have An Account? <a href="{{ url_for('register')  }}">Register Now!</a>
             </small>
-        </form>
     </div>
 </body>
 </html>
