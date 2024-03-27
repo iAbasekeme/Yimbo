@@ -8,6 +8,8 @@
 
   
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
   <style>
 
     .artist-header {
@@ -39,12 +41,15 @@
         <a href="#" class="sidebar-link">
             Edit Profile
         </a>
+        <a href="/logout" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome logout icon -->
+            Logout
     </div>
 
 
 
     <div class="sidebar-section">
-        <a href={{ url_for('music') }} class="sidebar-link active">
+        <a href="#" class="sidebar-link active">
             Music
         </a>
         <a href="#" class="sidebar-link">
@@ -90,6 +95,8 @@
           <button type="submit" aria-label="Search">
           </button>
       </div>
+
+      </a>
     </header>
 
     <section class="music-list">

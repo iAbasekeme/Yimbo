@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 from flask import render_template, url_for, flash, redirect, session
-from yimbo_appli import app, db, bcrypt
-from yimbo_appli.forms import RegistrationForm, LoginForm
+from yimbo_appli import app, db, bcrypt, mail
+from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from yimbo_appli.models import User
 from flask_login import login_user, current_user, logout_user
-
+from flask_mail import Message
 # for podcast
 from yimbo_appli.model import Category, Region, Country, Podcast
 from yimbo_appli.podcast_model import get_db
@@ -131,6 +131,54 @@ def logout():
         session.pop('user', None)
     return redirect(url_for('home_page'))
 
+def send_mail(user):
+    """
+    method to send mail
+    """
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request', sender='abdoulayesadio@gmail.com', recipients=[user.email])
+    msg.body = f'''To    reset your password, visit the following link:
+    {url_for('reset_password', token=token, _external=True)}
+    
+    Ignore this email this you are not the one who requested it
+    '''
+    mail.send(msg)
+
+@app.route("/reset_password", methods=['GET', 'POST'])
+def reset_request():
+    """
+    method for reset password
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('home_page'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_mail(user)
+            flash('An email has been sent with instructions to reset your password.', 'info')
+            return redirect(url_for('login'))
+    return render_template('reset_request.html', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """
+    method for reset password
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('home_page'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        flash('Your password has been updated! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)
 
 # for podcast
 def category_name():
@@ -189,6 +237,7 @@ def account_music():
     """
     musics = get_music()
     return render_template('user_music.html', musics=musics)
+
 @app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
 def get_track(artist_id):
     key = os.environ.get('MY_API_KEY')

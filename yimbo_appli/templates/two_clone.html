@@ -37,12 +37,12 @@ DOCTYPE html>
             {% if current_user.is_authenticated %}
 					<li class="signs">
 						<a href={{ url_for('logout') }}>Logout</a>
-						<a href="#">Account</a>
-            		</li>
+            <a href={{ url_for('account') }}>Account</a>
+          </li>
 					{% elif session %}
 						<li class="signs">
 							<a href={{ url_for('logout_google') }}>Logout</a>
-							<a href="#">Account</a>
+							<a href={{ url_for('account') }}>Account</a>
 						</li>
 				{% else %}
 					<li class="signs">
