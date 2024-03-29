@@ -46,28 +46,37 @@ CREATE TABLE IF NOT EXISTS podcast (
   FOREIGN KEY(region_id) REFERENCES region(id)
 );
 
+-- Insert data for south African
 INSERT INTO podcast (category_id, region_id,  country_id, name, description)
 VALUES
-  (1, 2, 3, 'Reply All', 'Explores internet stories.'),
-  (1, 1, 4, 'The Vergecast', 'Insightful analysis on tech news and internet culture.'),
-  (1, 4, 2, 'TechStuff', 'Explores tech history, science, and impact.'),
-  (1, 2, 1, 'Accidental Tech Podcast (ATP)', 'Focuses on Apple, tech, and programming news and debates.'),
-  (1, 1, 3, 'Clockwise', 'Fast-paced discussions on tech topics, perfect for busy enthusiasts.');
+  (1, 1, 1, 'Africa Tech Today', 'interviews with founders of startups and discussions on the latest trends.'),
+  (1, 1, 1, 'The Business of Innovation in Africa', ' interviews with entrepreneurs, investors, and policymakers.'),
+  (1, 1, 1, 'TXRD Podcast', 'interviews with experts in a variety of fields, as well as discussions on current events and trends.'),
+  (2, 1, 1, 'Express Yourself', 'interview-based podcast features South African personalities.'),
+  (2, 1, 1, 'Behind the Curtain with MacGyver', 'features South African personalities, often media personalities or entertainers0.')
+  (3, 1, 1, 'The Daily Maverick', 'In-depth interviews and discussions on current events in South Africa..');
+  (3, 1, 1, 'Checkpoint', 'investigative journalism podcast from the South African Broadcasting Corporation (SABC).')
+  (4, 1, 1, 'Ya Rassi!', 'stand-up comedy routines from some of South Africa''s best comedians.')
+  (4, 1, 1, 'Black Man With a Podcast', 'hosted by South African comedian and radio personality, Trevor Noah.')
 
--- Insert data for Celebrity & Entertainment podcasts
+
+-- Insert data for for East African
 INSERT INTO podcast (category_id, region_id, country_id, name, description)
 VALUES
-  (2, 4, 4, 'My Dad Wrote A Porno', 'Hilariously dissects absurd erotic fiction.'),
-  (2, 3, 4, 'The Joe Rogan Experience', 'Features comedian Joe Rogan''s long-form, humorous conversations.'),
-  (2, 2, 5, '2 Dope Queens', 'Stand-up performances, storytelling, and interviews with comedians.'),
-  (2, 1, 5, 'The Dollop with Dave Anthony and Gareth Reynolds', 'Comedians explore weird historical stories.'),
-  (2, 2, 7, 'Conan O''Brien Needs A Friend', 'Conan O''Brien interviews celebrities for genuine friendship.');
+  (1, 2, 2, 'The Nairobi Tech Podcast', 'Exploring the tech scene in Kenya.'),
+  (1, 2, 3, 'iCognito', 'focuses on science, technology, engineering, and mathematics (STEM) education.'),
+  (2, 2, 2, 'KenyaBuzz', 'Covers entertainment news, celebrity gossip, and interviews with Kenyan celebrities.'),
+  (2, 2, 3, 'Afripods Music', 'explores African music, featuring interviews with musicians from across the region.'),
+  (3, 2, 3, 'Ethiopia Insight Podcast', 'Ethiopia Insight covers politics, economy, and society in Ethiopia.'),
+  (3, 2, 2, 'The Kenya Podcast', 'this podcast provides news and analysis on current events in Kenya, with a focus on politics, business, and social issues.'),
+  (4, 2, 3, 'Insanity by Chance', 'The hosts, Hanna and Mikiyas, are a married couple who use their humor to talk about relationships, life in Ethiopia, and anything else that comes to mind.')
+  (4, 2, 2, 'The Lazarus Effect', 'The hosts, Eddy and Juress, interview celebrities and other interesting people, but they always keep things light and funny.')
 
--- Insert data for News & Politics podcasts
+-- Insert data for North African
 INSERT INTO podcast (category_id, region_id, country_id, name, description)
 VALUES
-  (3, 4, 7, 'Save America', 'Hosted by former Obama staffers, this podcast discusses politics and current events.'),
-  (3, 4, 7, 'The Daily', 'A daily news podcast by The New York Times, covering top news stories and analysis.'),
+  (1, 3, 4, 'The Nile Valley Podcast', 'Hosted by former Obama staffers, this podcast discusses politics and current events.'),
+  (3, 3, 7, 'The Daily', 'A daily news podcast by The New York Times, covering top news stories and analysis.'),
   (3, 3, 1, 'The Rachel Maddow Show', 'The audio version of the popular MSNBC show, featuring in-depth political analysis.');
 
 -- Insert data for comedy podcasts

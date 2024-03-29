@@ -1,53 +1,67 @@
 #!/usr/bin/python3
-""" podcast flask app"""
 
-from flask import Flask, render_template, request, url_for
-from model import Category, Region, Country, Podcast
-from podcast_model import get_db
-from sqlalchemy import inspect
+from flask import Flask, render_template, request, jsonify
+from podcast_methods import PodcastMethods
 
 app = Flask(__name__)
+podcast_method = PodcastMethods()
 
-def category_name():
-    """retrieve the category name"""
-    with get_db() as db:
-        # query the db and get all the values from the name column
-        category_names = db.query(Category.name).all()
-        return category_names
 
-def region_name():
-    """retrieve the region name"""
-    with get_db() as db:
-        # query the region table and get all the values of the name column
-        region_names = db.query(Region.name).all()
-        return region_names
+@app.route("/sort_category", methods=["GET", "POST"], strict_slashes=False)
+def sort_category():
+    """ retrieve the category name and get all podcasts belonging
+        to that group
+    """ 
 
-def country_name():
-    """retrieve the country name"""
-    with get_db() as db:
-        country_names = db.query(Country.name).all()
-        if not country_names:
-            return None  # Or raise a specific exception like NotFound
-        else:
-            return country_names
- 
-def get_table_name():
-    """retrieve the table name of the database"""
-    with get_db() as db:
-        table_names = inspect(db.get_bind()).get_table_names()
-    return table_names
+    # retrive the request
+    category = request.args.get("category")
+    table_names = request.args.get("table_names")
+    category_name = podcast_method.get_podcastsInEachCategory(category_name)
+   
+    
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html", category_name=category_name, table_names=table_names)
+
+
+@app.route("/sort_region", methods=["GET", "POST"], strict_slashes=False)
+def sort_region():
+    """ retrieve the region name and get all podcasts belonging
+        to that group
+    """
+    region_name = request.args.get("region")
+    table_names = request.args.get("table_names")
+    category_name = podcast_method.get_podcastsInEachRegion(region_name)
+    return render_template("new.html", category_name=category_name, table_names=table_names)
+
+
+@app.route("/sort_country", methods=["GET", "POST"], strict_slashes=False)
+def sort_country():
+    """ retrieve the country name and get all podcasts belonging
+        to that group
+    """
+
+    # retrive the request
+    country_name = request.args.get("country")
+    table_names = request.args.get("table_names")
+    category_name = get_podcastsInEachCountry(country_name)
+
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html", category_name=category_name, table_names=table_names)
+
 
 @app.route("/", methods=["GET", "POST"], strict_slashes=False)
 def podcast():
-    category_names = category_name()
+    category_names = podcast_method.category_names()
+    table_names = podcast_method.get_table_name()
+    country_names = podcast_method.country_names()
+    region_names = podcast_method.region_names()
 
-    table_names = get_table_name()
-    country_names = country_name()
-    region_names = region_name()
-
-    return render_template("podcast_page.html",  category_name=category_names,
-                           table_name=table_names, country_name=country_names,
-                           region_name=region_names)
+    return render_template("podcast_page.html",  
+                           category_names=category_names,
+                           table_names=table_names,
+                           country_names=country_names,
+                           region_names=region_names)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
+
