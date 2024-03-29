@@ -41,7 +41,7 @@ DOCTYPE html>
           </li>
 					{% elif session %}
 						<li class="signs">
-							<a href={{ url_for('logout_google') }}>Logout</a>
+							<a href={{ url_for('logout') }}>Logout</a>
 							<a href={{ url_for('account') }}>Account</a>
 						</li>
 				{% else %}
