@@ -20,7 +20,10 @@ app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///yimbo.db'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+# Login requierment
 login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
 # configure the mail sender
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
