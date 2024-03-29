@@ -17,7 +17,7 @@ def get_track():
     if response.status_code == 200:
         artist_info = response.json()
         # Process artist information
-        return jsonify(artist_info)
+        print(artist_info)
     else:
         print(f"Error: {response.status_code}")
         return None
