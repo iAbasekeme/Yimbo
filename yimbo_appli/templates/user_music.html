@@ -26,7 +26,6 @@
   <div class="sidebar">
     <!-- yimbo Logo -->
     <div class="logo-container">
-        <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png" alt="Yimbo Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
     </div>
 
 
@@ -35,9 +34,9 @@
 	
 	<div class="sidebar-section">
 		<div class="logo-container">
-        	<img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
+        	<img src="{{ image_file }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
 		</div>
-		<div>User Name</div>
+		<div>{{ current_user.username }}</div>
         <a href="#" class="sidebar-link">
             Edit Profile
         </a>
