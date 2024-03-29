@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-from flask import render_template, url_for, flash, redirect, session
+from flask import render_template, url_for, flash, redirect, session, request
 from yimbo_appli import app, db, bcrypt, mail
 from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from yimbo_appli.models import User
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 # for podcast
 from yimbo_appli.model import Category, Region, Country, Podcast
@@ -107,17 +107,20 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
+            next_page = request.args.get('next')
             #return redirect(url_for('home_page', user=user))
-            return redirect(url_for('account', user=user))
+            return redirect(next_page) if next_page else redirect(url_for('account', user=user))
             
         else:
             flash('Login Unsuccessful. Please check your email and your password', 'danger')
     return render_template('new_login.html',form=form)
 
 @app.route('/account')
+@login_required
 def account():
     # return render_template('user.html')
-    return render_template('new_user_page.html')
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template('new_user_page.html', image_file=image_file)
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     """
@@ -156,7 +159,8 @@ def reset_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_mail(user)
-            flash('An email has been sent with instructions to reset your password.', 'info')
+            flash(f'''An email has been sent with instructions to reset your password.
+                  Please check spam if you don't see the email''', 'info')
             return redirect(url_for('login'))
     return render_template('reset_request.html', form=form)
 
@@ -231,12 +235,14 @@ def music():
     return render_template('music.html', musics=musics)
 
 @app.route('/account/music')
+@login_required
 def account_music():
     """
     route for the music page
     """
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     musics = get_music()
-    return render_template('user_music.html', musics=musics)
+    return render_template('user_music.html', musics=musics, image_file=image_file)
 
 @app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
 def get_track(artist_id):
