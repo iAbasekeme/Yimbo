@@ -24,7 +24,9 @@ def get_track():
         print(f"Error: {response.status_code}")
         return None
     try:
-        artist_country = artist_info['message']['body']['artist_country']
+        # artist_country = artist_info['message']['body']['artist_country']
+        artist_country = artist_info.get('message', {}).get(
+            'body', {}).get('artist_country')
         if artist_country and artist_country not in os.getenv("ACCEPTED_CODES", "").split(","):
             print('Artist not from africa')
         else:
