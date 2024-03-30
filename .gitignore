@@ -2,3 +2,4 @@
 yimbo_appli/flask_config.env
 .env
 yimbo_appli/.env
+.env
