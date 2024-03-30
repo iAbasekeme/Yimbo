@@ -6,6 +6,14 @@ from dotenv import load_dotenv
 
 MY_API_KEY = "8b45ee61f43e5fe313a0b788fe98c2f5"
 
+ACCEPTED_CODES = (
+    "DZ", "AO", "BJ", "BW", "BF", "BI", "CM", "CV", "CF", "TD", "KM", "CD", "CJ",
+    "EG", "GQ", "ER", "ET", "GA", "GM", "GH", "GN", "GW", "CI", "KE", "LS", "LR",
+    "LY", "MG", "MW", "ML", "MR", "MU", "YT", "MA", "MZ", "NA", "NE", "MG", "CG",
+    "RE", "RW", "SH", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "SZ", "TZ",
+    "TG", "TN", "UG", "EH", "ZM", "ZW"
+)
+
 
 def get_track():
     key = MY_API_KEY
@@ -27,7 +35,7 @@ def get_track():
         # artist_country = artist_info['message']['body']['artist_country']
         artist_country = artist_info.get('message', {}).get(
             'body', {}).get('artist_country')
-        if artist_country and artist_country not in os.getenv("ACCEPTED_CODES", "").split(","):
+        if artist_country and artist_country not in ACCEPTED_CODES.split(","):
             print('Artist not from africa')
         else:
             print(artist_info)
