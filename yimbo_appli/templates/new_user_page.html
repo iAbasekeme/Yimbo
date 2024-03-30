@@ -38,7 +38,8 @@
         	<img src="{{ image_file }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
 		</div>
 		<div>{{ current_user.username }}</div>
-        <a href="#" class="sidebar-link">
+        <a href={{url_for('edit')}} class="sidebar-link">
+
             Edit Profile
         </a>
         <a href="/logout" class="logout-button">
