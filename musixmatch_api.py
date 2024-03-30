@@ -25,6 +25,7 @@ def get_track():
     print(response.status_code)
     if response.status_code == 200:
         artist_info = response.json()
+        print(artist_info)
         try:
             # artist_country = artist_info['message']['body']['artist_country']
             artist_country = artist_info.get('message', {}).get(
