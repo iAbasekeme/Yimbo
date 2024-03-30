@@ -3,6 +3,7 @@
 from model import Category, Region, Country, Podcast
 from podcast_model import get_db
 from sqlalchemy import inspect
+# from PIL import Image
 import os
 
 class PodcastMethods():
@@ -215,26 +216,48 @@ class PodcastMethods():
             print(f"Directory '{directory}' does not exist or is not a valid directory.")
 
         return image_file_names
-
-
     
-    def get_linkFromFile(self, category_info, file_names, image_dir):
+    def get_image_path(directory):
+        """get images"""
+        
+
+        images = []
+
+        # Check if the directory exists
+        if os.path.exists(directory):
+            # Open the directory
+            dir_fd = os.open(directory, os.O_RDONLY)
+            
+            # Iterate over the files in the directory
+            for filename in os.listdir(directory):
+                # Check if the file is a PNG image
+                if filename.endswith('.png'):
+                    # Open each image using its file descriptor
+                    with os.fdopen(os.open(os.path.join(directory, filename), os.O_RDONLY, dir_fd=dir_fd), 'rb') as file:
+                        # Open the image using PIL
+                        img = Image.open(file)
+                        images.append(img)  # Add the image object to the list of images
+            
+            # Close the directory file descriptor
+            os.close(dir_fd)
+
+        
+        
+    def get_linkFromFile(self, category_info, file_names):
         """get the link"""
         podcast_box = {}
         for key, values in category_info.items():
-            for names in file_names:
-                for letter in names:
-                    if letter == "_":
-
-                        # get str before letter to the firsts
-                        name = letter[:-1]
-                        if names.isdigit():
-                            podcast_digit = int(names)
-                            if values["image_id"] == podcast_digit:
-                                image_path = image_dir + "/" + names
+            for name in file_names:
+                try:
+                    digit_name = name.split('_')
+                    if len(digit_name) > 1:
+                        tokenized_num = digit_name[0]
+                        if tokenized_num.isdigit():
+                            if values["image_id"] == int(tokenized_num):
+                                image_path = name
                                 podcast_box[image_path] = {
                                     "podcast_name": values["name"]
                                 }
-                            else:
-                                continue
+                except Exception as e:
+                    print(f"Error processing filename {name}: {e}")
         return podcast_box

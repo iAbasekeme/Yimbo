@@ -17,9 +17,8 @@ def sort_category():
     group_names = request.args.get("category")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachCategory(group_names)
-    image_dir = "/static/pics/"
-    file_names = podcast_method.get_imageFile_name(image_dir)
-    podcast_info =  podcast_method.get_linkFromFile(category_info, file_names, image_dir)
+    pic_names = podcast_method.get_imageFile_name("/home/pc/Yimbo/model_podcast/static/pics")
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
     
     # Render the template and pass the category and table names as context variables
     return render_template("new.html", group_names=group_names,
@@ -33,11 +32,14 @@ def sort_region():
     """
     group_names = request.args.get("region")
     table_names = request.args.get("table_names")
-    category_names = podcast_method.get_podcastsInEachRegion(group_names)
+    category_info = podcast_method.get_podcastsInEachRegion(group_names)
+    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
     return render_template("new.html",
                            group_names=group_names,
-                           category_names=category_names,
-                           table_names=table_names)
+                           podcast_info=podcast_info)
 
 
 @app.route("/sort_country", methods=["GET", "POST"], strict_slashes=False)
@@ -49,13 +51,16 @@ def sort_country():
     # retrive the request
     group_names = request.args.get("country")
     table_names = request.args.get("table_names")
-    category_names = get_podcastsInEachCountry(group_name)
+    category_info = podcast_method.get_podcastsInEachCountry(group_names)
+    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
     # Render the template and pass the category and table names as context variables
     return render_template("new.html",
                            group_names=group_names,
-                           category_names=category_names,
-                           table_names=table_names)
+                           podcast_info=podcast_info,
+                           )
 
 
 @app.route("/", methods=["GET", "POST"], strict_slashes=False)

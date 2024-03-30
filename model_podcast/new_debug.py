@@ -16,8 +16,10 @@ if __name__ == "__main__":
     image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
     list_image_names = podcast_methods.get_imageFile_name(image_dir)
     print("Names of images in /stactic/pic/ :", list_image_names)
-
+    
+    print()
     # Retrieve podcast information from image files
     podcast_info = podcast_methods.get_linkFromFile(category_info, list_image_names, image_dir)
-    print("Podcast information from image files:", podcast_info)
-
+    for key, value in podcast_info.items():
+        print("image path: {}, image name: {}".format(key, value["podcast_name"]))
+        print()
