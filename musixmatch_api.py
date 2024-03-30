@@ -30,8 +30,8 @@ def get_track():
             # artist_country = artist_info['message']['body']['artist_country']
             artist_country = artist_info.get('message', {}).get(
                 'body', {}).get('artist', {}).get('artist_country')
-            if artist_country and artist_country not in ACCEPTED_CODES:
-                print('Artist not from africa')
+            if not artist_country or artist_country not in ACCEPTED_CODES:
+                print("Can't get that artist or artist not in africa")
             else:
                 print(artist_info)
         except (KeyError, AttributeError):
