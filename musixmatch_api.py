@@ -1,5 +1,6 @@
 import requests
 import sys
+import os
 from flask import jsonify
 
 MY_API_KEY = "8b45ee61f43e5fe313a0b788fe98c2f5"
@@ -21,6 +22,13 @@ def get_track():
     else:
         print(f"Error: {response.status_code}")
         return None
-
+    try:
+        artist_country = artist_info['message']['body']['artist_country']
+        if artist_country and artist_country not in os.getenv(ACCEPTED_CODES):
+            print('Artist not from africa')
+        else:
+            print(artist_info)
+    except (KeyError, AttributeError):
+        print("Error retrieving artist information or country data. Check API response structure.")
 
 get_track()
