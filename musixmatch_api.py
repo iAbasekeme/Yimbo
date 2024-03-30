@@ -10,7 +10,7 @@ def get_track():
     if key is None:
         print("Error: API key not found in environment variables.")
 
-    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={sys.argv[2]}&apikey={key}"
+    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={sys.argv[1]}&apikey={key}"
     headers = {"Authorization": f"Bearer {MY_API_KEY}"}
     response = requests.get(api_endpoint, headers=headers)
     print(response.status_code)
