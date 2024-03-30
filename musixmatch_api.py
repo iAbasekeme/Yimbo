@@ -28,7 +28,7 @@ def get_track():
         try:
             # artist_country = artist_info['message']['body']['artist_country']
             artist_country = artist_info.get('message', {}).get(
-                'body', {}).get('artist_country')
+                'body', {}).get('artist', {}).get('artist_country')
             if artist_country and artist_country not in ACCEPTED_CODES:
                 print('Artist not from africa')
             else:
