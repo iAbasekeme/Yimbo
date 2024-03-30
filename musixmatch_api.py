@@ -1,5 +1,6 @@
 import requests
 import sys
+import os
 from flask import jsonify
 
 MY_API_KEY = "8b45ee61f43e5fe313a0b788fe98c2f5"
@@ -10,13 +11,24 @@ def get_track():
     if key is None:
         print("Error: API key not found in environment variables.")
 
-    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={sys.argv[2]}&apikey=8b45ee61f43e5fe313a0b788fe98c2f5"
+    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={sys.argv[1]}&apikey={key}"
     headers = {"Authorization": f"Bearer {MY_API_KEY}"}
     response = requests.get(api_endpoint, headers=headers)
+    print(response.status_code)
     if response.status_code == 200:
         artist_info = response.json()
         # Process artist information
-        return jsonify(artist_info)
+        print(artist_info)
     else:
         print(f"Error: {response.status_code}")
         return None
+    try:
+        artist_country = artist_info['message']['body']['artist_country']
+        if artist_country and artist_country not in os.getenv(ACCEPTED_CODES):
+            print('Artist not from africa')
+        else:
+            print(artist_info)
+    except (KeyError, AttributeError):
+        print("Error retrieving artist information or country data. Check API response structure.")
+
+get_track()
