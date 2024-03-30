@@ -15,7 +15,7 @@ ACCEPTED_CODES = (
 )
 
 
-def get_track():
+def get_artist():
     key = MY_API_KEY
     if key is None:
         print("Error: API key not found in environment variables.")
@@ -24,15 +24,15 @@ def get_track():
     response = requests.get(api_endpoint, headers=headers)
     print(response.status_code)
     if response.status_code == 200:
-        artist_info = response.json()
+        track_info = response.json()
         try:
-            # artist_country = artist_info['message']['body']['artist_country']
-            artist_country = artist_info.get('message', {}).get(
+            # artist_country = track_info['message']['body']['artist_country']
+            artist_country = track_info.get('message', {}).get(
                 'body', {}).get('artist', {}).get('artist_country')
             if not artist_country or artist_country not in ACCEPTED_CODES:
                 print("Can't get that artist or artist not in africa")
             else:
-                print(artist_info)
+                print(track_info)
         except (KeyError, AttributeError):
             print(
                 "Error retrieving artist information or country data. Check API respons structure.")
