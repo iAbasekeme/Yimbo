@@ -9,6 +9,7 @@ from flask_mail import Message
 from yimbo_appli.model import Category, Region, Country, Podcast
 from yimbo_appli.podcast_model import get_db
 from sqlalchemy import inspect
+from werkzeug.security import generate_password_hash
 
 # import json
 # import requests
@@ -68,11 +69,37 @@ def googleLogin():
 def googleCallback():
     """
     the callback function
-    """
+    
     token = oauth.Yimbo.authorize_access_token()
     session['user'] = token
     return redirect(url_for('account')) 
-    #return redirect(url_for("home_page"))
+    #return redirect(url_for("home_page"))"""
+    token = oauth.Yimbo.authorize_access_token()
+    session['user'] = token
+    userinfo_endpoint = oauth.Yimbo.server_metadata.get('userinfo_endpoint')
+    if not userinfo_endpoint:
+        return 'Userinfo endpoint not found.', 400
+
+    resp = oauth.Yimbo.get(userinfo_endpoint)
+    if not resp.ok:
+        return 'Failed to fetch user info from Google.', 400
+
+    user_info = resp.json()
+    email = user_info.get('email')
+
+    # Check if the user already exists in the database
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        # If the user doesn't exist, create a new user object and add it to the database
+        username = email.split('@')[0]
+        user = User(email=email, username=username, password=generate_password_hash(username))
+        db.session.add(user)
+        db.session.commit()
+
+    # Log the user in
+    login_user(user)
+
+    return redirect(url_for('account'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -133,6 +160,14 @@ def logout():
         # If user is signed in with Google
         session.pop('user', None)
     return redirect(url_for('home_page'))
+
+@app.route('/edit', methods=['GET', 'POST'])
+def edit():
+    """
+    method to edit the user profile
+    """
+    user = User.query.filter_by(email=current_user.email).first()
+    return render_template('edit.html',  user=user)
 
 def send_mail(user):
     """
