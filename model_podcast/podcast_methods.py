@@ -223,13 +223,18 @@ class PodcastMethods():
         podcast_box = {}
         for key, values in category_info.items():
             for names in file_names:
-                if names[0].isdigit():
-                    podcast_digit = int(names[0])
-                    if values["image_id"] == podcast_digit:
-                        image_path = image_dir + "/" + names
-                        podcast_box[image_path] = {
-                            "podcast_name": values["name"]
-                        }
-                    else:
-                        continue
+                for letter in names:
+                    if letter == "_":
+
+                        # get str before letter to the firsts
+                        name = letter[:-1]
+                        if names.isdigit():
+                            podcast_digit = int(names)
+                            if values["image_id"] == podcast_digit:
+                                image_path = image_dir + "/" + names
+                                podcast_box[image_path] = {
+                                    "podcast_name": values["name"]
+                                }
+                            else:
+                                continue
         return podcast_box
