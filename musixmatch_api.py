@@ -21,3 +21,6 @@ def get_track():
     else:
         print(f"Error: {response.status_code}")
         return None
+
+
+get_track()
