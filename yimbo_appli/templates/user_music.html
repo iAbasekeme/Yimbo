@@ -8,6 +8,8 @@
 
   
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
   <style>
 
     .artist-header {
@@ -24,7 +26,6 @@
   <div class="sidebar">
     <!-- yimbo Logo -->
     <div class="logo-container">
-        <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png" alt="Yimbo Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
     </div>
 
 
@@ -33,18 +34,21 @@
 	
 	<div class="sidebar-section">
 		<div class="logo-container">
-        	<img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
+        	<img src="{{ image_file }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
 		</div>
-		<div>User Name</div>
+		<div>{{ current_user.username }}</div>
         <a href="#" class="sidebar-link">
             Edit Profile
         </a>
+        <a href="/logout" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome logout icon -->
+            Logout
     </div>
 
 
 
     <div class="sidebar-section">
-        <a href={{ url_for('music') }} class="sidebar-link active">
+        <a href="#" class="sidebar-link active">
             Music
         </a>
         <a href="#" class="sidebar-link">
@@ -90,6 +94,8 @@
           <button type="submit" aria-label="Search">
           </button>
       </div>
+
+      </a>
     </header>
 
     <section class="music-list">

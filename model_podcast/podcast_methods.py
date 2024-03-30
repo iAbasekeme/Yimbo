@@ -1,15 +1,31 @@
 #!/usr/bin/python3
-"""module for the podcast section"""
 
 from model import Category, Region, Country, Podcast
 from podcast_model import get_db
 from sqlalchemy import inspect
-
+import os
 
 class PodcastMethods():
-    """ the podcast module"""
-    def __init__(self, user_name=None):
-        self.user_name = user_name
+    """The podcast module"""
+    def __init__(self, name=None, description=None, category_id=None, region_id=None, country_id=None):
+        self.name = name
+        self.description = description
+        self.category_id = category_id
+        self.region_id = region_id
+        self.country_id = country_id
+        self.image_id = None
+
+    def create_podcast(self):
+        """Create a new podcast"""
+        with get_db() as db:
+            new_podcast = Podcast(name=self.name, description=self.description, category_id=self.category_id,
+                                  region_id=self.region_id, country_id=self.country_id, image_id=self.image_id)
+            db.add(new_podcast)
+            db.commit()
+
+            # Set image_id to the id of the newly created podcast
+            new_podcast.image_id = new_podcast.id
+            db.commit()
 
     def get_category(self):
         """Retrieve the category name"""
@@ -39,7 +55,6 @@ class PodcastMethods():
 
     def get_country(self):
         """Retrieve the country names and returns a dictionary"""
-        print("after get_country main()")
         with get_db() as db:
             country_data = db.query(Country).all()
             country_info = {}
@@ -59,7 +74,7 @@ class PodcastMethods():
         return tables_names
     
     def get_podcast_info(self):
-        """ retrive all infor related to podcast and store in a dictionary"""
+        """Retrieve all info related to podcast and store in a dictionary"""
         with get_db() as db:
             podcasts = db.query(Podcast).all()
         
@@ -70,13 +85,14 @@ class PodcastMethods():
                     "description": podcast.description,
                     "category_id": podcast.category_id,
                     "region_id": podcast.region_id,
-                    "country_id": podcast.country_id
+                    "country_id": podcast.country_id,
+                    "image_id": podcast.image_id
                 }   
 
         return podcast_info
 
     def category_names(self):
-        """returns a list of all categories of podcast"""
+        """Returns a list of all categories of podcast"""
         category_info = self.get_category()
         category_names = []
         for cat_id, cat_name in category_info.items():
@@ -84,13 +100,13 @@ class PodcastMethods():
         return category_names
 
     def country_names(self):
-         """ display the country name:
-                arg: accepts the method country_name
-                Retruns: list containing all names of country
+         """Display the country name:
+                Arg: accepts the method country_name
+                Returns: list containing all names of country
          """
-         print("after method name")
+         print("After method name")
          country_info = self.get_country()
-         print("after get_country()")
+         print("After get_country()")
          country_names = []
          for country_id, country_name in country_info.items():
             country_names.append(country_name["name"])
@@ -98,7 +114,7 @@ class PodcastMethods():
          return country_names
     
     def region_names(self):
-        """ retrun a list containing the names of all regions"""
+        """Return a list containing the names of all regions"""
         region_info = self.get_region()
         region_names = []
         for region_id, region_name in region_info.items():
@@ -107,9 +123,9 @@ class PodcastMethods():
         return region_names
     
     def get_podcastsInEachCategory(self, category_name):
-        """ retrive all the podcasts in each category """
+        """Retrieve all the podcasts in each category"""
 
-        # get the id associated with the category_name
+        # Get the id associated with the category_name
         categories = self.get_category()
         if categories:
             for key, value in categories.items():
@@ -119,55 +135,101 @@ class PodcastMethods():
         else:
             return None
 
-        # use the category_name id to get the podcast grouped under it
+        # Use the category_name id to get the podcast grouped under it
         podcasts = self.get_podcast_info()
         podcasts_in_category = {}
         for key, values in podcasts.items():
             if values["category_id"] == category_id:
                 podcasts_in_category[key] = {
                     "name": values["name"],
-                    "description": values["description"] 
+                    "description": values["description"],
+                    "image_id": values["image_id"]
                }
         return podcasts_in_category
 
     def get_podcastsInEachRegion(self, region_name):
-        """ retrieve all podcast in a region """
-        # get the id associated with the region_name
+        """Retrieve all podcast in a region"""
+        # Get the id associated with the region_name
         regions = self.get_region()
         for key, values in regions.items():
              if region_name == values["name"]:
                 region_id = key
                 break
         
-        # use the region id to get the podcast name and description
+        # Use the region id to get the podcast name and description
         podcasts = self.get_podcast_info()
         podcasts_in_region = {}
         for key, values in podcasts.items():
             if values["region_id"] == region_id:
                 podcasts_in_region[key] = {
                     "name": values["name"],
-                    "description": values["description"]
+                    "description": values["description"],
+                    "image_id": values["image_id"]
                 }
         return podcasts_in_region
     
     def get_podcastsInEachCountry(self, country_name):
-        """ retrieve all podcast in a region """
+        """Retrieve all podcast in a region"""
         country = self.get_country()
         for key, values in country.items():
             if country_name == values["name"]:
                 country_id = key
                 break
         if country_id == None:
-            print("country id not found")
+            print("Country id not found")
             return None
         
-        # use the country id to get the podcast name and description
+        # Use the country id to get the podcast name and description
         podcasts = self.get_podcast_info()
         podcasts_in_country = {}
         for key, values in podcasts.items():
             if values["country_id"] == country_id:
                 podcasts_in_country[key] = {
                     "name": values["name"],
-                    "description": values["description"]
+                    "description": values["description"],
+                    "image_id": values["image_id"]
                 }
         return podcasts_in_country
+
+    def get_imageFile_name(self, directory):
+        """
+        Retrieve the names of image files (ending with .jpg, .jpeg, .png) in the specified directory.
+
+        Args:
+        - directory: The path to the directory containing image files.
+
+        Returns:
+        - A list containing the names of image files.
+        """
+        # Initialize an empty list to store file names
+        image_file_names = []
+        # Check if the directory exists
+        if os.path.exists(directory) and os.path.isdir(directory):
+            # Iterate over all files in the directory
+            for filename in os.listdir(directory):
+                # Check if the file ends with .jpg, .jpeg, or .png
+                if filename.lower().endswith(('.jpg', '.jpeg', '.png')):
+                    # Append the file name to the list
+                    image_file_names.append(filename)
+        else:
+            print(f"Directory '{directory}' does not exist or is not a valid directory.")
+
+        return image_file_names
+
+
+    
+    def get_linkFromFile(self, category_info, file_names, image_dir):
+        """get the link"""
+        podcast_box = {}
+        for key, values in category_info.items():
+            for names in file_names:
+                if names[0].isdigit():
+                    podcast_digit = int(names[0])
+                    if values["image_id"] == podcast_digit:
+                        image_path = image_dir + "/" + names
+                        podcast_box[image_path] = {
+                            "podcast_name": values["name"]
+                        }
+                    else:
+                        continue
+        return podcast_box

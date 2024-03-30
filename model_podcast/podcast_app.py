@@ -14,13 +14,16 @@ def sort_category():
     """ 
 
     # retrive the request
-    category = request.args.get("category")
+    group_names = request.args.get("category")
     table_names = request.args.get("table_names")
-    category_name = podcast_method.get_podcastsInEachCategory(category_name)
-   
+    category_info = podcast_method.get_podcastsInEachCategory(group_names)
+    image_dir = "/static/pics/"
+    file_names = podcast_method.get_imageFile_name(image_dir)
+    podcast_info =  podcast_method.get_linkFromFile(category_info, file_names, image_dir)
     
     # Render the template and pass the category and table names as context variables
-    return render_template("new.html", category_name=category_name, table_names=table_names)
+    return render_template("new.html", group_names=group_names,
+                           podcast_info=podcast_info)
 
 
 @app.route("/sort_region", methods=["GET", "POST"], strict_slashes=False)
@@ -28,10 +31,13 @@ def sort_region():
     """ retrieve the region name and get all podcasts belonging
         to that group
     """
-    region_name = request.args.get("region")
+    group_names = request.args.get("region")
     table_names = request.args.get("table_names")
-    category_name = podcast_method.get_podcastsInEachRegion(region_name)
-    return render_template("new.html", category_name=category_name, table_names=table_names)
+    category_names = podcast_method.get_podcastsInEachRegion(group_names)
+    return render_template("new.html",
+                           group_names=group_names,
+                           category_names=category_names,
+                           table_names=table_names)
 
 
 @app.route("/sort_country", methods=["GET", "POST"], strict_slashes=False)
@@ -41,12 +47,15 @@ def sort_country():
     """
 
     # retrive the request
-    country_name = request.args.get("country")
+    group_names = request.args.get("country")
     table_names = request.args.get("table_names")
-    category_name = get_podcastsInEachCountry(country_name)
+    category_names = get_podcastsInEachCountry(group_name)
 
     # Render the template and pass the category and table names as context variables
-    return render_template("new.html", category_name=category_name, table_names=table_names)
+    return render_template("new.html",
+                           group_names=group_names,
+                           category_names=category_names,
+                           table_names=table_names)
 
 
 @app.route("/", methods=["GET", "POST"], strict_slashes=False)
@@ -64,4 +73,3 @@ def podcast():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
-

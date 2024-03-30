@@ -6,7 +6,7 @@
     <title>Music Streaming Service</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/clone.css') }}"/>
 </head>
-<body style="margin:0; padding:0; background:#121212; font-family:Arial, sans-serif; color:#fff;">
+<body style="margin: auto; padding: 0; background:#121212; font-family:Arial, sans-serif; color:#fff; box-sizing: border-box; min-height: 100vh; max-width: 500px;">
     <script>
         // Handle navbar hide/show on scroll
         var pos1 = window.pageYOffset;
@@ -36,12 +36,12 @@
             {% if current_user.is_authenticated %}
 					<li class="signs">
 						<a href={{ url_for('logout') }}>Logout</a>
-						<a href="#">Account</a>
-            		</li>
+            <a href={{ url_for('account') }}>Account</a>
+          </li>
 					{% elif session %}
 						<li class="signs">
-							<a href={{ url_for('logout_google') }}>Logout</a>
-							<a href="#">Account</a>
+							<a href={{ url_for('logout') }}>Logout</a>
+							<a href={{ url_for('account') }}>Account</a>
 						</li>
 				{% else %}
 					<li class="signs">

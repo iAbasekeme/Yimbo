@@ -99,7 +99,7 @@ margin: 0;
 	padding: 8px;
 	box-shadow: 0 4px 8px rgba(80, 45, 71, 0.5);
 	text-align: center;
-	position: relative;
+    /* position: relative; */
 	overflow: hidden;
 	margin: auto;
 	display: inline-block;
@@ -138,7 +138,7 @@ margin: 0;
     text-align: center;
     box-shadow: 0 0 8px rgba(0,0,0,0.5);
     height: 190px;
-    width: 190px;
+    /* width: 190px; reduce the width */
 	margin: auto
 /*	
 	margin-left: -20px;
@@ -173,7 +173,7 @@ margin: 0;
 /* contact section */
 #contact {
 background-color: #303841;
-width: 100%;
+/* width: 100%; remove this width*/
 height: 80vh;
 padding: 1rem 2rem;
 display: flex;

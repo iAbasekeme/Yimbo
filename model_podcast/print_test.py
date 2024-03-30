@@ -27,7 +27,8 @@ if __name__ == "__main__":
     print()
     # Retrieve podcasts in each category
     category_name = "News & Politics"
-    print("podcast in each News & politics:", podcast_methods.get_podcastsInEachCategory(category_name))
+    category_info = podcast_methods.get_podcastsInEachCategory(category_name)
+    print("podcast in each News & politics:", category_info)
     
     print()
     region_name = "Ethiopia"
@@ -36,4 +37,11 @@ if __name__ == "__main__":
     print()
     country_name = "East Africa"
     print("podcasts in East Africa:", podcast_methods.get_podcastsInEachRegion(country_name))
+   
+    list_image_names = []
+    list_image_names = podcast_methods.get_imageFile_name("/home/pc/Yimbo/model_podcast/static/pics")
+    print("Names of images in /stactic/pic/ :", list_image_names)
 
+    podcast = {}
+    podcast_info = podcast_methods.get_linkFromFile(category_info, list_image_names, "/home/pc/Yimbo/model_podcast/static/pics")
+    print(podcast_info)
