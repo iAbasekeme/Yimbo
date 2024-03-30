@@ -31,15 +31,17 @@ def get_track():
     else:
         print(f"Error: {response.status_code}")
         return None
-    try:
-        # artist_country = artist_info['message']['body']['artist_country']
-        artist_country = artist_info.get('message', {}).get(
-            'body', {}).get('artist_country')
-        if artist_country and artist_country not in ACCEPTED_CODES.split(","):
-            print('Artist not from africa')
-        else:
-            print(artist_info)
-    except (KeyError, AttributeError):
-        print("Error retrieving artist information or country data. Check API respons structure.")
+    if artist_info:
+        try:
+            # artist_country = artist_info['message']['body']['artist_country']
+            artist_country = artist_info.get('message', {}).get(
+                'body', {}).get('artist_country')
+            if artist_country and artist_country not in ACCEPTED_CODES:
+                print('Artist not from africa')
+            else:
+                print(artist_info)
+        except (KeyError, AttributeError):
+            print(
+                "Error retrieving artist information or country data. Check API respons structure.")
 
 get_track()
