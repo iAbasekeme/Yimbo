@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from flask import render_template, url_for, flash, redirect, session, request
 from yimbo_appli import app, db, bcrypt, mail
-from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
+from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm, UpdateAccountForm
 from yimbo_appli.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -11,6 +11,10 @@ from yimbo_appli.podcast_model import get_db
 from sqlalchemy import inspect
 from werkzeug.security import generate_password_hash
 
+# to create a random secret token
+import secrets
+# To resize image
+from PIL import Image
 # import json
 # import requests
 
@@ -161,13 +165,46 @@ def logout():
         session.pop('user', None)
     return redirect(url_for('home_page'))
 
+
+def save_picture(form_picture):
+    """
+    method to save the picture
+    """
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    
+    #resize = (250, 250)
+    #i = Image.open(form_picture)
+    #i.thumbnail(resize)
+    #i.save(picture_path)
+    form_picture.save(picture_path)
+    return picture_fn
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
     """
     method to edit the user profile
     """
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        if form.password.data and form.confirm_password.data:
+            if form.password.data == form.confirm_password.data:
+                current_user.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') 
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('edit'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     user = User.query.filter_by(email=current_user.email).first()
-    return render_template('edit.html',  user=user)
+    return render_template('edit.html', user=user ,image_file=image_file, form=form)
 
 def send_mail(user):
     """
