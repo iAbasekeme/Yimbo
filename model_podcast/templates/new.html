@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>podcast</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/search.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/category_search.css') }}"/>
 
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
   <style>
@@ -24,7 +24,7 @@
   <div class="sidebar">
     <!-- yimbo Logo -->
     <div class="logo-container">
-        <img src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
+        <img src="{{ url_for('static', filename='r_pics/Yimbo-logo.jpg') }}" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
     </div>
 
     <!-- Top section of the sidebar -->
@@ -71,16 +71,26 @@
     
     <!-- Popular Tracks Section -->
     <h2 class="text-2xl font-bold mb-4">Podcast</h2>
-
     <h3>{{ group_names }}</h3>
-    <section id="trending" class="display_content">
-        {% for key, podcast in podcast_info.items() %}
-            <div class="category-card">
-                <img src="{{ url_for('static', filename='pics/' + key) }}" alt="Podcasts">
-                <div class="category-title">{{ podcast['podcast_name'] }}</div>
-            </div>
-        {% endfor %}
-    </section>
+    {% if request.endpoint == 'sort_RadioByCountry' or request.endpoint == 'sort_radioByRegion' %}
+        <section id="trending" class="display_content">
+            {% for key, radio in radio_info.items() %}
+                <div class="category-card">
+                    <img src="{{ url_for('static', filename='r_pics/' + key) }}" alt="Podcasts">
+                    <div class="category-title">{{ radio['item_name'] }}</div>
+                </div>
+            {% endfor %}
+        </section>
+    {% else %}
+        <section id="trending" class="display_content">
+            {% for key, podcast in podcast_info.items() %}
+                <div class="category-card">
+                    <img src="{{ url_for('static', filename='pics/' + key) }}" alt="Podcasts">
+                    <div class="category-title">{{ podcast['item_name'] }}</div>
+                </div>
+            {% endfor %}
+        </section>
+    {% endif %}
 </div>
 
 </body>

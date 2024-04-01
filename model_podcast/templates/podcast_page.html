@@ -58,7 +58,7 @@
         <a href="#" class="sidebar-link active">
             Podcast
         </a>
-        <a href="#" class="sidebar-link">
+        <a href="{{ url_for('user_radio') }}" class="sidebar-link">
             radio
         </a>
 		 <a href="#" class="sidebar-link">
@@ -101,7 +101,11 @@
     </header>
     
 		<!-- Popular Tracks Section -->
-	<h2 class="text-2xl font-bold mb-4">Podcast</h2>
+  {% if request.endpoint == 'user_radio' %}
+    <h2 class="text-2xl font-bold mb-4">Radio</h2>
+  {% else %}
+	  <h2 class="text-2xl font-bold mb-4">Podcast</h2>
+  {% endif %}
 
 	<h3> Recent </>
     <section id="trending" class="display_content">
@@ -131,9 +135,9 @@
             </div>
     </section>
 
-
+	{% if category_names %}
 	<section class="display_content">
-		<h3><b>{{ table_names[1] }}</h3>
+		<h3><b>{{ table_names[0] }}</h3>
 		<nav class="category">
 			<ul>
 				{% for category in category_names %}
@@ -144,29 +148,42 @@
 			</ul>
 		</nav>
 	</section>
+	{% endif %}
 
 	 <section class="display_content">
-        <h3><b>{{ table_names[0] }}</h3>
+        <h3><b>{{ table_names[4] }}</h3>
         <nav class="category">
             <ul>
-                {% for region in region_names %}
-                    <li>
-                        <a href="{{ url_for('sort_region', region=region, table_names=table_names[0]) }}">{{ region }}</a>
-                    </li>
-				{% endfor %}
+              {% for region in region_names %}
+                {% if request.endpoint == 'user_radio' %}
+                  <li>
+                    <a href="{{ url_for('sort_radioByRegion', region=region, table_names=table_names[4]) }}">{{ region }}</a>
+                  </li>
+                {% else %}
+                  <li>    
+                    <a href="{{ url_for('sort_region', region=region, table_names=table_names[0]) }}">{{ region }}</a>
+                  </li>
+                {% endif %}
+				      {% endfor %}
             </ul>
         </nav>
     </section>
 	
 	 <section class="display_content">
-        <h3><b>{{ table_names[2] }}</h3>
+        <h3><b>{{ table_names[1] }}</h3>
         <nav class="category">
             <ul>
                 {% for country in country_names %}
+                  {% if request.endpoint == 'user_radio' %}
                     <li>
-                        <a href="{{ url_for('sort_country', country=country, table_names=table_names[2]) }}">{{ country }}</a>
+                      <a href="{{ url_for('sort_RadioByCountry', country=country, table_names=table_names[1]) }}">{{ country }}</a>
                     </li>
-				{% endfor %}
+                  {% else %}
+                    <li>
+                        <a href="{{ url_for('sort_country', country=country, table_names=table_names[1]) }}">{{ country }}</a>
+                    </li>
+                  {% endif %}
+				        {% endfor %}
             </ul>
         </nav>
     </section>
