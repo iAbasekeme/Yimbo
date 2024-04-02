@@ -235,9 +235,3 @@ class PodcastMethods():
                 except Exception as e:
                     print(f"Error processing filename {name}: {e}")
         return podcast_box
-    
-    def displayPodcastLandingpage(self):
-        """display podcast for the landing page"""
-        podcast_info = self.get_podcast_info()
-            for key, value in podcast_info.items():
-            
