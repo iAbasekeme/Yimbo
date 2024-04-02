@@ -99,3 +99,14 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError("That email is taken. Please choose a different one.")
+            
+class HandleMusic(FlaskForm):
+    """
+    class for handle music
+    """
+    title = StringField('Title', validators=[DataRequired()])
+    date = StringField('Date', validators=[DataRequired()])
+    artist = StringField('Artist', validators=[DataRequired()])
+    duration = StringField('Duration', validators=[DataRequired()])
+    music = FileField('Upload Music', validators=[FileAllowed(['mp3'])])
+    submit = SubmitField('Add')
