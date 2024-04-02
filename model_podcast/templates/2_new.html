@@ -8,26 +8,14 @@
 
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
   <style>
+
     .artist-header {
       background-image: url('https://cdn.punchng.com/wp-content/uploads/2023/05/20120536/Rema.jpeg');
       background-size: cover;
       background-position: center;
       height: 60vh;
     }
-    
-    /* Play icon */
-    .play-icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      visibility: hidden; /* Initially hidden */
-      cursor: pointer; /* Change cursor on hover */
-    }
-    
-    .category-card:hover .play-icon {
-      visibility: visible; /* Show on hover */
-    }
+
   </style>
 </head>
 <body class="bg-black text-white flex">
@@ -90,7 +78,6 @@
                 <div class="category-card">
                     <img src="{{ url_for('static', filename='r_pics/' + key) }}" alt="Podcasts">
                     <div class="category-title">{{ radio['item_name'] }}</div>
-                    <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
                 </div>
             {% endfor %}
         </section>
@@ -100,7 +87,6 @@
                 <div class="category-card">
                     <img src="{{ url_for('static', filename='pics/' + key) }}" alt="Podcasts">
                     <div class="category-title">{{ podcast['item_name'] }}</div>
-                    <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
                 </div>
             {% endfor %}
         </section>
