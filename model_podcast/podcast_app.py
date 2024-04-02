@@ -1,53 +1,158 @@
 #!/usr/bin/python3
-""" podcast flask app"""
 
-from flask import Flask, render_template, request, url_for
-from model import Category, Region, Country, Podcast
-from podcast_model import get_db
-from sqlalchemy import inspect
+from flask import Flask, render_template, request, jsonify
+from podcast_model.podcast_methods import PodcastMethods
+from radio_model.radio_methods import RadioMethods
 
 app = Flask(__name__)
+podcast_method = PodcastMethods()
+radio_method = RadioMethods()
 
-def category_name():
-    """retrieve the category name"""
-    with get_db() as db:
-        # query the db and get all the values from the name column
-        category_names = db.query(Category.name).all()
-        return category_names
 
-def region_name():
-    """retrieve the region name"""
-    with get_db() as db:
-        # query the region table and get all the values of the name column
-        region_names = db.query(Region.name).all()
-        return region_names
+@app.route("/sort_category", methods=["GET", "POST"], strict_slashes=False)
+def sort_category():
+    """ retrieve the category name and get all podcasts belonging
+        to that group
+    """ 
 
-def country_name():
-    """retrieve the country name"""
-    with get_db() as db:
-        country_names = db.query(Country.name).all()
-        if not country_names:
-            return None  # Or raise a specific exception like NotFound
-        else:
-            return country_names
- 
-def get_table_name():
-    """retrieve the table name of the database"""
-    with get_db() as db:
-        table_names = inspect(db.get_bind()).get_table_names()
-    return table_names
+    # retrive the request
+    group_names = request.args.get("category")
+    table_names = request.args.get("table_names")
+    category_info = podcast_method.get_podcastsInEachCategory(group_names)
+    pic_names = podcast_method.get_imageFile_name("/home/pc/Yimbo/model_podcast/static/pics")
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+    
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html", group_names=group_names,
+                           podcast_info=podcast_info)
+
+
+@app.route("/sort_region", methods=["GET", "POST"], strict_slashes=False)
+def sort_region():
+    """ retrieve the region name and get all podcasts belonging
+        to that group
+    """
+    group_names = request.args.get("region")
+    table_names = request.args.get("table_names")
+    category_info = podcast_method.get_podcastsInEachRegion(group_names)
+    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    return render_template("new.html",
+                           group_names=group_names,
+                           podcast_info=podcast_info)
+
+
+@app.route("/sort_country", methods=["GET", "POST"], strict_slashes=False)
+def sort_country():
+    """ retrieve the country name and get all podcasts belonging
+        to that group
+    """
+
+    # retrive the request
+    group_names = request.args.get("country")
+    table_names = request.args.get("table_names")
+    category_info = podcast_method.get_podcastsInEachCountry(group_names)
+    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html",
+                           group_names=group_names,
+                           podcast_info=podcast_info,
+                           )
+
 
 @app.route("/", methods=["GET", "POST"], strict_slashes=False)
 def podcast():
-    category_names = category_name()
+    category_names = podcast_method.category_names()
+    table_names = podcast_method.get_table_name()
+    country_names = podcast_method.country_names()
+    region_names = podcast_method.region_names()
 
-    table_names = get_table_name()
-    country_names = country_name()
-    region_names = region_name()
+    return render_template("podcast_page.html",  
+                           category_names=category_names,
+                           table_names=table_names,
+                           country_names=country_names,
+                           region_names=region_names)
 
-    return render_template("podcast_page.html",  category_name=category_names,
-                           table_name=table_names, country_name=country_names,
-                           region_name=region_names)
+
+@app.route("/user_radio", methods=["GET", "POST"], strict_slashes=False)
+def user_radio():
+    """This method defins the route to handle all radio streamings"""
+    table_names = podcast_method.get_table_name()
+    country_names = podcast_method.country_names()
+    region_names = podcast_method.region_names()
+    return render_template("podcast_page.html",
+                               table_names=table_names,
+                               country_names=country_names,
+                               region_names=region_names)
+
+
+@app.route("/sort_radioByRegion", methods=["GET", "POST"], strict_slashes=False)
+def sort_radioByRegion():
+    """ retrieve the region name and get all podcasts belonging
+        to that group
+    """
+    group_names = request.args.get("region")
+    table_names = request.args.get("table_names")
+    category_info = radio_method.get_radioInEachRegion(group_names)
+    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    return render_template("new.html",
+                           group_names=group_names,
+                           radio_info=radio_info)
+
+
+@app.route("/sort_RadioByCountry", methods=["GET", "POST"], strict_slashes=False)
+def sort_RadioByCountry():
+    """ retrieve the country name and get all podcasts belonging
+        to that group
+    """
+    # retrive the request
+    group_names = request.args.get("country")
+    table_names = request.args.get("table_names")
+    category_info = radio_method.get_radioInEachCountry(group_names)
+    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html",
+                           group_names=group_names,
+                           radio_info=radio_info,
+                           )
+
+
+@app.route("/home", methods=["GET", "POST"], strict_slashes=False)
+def home():
+    """This method defins the route to handle all radio streamings"""
+    pod_country_names = podcast_method.get_podcastsInEachRegion("North Africa")
+    pod_region_names = podcast_method.get_podcastsInEachCountry("South Africa")
+    ra_country_names = radio_method.get_radioInEachCountry("Kenya")
+    ra_region_names = radio_method.get_radioInEachRegion("West Africa")
+
+    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+
+    ra_region =  podcast_method.get_linkFromFile(ra_region_names, pic_names)
+    ra_country = podcast_method.get_linkFromFile(ra_country_names, pic_names)
+    pod_region = podcast_method.get_linkFromFile(pod_region_names, pic_names)
+    pod_country = podcast_method.get_linkFromFile(pod_country_names, pic_names)
+    counter = 0
+    sec_counter = 0
+    now_count = 0
+    count = 0
+
+    return render_template("landing_page.html", ra_region=ra_region,
+                           ra_country=ra_country,  pod_region= pod_region,
+                           pod_country=pod_country, now_count=now_count,
+                           count=count, sec_counter=sec_counter, counter=counter)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

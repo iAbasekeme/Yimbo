@@ -2,11 +2,11 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from model import Base
+from .model import Base
 from contextlib import contextmanager
 
 # Create an engine to connect to the database
-engine = create_engine('mysql+mysqldb://root:password@localhost:3306/podcast_database')
+engine = create_engine('mysql+mysqldb://root:password@localhost:3306/podcast_radio_database')
 
 # Create a sessionmaker
 SessionLocal = sessionmaker(bind=engine)

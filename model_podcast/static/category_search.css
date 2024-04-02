@@ -193,11 +193,19 @@ h2 {
   background-color: #e8effa;
 }
 
-.display_content {
+/* .display_content {
   display: grid;
-  /*  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define grid columns */
+  /*grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define grid columns */
   gap: 10px;
   /* Gap between grid items */
+/*  background-color: #e8effa;
+  padding: 1rem 1rem;
+  margin: 0;
+	}
+*/
+.display_content {
+  column-count: auto; /* Automatically determine the number of columns based on available width */
+  column-gap: 10px; /* Gap between columns */
   background-color: #e8effa;
   padding: 1rem 1rem;
   margin: 0;
@@ -211,7 +219,7 @@ h2 {
 .category {
   display: flex;
   justify-content: flex-start;
-  font: bold 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: bold 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: 5px;
   text-transform: uppercase;
 }
@@ -265,7 +273,14 @@ h2 {
   flex-direction: row;
 }
 
-category-card {
+h3 {
+font-size: 12px;
+color: black;
+text-transform: uppercase;
+}
+
+
+/*.category-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -280,18 +295,57 @@ category-card {
   width: 190px;
   margin: auto
 }
-
-.category-card img {
-  width: 100%;
-  height: auto;
-  margin-top: 12px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-}
-
-.category-title {
+*/
+/* .category-card img {
+   width: 100%;
+   height: auto;
+   margin-top: 12px;
+   margin-bottom: 10px;
+   border-radius: 4px;
+  }
+*/
+/*
+  .category-title {
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 12px;
   color: #000;
+}
+*/
+.display_content {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next row */
+  gap: 10px; /* Gap between grid items */
+  background-color: #e8effa;
+  padding: 1rem 1rem;
+  margin: 0;
+}
+
+.category-card {
+  flex: 1 0 calc(25% - 10px); /* Set initial width of each item to 25% minus the gap */
+  max-width: calc(25% - 10px); /* Limit maximum width of each item to 25% minus the gap */
+  /* You can adjust the flex and max-width values based on your desired layout */
+  margin-bottom: 10px; /* Add margin at the bottom of each item */
+  position: relative; /* Add position relative */
+}
+
+.category-card img {
+  width: 100%; /* Set image width to 100% of its parent container */
+  height: 100%; /* Set image height to 100% of its parent container */
+  object-fit: cover; /* Ensure the image covers the entire container */
+  object-position: center; /* Center the image within the container */
+}
+
+/* Adjust styling for title as needed */
+.category-title {
+  margin-top: 10px;
+  font-weight: bold;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background */
+  color: white; /* Set text color to white */
+  padding: 5px;
+  box-sizing: border-box;
 }
