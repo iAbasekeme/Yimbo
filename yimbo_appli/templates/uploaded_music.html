@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+</head>
+<body>
+    <h1>Music Player</h1>
+    {% for music in musics %}
+    <div>
+        <h2>{{ music.title }}</h2>
+        <audio controls>
+            <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mpeg">
+            <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mp4">
+            <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+        <p>{{ music.duration }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>

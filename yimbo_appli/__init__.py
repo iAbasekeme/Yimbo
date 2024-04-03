@@ -3,14 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_migrate import Migrate
 
 import os
 from dotenv import load_dotenv
 
 # load the .env file that content secret information
 load_dotenv()
-
+UPLOAD_FOLDER = 'yimbo_appli/static/music'
+ALLOWED_EXTENSIONS = {'mp3','mp4' ,'wav', 'jpg', 'png'}
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['SECRET_KEY'] = '80ab528d4604e4d073b613216f6a0822'
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///yimbo.db'
@@ -19,6 +22,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///yimbo.db'
 #app.register_blueprint(yb)
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
 # Login requierment

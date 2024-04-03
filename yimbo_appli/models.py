@@ -39,3 +39,16 @@ class User(db.Model, UserMixin):
     
     def __repr__(self):
         return f"User('{self.username}',' {self.email}')"
+
+class Music(db.Model):
+    __tablename__ = 'music'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    artist = db.Column(db.String(100), nullable=False)
+    duration = db.Column(db.String(20), nullable=False)
+    picture = db.Column(db.String(100), nullable=False, default='default.jpg')
+    music_file = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f"Music(title='{self.title}', artist='{self.artist}', duration='{self.duration}')"
