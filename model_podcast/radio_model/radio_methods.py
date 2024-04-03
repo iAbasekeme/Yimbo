@@ -56,6 +56,7 @@ class RadioMethods():
     def get_radioInEachRegion(self, region_name):
         """ Retrieve all radio stations in the region """
         region = podcast_cls.get_region()
+        region_id = None
         for key, value in region.items():
             if region_name == value["name"]:
                 region_id = key
@@ -65,7 +66,7 @@ class RadioMethods():
         radio_data = self.get_radioInfo()
         radio_in_region = {}
         for key, value in radio_data.items():
-            if region_id == value["region_id"]:
+            if value["region_id"] == region_id:
                 radio_in_region[key] = {
                     "name": value["name"],
                     "description": value["description"],
@@ -76,6 +77,7 @@ class RadioMethods():
     def get_radioInEachCountry(self, country_name):
         """Retrive all the radio channels in the country"""
         country = podcast_cls.get_country()
+        country_id = None
         for key, value in country.items():
             if country_name == value["name"]:
                 country_id = key
@@ -96,3 +98,47 @@ class RadioMethods():
                     "image_id": value["image_id"]
                 }
         return radio_in_country
+
+
+    def display_sixradio(self, region, country):
+        """display six radio channel 3 from country &"""
+        ra_country_names = self.get_radioInEachCountry(country)
+        ra_region_names = self.get_radioInEachRegion(region)
+
+        image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+        pic_names = podcast_cls.get_imageFile_name(image_dir)
+
+        ra_region = podcast_cls.get_linkFromFile(ra_region_names, pic_names)
+        ra_country = podcast_cls.get_linkFromFile(ra_country_names, pic_names)
+
+        count = 1
+
+        # all radio and podcast items should be stored 3 each in a dictionary and
+        # displayed in groups of six
+        
+        radio_channel = {}
+        print(ra_region)
+        for key, values in ra_region.items():
+            if count > 3:
+                break
+            else:
+                radio_channel[count] = {
+                    "image_path": key,
+                    "name": values["item_name"]
+                }
+            count += 1
+        print(radio_channel)
+        print()
+
+        count = 1
+        for keys, values in ra_country.items():
+            if count > 6:
+                break
+            else:
+                radio_channel[count + 3] = {
+                    "image_path": keys,
+                    "name": values["item_name"]
+                }
+            count += 1
+        
+        return radio_channel

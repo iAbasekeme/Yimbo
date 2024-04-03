@@ -130,28 +130,15 @@ def sort_RadioByCountry():
 
 @app.route("/home", methods=["GET", "POST"], strict_slashes=False)
 def home():
-    """This method defins the route to handle all radio streamings"""
-    pod_country_names = podcast_method.get_podcastsInEachRegion("North Africa")
-    pod_region_names = podcast_method.get_podcastsInEachCountry("South Africa")
-    ra_country_names = radio_method.get_radioInEachCountry("Kenya")
-    ra_region_names = radio_method.get_radioInEachRegion("West Africa")
+    """This method defins the route to handle all radio/podcast streamings"""
+    pod_country = "South Africa"
+    pod_Region = "East Africa"
+    podcast_dic = podcast_method.display_sixpodcast(region, country)
+    radio_dic = radio_method.display_sixradio(region, country)
 
-    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
-    pic_names = podcast_method.get_imageFile_name(image_dir)
-
-    ra_region =  podcast_method.get_linkFromFile(ra_region_names, pic_names)
-    ra_country = podcast_method.get_linkFromFile(ra_country_names, pic_names)
-    pod_region = podcast_method.get_linkFromFile(pod_region_names, pic_names)
-    pod_country = podcast_method.get_linkFromFile(pod_country_names, pic_names)
-    counter = 0
-    sec_counter = 0
-    now_count = 0
-    count = 0
-
-    return render_template("landing_page.html", ra_region=ra_region,
-                           ra_country=ra_country,  pod_region= pod_region,
-                           pod_country=pod_country, now_count=now_count,
-                           count=count, sec_counter=sec_counter, counter=counter)
+    return render_template("landing_page.html", radio_dic,
+                           podcast_dic=podcast_dic,
+                           )
 
 
 if __name__ == "__main__":

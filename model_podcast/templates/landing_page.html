@@ -106,7 +106,8 @@
             	{% if count == 3 %}
                 	{% for pic, val in pod_country.items() %}
                     	<div class="category-card">
-                        	<img src="{{ url_for('static', filename='pics/' + pic) }}" alt="Podcasts">
+                        	<img src="
+							{{ url_for('static', filename='pics/' + pic) }}" alt="Podcasts">
                         	<div class="category-title">{{ val['item_name'] }}</div>
                     	</div>
                     	{{ now_count += 1}}

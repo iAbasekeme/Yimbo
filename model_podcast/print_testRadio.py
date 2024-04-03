@@ -12,6 +12,13 @@ radio_in_region = r_cls.get_radioInEachRegion(region)
 print("Radio cahnnells in {}: {}".format(region, radio_in_region))
 print()
 
-country = "South Africa"
+country = "Nigeria"
 radio_in_country = r_cls.get_radioInEachCountry(country)
 print("radio channels in {}: {}".format(country, radio_in_country))
+
+print()
+country = "Egypt"
+region = "North Africa"
+radio_in_country = r_cls.display_sixradio(country, region)
+print("Six radio channels in {} and {}: {}".format(country, region, radio_in_country))
+
