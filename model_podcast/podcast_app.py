@@ -19,7 +19,7 @@ def sort_category():
     group_names = request.args.get("category")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachCategory(group_names)
-    pic_names = podcast_method.get_imageFile_name("/home/pc/Yimbo/model_podcast/static/pics")
+    pic_names = podcast_method.get_imageFile_name("/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics") # use the full path of the server
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
     
     # Render the template and pass the category and table names as context variables
@@ -35,7 +35,7 @@ def sort_region():
     group_names = request.args.get("region")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachRegion(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -49,12 +49,12 @@ def sort_country():
     """ retrieve the country name and get all podcasts belonging
         to that group
     """
-
+    
     # retrive the request
     group_names = request.args.get("country")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachCountry(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -85,7 +85,7 @@ def sort_radioByRegion():
     group_names = request.args.get("region")
     table_names = request.args.get("table_names")
     category_info = radio_method.get_radioInEachRegion(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -103,7 +103,7 @@ def sort_RadioByCountry():
     group_names = request.args.get("country")
     table_names = request.args.get("table_names")
     category_info = radio_method.get_radioInEachCountry(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 

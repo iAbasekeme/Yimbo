@@ -21,6 +21,28 @@
     <main>
          <!--<section id="display_content" class="display_content">-->
         <section class="music-list">
+            <h2>Top 10 musics</h2>
+            <div class="browse_all">
+                {% for music in our_musics %}
+                <div class="artist-card" style="height: 320px;">
+                        <img src="{{ url_for('static', filename='music/' + music.picture) }}" alt="Music Picture" style="width:150px; height:150px; border-radius:50%;">
+                    <div class="artist-info">
+                        <div class="artist-name">{{ music.artist }}</div>
+                        <h2 class="artist-title">{{ music.title }}</h2>
+                        
+                        <div class="music-player">
+                            <audio controls>
+                                <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mpeg">
+                                <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mp4">
+                                <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                        
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
             <h2>African musics</h2>
             <div class="browse_all">
                 {% for music in musics %}

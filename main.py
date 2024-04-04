@@ -56,6 +56,26 @@ def search_for_artist(token, artist_name):
         return None
 
     return json_result[0]
+def get_categories():
+    """
+    make a GET request to get the categories of music
+    """
+    token = get_token()
+    url = "https://api.spotify.com/v1/browse/categories"
+    headers = get_auth_header(token)
+    response = requests.get(url, headers=headers)
+    json_result = json.loads(response.content)["categories"]["items"]
+    return json_result
+
+def get_category_playlists(token, category_id):
+    """
+    make a GET request to get the playlists in a category
+    """
+    url = f"https://api.spotify.com/v1/browse/categories/{category_id}/playlists"
+    headers = get_auth_header(token)
+    response = requests.get(url, headers=headers)
+    json_result = json.loads(response.content)["playlists"]["items"]
+    return json_result
 
 def get_songs_by_artist(token, artist_id):
     """
@@ -114,3 +134,5 @@ def get_music():
         }
         all_songs.append(my_songs)
     return all_songs
+
+print(get_category_playlists(get_token(), '0JQ5DAqbMKFNQ0fGp4byGU')[0])
