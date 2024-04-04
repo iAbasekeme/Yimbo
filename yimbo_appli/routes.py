@@ -382,4 +382,3 @@ def get_track(artist_id):
         print(artist_info)
     else:
         print("Error:", response.status_code)
-
