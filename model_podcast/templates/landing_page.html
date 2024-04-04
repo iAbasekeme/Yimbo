@@ -99,7 +99,7 @@
         	<!-- display six podcastcast in one line -->
         	{% for key, value in podcast_kenya.items() %}
             	<div class="category-card">
-                	<img src="{{ url_for('static', filename='pics/' + key) }} alt="Podcasts">
+                	<img src="{{ url_for('static', filename='pics/' + key) }} alt='Podcasts'">
                 	<div class="category-title">{{ value['name'] }}</div>
 				</div>
 			{% endfor %}

@@ -13,7 +13,8 @@ if __name__ == "__main__":
     print("podcast in each News & politics:", category_info)
     
     # Retrieve image file names
-    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    # image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics"
     list_image_names = podcast_methods.get_imageFile_name(image_dir)
     print("Names of images in /stactic/pic/ :", list_image_names)
     

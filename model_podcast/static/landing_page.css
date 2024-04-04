@@ -285,6 +285,7 @@ font-size: 1.7rem;
   .display_artist {
     display: grid;
     grid-template-columns: c;
+    display: inline-block;
   }
 
 /*.category > li {
@@ -298,6 +299,7 @@ font-size: 1.7rem;
   background-color: #45567d;
   padding: 8rem 2rem;
   margin: 0;
+
   }
   
 .category a {
@@ -506,3 +508,47 @@ display_content {
     color: #000;
   }
   */
+  .artist-name {
+    color: #b3b3b3;
+    font-size: 1.5em;
+}
+
+.artist-name {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.artist-card {
+	width: 220px;
+	height: 255px;
+	background-color: #eaf3da;
+	border-radius: 10px;
+	padding: 8px;
+	box-shadow: 0 4px 8px rgba(80, 45, 71, 0.5);
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+	margin: auto;
+	display: inline-block;
+}
+
+.artist-card img {
+    margin-top: 10px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+}
+
+.artist-card .artist-name {
+    font-size: 18px;
+    color: black;
+    margin-top: 8px;
+}
+
+.artist-card .artist-title {
+    font-size: 13px;
+    color: black;
+}
