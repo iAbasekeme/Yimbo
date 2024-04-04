@@ -35,7 +35,7 @@ background-color: #45567d
 }
 
 #welcome-section {
-width: 100%;
+width: auto;
 height: 100vh;
 display: flex;
 flex-direction: column;
@@ -127,39 +127,6 @@ font-size: 1.7rem;
     color: black;
   }
   
-  .dropdown-toggle {
-    background: none;
-    /* Remove default button styling */
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-  }
-  
-  .dropdown-toggle i {
-    /* Style your dropdown icon here */
-  }
-  
-  .dropdown-menu {
-    position: absolute;
-    /* Position the dropdown below the button */
-    top: 100%;
-    /* Offset from the button */
-    left: 0;
-    background-color: #fff;
-    list-style: none;
-    padding: 0;
-    display: none;
-    /* Initially hide the dropdown */
-  }
-  
-  .dropdown-menu li {
-    padding: 5px 10px;
-  }
-  
-  .dropdown-menu a {
-    text-decoration: none;
-    color: #000;
-  }
   
   .user-profile:hover .dropdown-menu {
     display: block;
@@ -315,8 +282,79 @@ font-size: 1.7rem;
     background-color: #e8effa;
   }
 
+  .display_artist {
+    display: grid;
+    grid-template-columns: c;
+    display: inline-block;
+  }
 
-.display_content {
+/*.category > li {
+  display: inline-block;
+  }
+*/
+.display_content{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define grid columns */
+  gap: 20px; /* Gap between grid items */
+  background-color: #45567d;
+  padding: 8rem 2rem;
+  margin: 0;
+
+  }
+  
+.category a {
+  background: #e8effa;
+  background: linear-gradient(#e8effa, #e8effa);
+  border-right: 1px solid #e2e7eb;
+  color: black;
+  padding: 12px 20px;
+  text-decoration: none;
+}
+
+.category a:hover {
+  background: #d9dde0;
+  box-shadow: inset 0 0 10px 1px #e2e7eb;
+}
+
+
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    border-radius: 10px;
+    background: #eaf3da;
+    color: white;
+    text-align: center;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    height: 190px;
+    width: 190px;
+    margin: auto
+  }
+  
+  .category-card img {
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  .category-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #000;
+  }
+
+  #trending {
+
+
+  }
+
+/*
+display_content {
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap to the next row */
   gap: 10px; /* Gap between grid items */
@@ -324,30 +362,38 @@ font-size: 1.7rem;
   padding: 1rem 1rem;
   margin: 0;
 }
+*/
 
+/*
 .category-card {
   flex: 1 0 calc(25% - 10px); /* Set initial width of each item to 25% minus the gap */
   max-width: calc(25% - 10px); /* Limit maximum width of each item to 25% minus the gap */
   /* You can adjust the flex and max-width values based on your desired layout */
   margin-bottom: 10px; /* Add margin at the bottom of each item */
 }
+*/
 
 /* Clear the margin for every fourth item to start a new row */
+/*
 .category-card:nth-child(6n) {
   margin-right: 0;
 }
+*/
 
 /* Adjust styling for images and title as needed */
+/*
 .category-card img {
   max-width: 100%;
   height: auto;
 }
+*/
 
+/*
 .category-title {
   margin-top: 10px;
   font-weight: bold;
 }
-
+*/
 
 /*  
   .display_content {
@@ -462,3 +508,47 @@ font-size: 1.7rem;
     color: #000;
   }
   */
+  .artist-name {
+    color: #b3b3b3;
+    font-size: 1.5em;
+}
+
+.artist-name {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.artist-card {
+	width: 220px;
+	height: 255px;
+	background-color: #eaf3da;
+	border-radius: 10px;
+	padding: 8px;
+	box-shadow: 0 4px 8px rgba(80, 45, 71, 0.5);
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+	margin: auto;
+	display: inline-block;
+}
+
+.artist-card img {
+    margin-top: 10px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+}
+
+.artist-card .artist-name {
+    font-size: 18px;
+    color: black;
+    margin-top: 8px;
+}
+
+.artist-card .artist-title {
+    font-size: 13px;
+    color: black;
+}

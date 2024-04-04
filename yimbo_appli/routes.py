@@ -228,28 +228,36 @@ def allowed_file(filename):
 @app.route('/handle_music', methods=['GET', 'POST'])
 def handle_music():
     if request.method == 'POST':
-        if 'file' not in request.files:
+        # Check if the POST request has the file part
+        if 'file' not in request.files or 'picture' not in request.files:
             flash('No file part')
             return redirect(request.url)
+
         file = request.files['file']
         picture = request.files['picture']
-        if file.filename == '':
+
+        # If user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '' or picture.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
+
+        # Check if the file is allowed
+        if file and allowed_file(file.filename) and allowed_file(picture.filename):
             music_filename = secure_filename(file.filename)
             picture_filename = secure_filename(picture.filename)
+            
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], music_filename))
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], picture_filename))
-            # add song to database
+            picture.save(os.path.join(app.config['UPLOAD_FOLDER'], picture_filename))
+            
+            # Add song to database
             new_song = Music(title=request.form['title'], artist=request.form['artist'], duration=request.form['duration'], music_file=music_filename, picture=picture_filename)
             db.session.add(new_song)
             db.session.commit()
             flash("File Uploaded Successfully")
-        return render_template('handle_music.html')
-            
-    return render_template('handle_music.html')
+            return redirect('/handle_music')  # Redirect after successful upload
 
+    return render_template('handle_music.html')
 @app.route('/uploaded_music', methods=['GET'])
 def uploaded_music():
     """
@@ -354,8 +362,9 @@ def music():
     """
     route for the music page
     """
+    our_musics = Music.query.all()
     musics = get_music()
-    return render_template('music.html', musics=musics)
+    return render_template('music.html', musics=musics, our_musics=our_musics)
 
 @app.route('/account/music')
 @login_required

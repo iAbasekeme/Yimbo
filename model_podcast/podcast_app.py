@@ -19,7 +19,7 @@ def sort_category():
     group_names = request.args.get("category")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachCategory(group_names)
-    pic_names = podcast_method.get_imageFile_name("/home/pc/Yimbo/model_podcast/static/pics")
+    pic_names = podcast_method.get_imageFile_name("/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics") # use the full path of the server
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
     
     # Render the template and pass the category and table names as context variables
@@ -35,7 +35,7 @@ def sort_region():
     group_names = request.args.get("region")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachRegion(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -49,12 +49,12 @@ def sort_country():
     """ retrieve the country name and get all podcasts belonging
         to that group
     """
-
+    
     # retrive the request
     group_names = request.args.get("country")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachCountry(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -63,20 +63,6 @@ def sort_country():
                            group_names=group_names,
                            podcast_info=podcast_info,
                            )
-
-
-@app.route("/", methods=["GET", "POST"], strict_slashes=False)
-def podcast():
-    category_names = podcast_method.category_names()
-    table_names = podcast_method.get_table_name()
-    country_names = podcast_method.country_names()
-    region_names = podcast_method.region_names()
-
-    return render_template("podcast_page.html",  
-                           category_names=category_names,
-                           table_names=table_names,
-                           country_names=country_names,
-                           region_names=region_names)
 
 
 @app.route("/user_radio", methods=["GET", "POST"], strict_slashes=False)
@@ -99,7 +85,7 @@ def sort_radioByRegion():
     group_names = request.args.get("region")
     table_names = request.args.get("table_names")
     category_info = radio_method.get_radioInEachRegion(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -117,7 +103,7 @@ def sort_RadioByCountry():
     group_names = request.args.get("country")
     table_names = request.args.get("table_names")
     category_info = radio_method.get_radioInEachCountry(group_names)
-    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -131,28 +117,26 @@ def sort_RadioByCountry():
 @app.route("/home", methods=["GET", "POST"], strict_slashes=False)
 def home():
     """This method defins the route to handle all radio streamings"""
-    pod_country_names = podcast_method.get_podcastsInEachRegion("North Africa")
-    pod_region_names = podcast_method.get_podcastsInEachCountry("South Africa")
-    ra_country_names = radio_method.get_radioInEachCountry("Kenya")
-    ra_region_names = radio_method.get_radioInEachRegion("West Africa")
+    radio_country= "South Africa"
+    podcast_country = "Kenya"
+    podcast_kenya = podcast_method.display_sixpodcast(podcast_country)
+    radio_sa = radio_method.display_sixradio(radio_country)
+    return render_template("landing_page.html", podcast_kenya=podcast_kenya,
+                           radio_sa=radio_sa)
 
-    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
-    pic_names = podcast_method.get_imageFile_name(image_dir)
 
-    ra_region =  podcast_method.get_linkFromFile(ra_region_names, pic_names)
-    ra_country = podcast_method.get_linkFromFile(ra_country_names, pic_names)
-    pod_region = podcast_method.get_linkFromFile(pod_region_names, pic_names)
-    pod_country = podcast_method.get_linkFromFile(pod_country_names, pic_names)
-    counter = 0
-    sec_counter = 0
-    now_count = 0
-    count = 0
+@app.route("/", methods=["GET", "POST"], strict_slashes=False)
+def podcast():
+    category_names = podcast_method.category_names()
+    table_names = podcast_method.get_table_name()
+    country_names = podcast_method.country_names()
+    region_names = podcast_method.region_names()
 
-    return render_template("landing_page.html", ra_region=ra_region,
-                           ra_country=ra_country,  pod_region= pod_region,
-                           pod_country=pod_country, now_count=now_count,
-                           count=count, sec_counter=sec_counter, counter=counter)
-
+    return render_template("podcast_page.html",
+                           category_names=category_names,
+                           table_names=table_names,
+                           country_names=country_names,
+                           region_names=region_names)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
