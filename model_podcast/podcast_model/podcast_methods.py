@@ -238,51 +238,62 @@ class PodcastMethods():
         return podcast_box
 
 
-    def display_sixpodcast(self, region, country):
+    def display_sixpodcast(self, country):
         """display podacst and radio in the landing page"""
-        pod_region_names = self.get_podcastsInEachRegion(region)
+        # pod_region_names = self.get_podcastsInEachRegion(region)
         pod_country_names = self.get_podcastsInEachCountry(country)
-
-        if pod_region_names is None:
-            print(f"No podcasts found in region '{region}'")
-            pod_region = {}
-        else:
-            image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
-            pic_names = self.get_imageFile_name(image_dir)
-
-            pod_region = self.get_linkFromFile(pod_region_names, pic_names)
 
         if pod_country_names is None:
             print(f"No podcasts found in country '{country}'")
-            pod_country = {}
+            return {}
         else:
             image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
             pic_names = self.get_imageFile_name(image_dir)
 
             pod_country = self.get_linkFromFile(pod_country_names, pic_names)
+            
+            Podcast_channel = {}
+            count = 1
+            for keys, values in pod_country.items():
+                if count > 6:
+                    break
+                else:
+                    Podcast_channel[keys] = {
+                        "name": values["item_name"]
+                    }
+                count += 1
+            
+            return Podcast_channel
+
+        # if pod_country_names is None:
+        #    print(f"No podcasts found in region '{region}'")
+        #    pod_region = {}
+        # else:
+        #    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+        #    pic_names = self.get_imageFile_name(image_dir)
+
+        #    pod_region = self.get_linkFromFile(pod_region_names, pic_names)
+
+        # if pod_country_names is None:
+        #    print(f"No podcasts found in country '{country}'")
+        #    pod_country = {}
+        # else:
+        #    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+        #    pic_names = self.get_imageFile_name(image_dir)
+
+        #    pod_country = self.get_linkFromFile(pod_country_names, pic_names)
 
         # create dictionary to store 6 podcast channels
-        podcast_channel = {}
-        count = 1
-        for key, values in pod_region.items():
-            if count == 4:
-                break
-            else:
-                podcast_channel[count] = {
-                    "image_path": key,
-                    "name": values["item_name"]
-                }
-            count += 1
+        # podcast_channel = {}
+        # count = 1
+        # for key, values in pod_region.items():
+        #    if count == 4:
+        #        break
+        #    else:
+        #        podcast_channel[count] = {
+        #            "image_path": key,
+        #            "name": values["item_name"]
+        #        }
+        #    count += 1
 
-        count = 4
-        for keys, values in pod_country.items():
-            if count == 7:
-                break
-            else:
-                podcast_channel[count] = {
-                    "image_path": keys,
-                    "name": values["item_name"]
-                }
-            count += 1
         
-        return podcast_channel
