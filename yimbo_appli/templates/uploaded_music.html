@@ -4,19 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        h1 {
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .music-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .music-image {
+            margin-right: 20px;
+        }
+        
+        .music-image img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        
+        .music-player {
+            margin-top: 10px;
+        }
+        
+        .music-duration {
+            color: #666;
+            margin: 0;
+        }
+        
+        .music-title {
+            margin: 0;
+        }
+        
+        .music-artist {
+            margin: 0;
+            color: #666;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        
+    </style>
 </head>
 <body>
     <h1>Music Player</h1>
     {% for music in musics %}
-    <div>
-        <h2>{{ music.title }}</h2>
-        <audio controls>
-            <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mpeg">
-            <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mp4">
-            <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/wav">
-            Your browser does not support the audio element.
-        </audio>
-        <p>{{ music.duration }}</p>
+    <div class="music-card">
+        <div class="music-image">
+            <img src="{{ url_for('static', filename='music/' + music.picture) }}" alt="Music Picture">
+        </div>
+        <div>
+            <h2 class="music-title">{{ music.title }}</h2>
+            <p class="music-artist">{{ music.artist }}</p>
+            <div class="music-player">
+                <audio controls>
+                    <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mpeg">
+                    <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mp4">
+                    <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            
+        </div>
     </div>
     {% endfor %}
 </body>

@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXITS podcast_radio_database;
+CREATE DATABASE IF NOT EXISTS podcast_radio_database;
 
 -- use the database
 USE podcast_radio_database;
 
---create radio table
+-- create radio table
 CREATE TABLE IF NOT EXISTS radio (
 id INT NOT NULL AUTO_INCREMENT,
 name VARCHAR(256) NOT NULL,
@@ -35,7 +35,7 @@ VALUES
 (2, 3, 'FBC', 'Fana Broadcasting Corporation. Offers news, talk shows, and Amharic music.');
 
 
---insert data for NORTH AFRICA
+-- insert data for NORTH AFRICA
 INSERT INTO radio (region_id,  country_id, name, description)
 VALUES
 (3, 4, 'Nile FM', 'Features Arabic hits and Egyptian pop music.'),

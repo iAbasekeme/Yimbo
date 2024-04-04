@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # load the .env file that content secret information
 load_dotenv()
 UPLOAD_FOLDER = 'yimbo_appli/static/music'
-ALLOWED_EXTENSIONS = {'mp3','mp4' ,'wav', 'jpg', 'png'}
+ALLOWED_EXTENSIONS = {'mp3', 'wav', 'mp4', 'png', 'jpg', 'jpeg'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
