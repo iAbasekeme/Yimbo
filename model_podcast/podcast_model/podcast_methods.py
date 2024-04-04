@@ -247,7 +247,8 @@ class PodcastMethods():
             print(f"No podcasts found in country '{country}'")
             return {}
         else:
-            image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+            # image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+            image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics"
             pic_names = self.get_imageFile_name(image_dir)
 
             pod_country = self.get_linkFromFile(pod_country_names, pic_names)

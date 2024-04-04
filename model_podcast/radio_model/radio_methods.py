@@ -106,7 +106,8 @@ class RadioMethods():
         # ra_region_names = self.get_radioInEachRegion(region)
         # print(ra_region_names)
         # print("___________")
-        image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+        # image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+        image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics"
         pic_names = podcast_cls.get_imageFile_name(image_dir)
 
         # ra_region = podcast_cls.get_linkFromFile(ra_region_names, pic_names)
