@@ -65,20 +65,6 @@ def sort_country():
                            )
 
 
-@app.route("/", methods=["GET", "POST"], strict_slashes=False)
-def podcast():
-    category_names = podcast_method.category_names()
-    table_names = podcast_method.get_table_name()
-    country_names = podcast_method.country_names()
-    region_names = podcast_method.region_names()
-
-    return render_template("podcast_page.html",  
-                           category_names=category_names,
-                           table_names=table_names,
-                           country_names=country_names,
-                           region_names=region_names)
-
-
 @app.route("/user_radio", methods=["GET", "POST"], strict_slashes=False)
 def user_radio():
     """This method defins the route to handle all radio streamings"""
@@ -130,16 +116,27 @@ def sort_RadioByCountry():
 
 @app.route("/home", methods=["GET", "POST"], strict_slashes=False)
 def home():
-    """This method defins the route to handle all radio/podcast streamings"""
-    pod_country = "South Africa"
-    pod_Region = "East Africa"
-    podcast_dic = podcast_method.display_sixpodcast(region, country)
-    radio_dic = radio_method.display_sixradio(region, country)
+    """This method defins the route to handle all radio streamings"""
+    radio_country= "South Africa"
+    podcast_country = "Kenya"
+    podcast_kenya = podcast_method.display_sixpodcast(podcast_country)
+    radio_sa = radio_method.display_sixradio(radio_country)
+    return render_template("landing_page.html", podcast_kenya=podcast_kenya,
+                           radio_sa=radio_sa)
 
-    return render_template("landing_page.html", radio_dic,
-                           podcast_dic=podcast_dic,
-                           )
 
+@app.route("/", methods=["GET", "POST"], strict_slashes=False)
+def podcast():
+    category_names = podcast_method.category_names()
+    table_names = podcast_method.get_table_name()
+    country_names = podcast_method.country_names()
+    region_names = podcast_method.region_names()
+
+    return render_template("podcast_page.html",
+                           category_names=category_names,
+                           table_names=table_names,
+                           country_names=country_names,
+                           region_names=region_names)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

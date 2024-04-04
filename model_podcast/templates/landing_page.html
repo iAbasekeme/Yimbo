@@ -50,7 +50,7 @@
         	<li></li>
     	</section>
 
-		<section id="trending" class="display_content">
+		<section class="display_artist">
         	<!-- Artist section -->
         	<h3>Trendin Artists </h3>
         	<div class="artist-card">
@@ -97,54 +97,25 @@
     	<h3>Trending Podcasts</h3>
 		<section class="display_content">
         	<!-- display six podcastcast in one line -->
-        	{% for key, value in pod_region.items() %}
+        	{% for key, value in podcast_kenya.items() %}
             	<div class="category-card">
-                	<img src="{{ url_for('static', filename='pics/' + key) }}" alt="Podcasts">
-                	<div class="category-title">{{ value['item_name'] }}</div>
-           	 	</div>
-            	{{ count += 1}}
-            	{% if count == 3 %}
-                	{% for pic, val in pod_country.items() %}
-                    	<div class="category-card">
-                        	<img src="
-							{{ url_for('static', filename='pics/' + pic) }}" alt="Podcasts">
-                        	<div class="category-title">{{ val['item_name'] }}</div>
-                    	</div>
-                    	{{ now_count += 1}}
-                    	{{ if now_count == 3}}
-                        	break
-                    	{{ endif }}
-                	{{ endfor }}
-                	break
-            	{% endif %}
-        	{% endfor %}
+                	<img src="{{ url_for('static', filename='pics/' + key) }} alt="Podcasts">
+                	<div class="category-title">{{ value['name'] }}</div>
+				</div>
+			{% endfor %}
 		</section>
         
 		<h3>Trending Radio Channels</h3>
 		<section class="display_content">
         	<!-- display six radio channels in one line -->
-        	{% for key, value in ra_region.items() %}
+        	{% for key, value in radio_sa.items() %}
             	<div class="category-card">
-                	<img src="{{ url_for('static', filename='pics/' + key) }}" alt="Podcasts">
-                	<div class="category-title">{{ value['item_name'] }}</div>
+                	<img src="{{ url_for('static', filename='r_pics/' + key) }}" alt="Podcasts">
+                	<div class="category-title">{{ value['name'] }}</div>
             	</div>
-            	{{ counter += 1}}
-            	{% if counter == 3 %}
-                	{% for pic, val in ra_country.items() %}
-                    	<div class="category-card">
-                        	<img src="{{ url_for('static', filename='pics/' + pic) }}" alt="Podcasts">
-                        	<div class="category-title">{{ val['item_name'] }}</div>
-                    	</div>
-                    	{{ sec_counter += 1}}
-                    	{{ if sec_counter == 3}}
-                        	break
-                    	{{ endif }}
-                	{{ endfor }}
-                	break
-            	{% endif %}
         	{% endfor %}
-
     	</section>
+
 		<section id="contact" class="contact">
 			<div id="contact-header">
 				<h2>Let's work together</h2>
