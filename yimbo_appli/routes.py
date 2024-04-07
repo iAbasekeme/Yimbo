@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 from flask import render_template, url_for, flash, redirect, session, request
 from yimbo_appli import app, db, bcrypt, mail, UPLOAD_FOLDER, ALLOWED_EXTENSIONS
-from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm, UpdateAccountForm, HandleMusic
-from yimbo_appli.models import User, Music
+from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm, UpdateAccountForm, HandleMusic, CreatePlaylistForm
+from yimbo_appli.models import User, Music, Playlist
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 # for podcast
@@ -391,3 +391,28 @@ def get_track(artist_id):
         print(artist_info)
     else:
         print("Error:", response.status_code)
+
+
+@app.route('/playlists/create', methods=['GET', 'POST'], strict_slashes=False)
+def create_playlists():
+    """A method that creates and stores a playlist
+    """
+    form = CreatePlaylistForm()
+
+    if form.validate_on_submit():
+        title = form.title.data
+        description = form.about.data
+        image_url = form.image.data
+        song_ids = form.songs.data
+
+        playlists = playlist(
+            title=title, description=description, image=image_url)
+
+        # Associate selected songs with the playlist
+        songs = Song.query.filter_by(
+            id=song_ids).all()  # Get actual Song objects
+        form.validate_songs(song_ids)
+        playlist.songs.extend(songs)  # Add songs to the playlist relationship
+        # return redirect('/playlist')
+    # return render_template('/create_template')
+    # return render_template()
