@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Corrected the 'rel' attribute value to 'stylesheet' -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='yimbo.css')}}"/>
+    <title>Navigation Menu</title>
+</head>
+<body>
+	<nav class="navbar">
+        <ul>
+            <li>
+                <a href="#">Music</a>
+                <ul>
+                    <li><a href="#">Category</a></li>
+                    <li><a href="#">Category</a></li>
+                    <li><a href="#">Category</a></li>
+                    <li><a href="#">Category</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Podcast</a>
+                <ul>
+                    <li><a href="{{ url_for('podcasts', option='Category') }}">Category</a></li>
+                    <li><a href="{{ url_for('podcasts', option='Region') }}">Region</a></li>
+                    <li><a href="{{ url_for('podcasts', option='Country') }}">Country</a></li>
+                    <li><a href="{{ url_for('podcasts', option='General') }}">General</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
+

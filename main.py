@@ -135,4 +135,4 @@ def get_music():
         all_songs.append(my_songs)
     return all_songs
 
-print(get_category_playlists(get_token(), '0JQ5DAqbMKFNQ0fGp4byGU')[0])
+# print(get_category_playlists(get_token(), '0JQ5DAqbMKFNQ0fGp4byGU')[0])
