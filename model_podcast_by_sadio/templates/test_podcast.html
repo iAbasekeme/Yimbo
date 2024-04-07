@@ -1,0 +1,53 @@
+<!-- podcast_page.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcast Page</title>
+</head>
+<body>
+    <h1>Podcast Categories</h1>
+
+    <!-- Display categories as options in a dropdown menu -->
+    <form action="/" method="post">
+        <label for="category-select">Select a category:</label>
+        <select name="category" id="category-select">
+            <!-- Jinja loop to iterate over category names -->
+            {% for category in category_name %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Display other data retrieved from the database -->
+    <h2>Other Data</h2>
+
+    <h3>Table Names:</h3>
+    <ul>
+        <!-- Jinja loop to iterate over table names -->
+        {% for table in table_name %}
+            <li>{{ table }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Country Names:</h3>
+    <ul>
+        <!-- Jinja loop to iterate over country names -->
+        {% for country in country_name %}
+            <li>{{ country }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Region Names:</h3>
+    <ul>
+        <!-- Jinja loop to iterate over region names -->
+        {% for region in region_name %}
+            <li>{{ region }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
