@@ -98,8 +98,8 @@ class UpdateAccountForm(FlaskForm):
         if email.data != current_user.email:
             user = User.query.filter_by(email=email.data).first()
             if user:
-                raise ValidationError("That email is taken. Please choose a different one.")
-            
+                raise ValidationError(
+                    "That email is taken. Please choose a different one.")
 class HandleMusic(FlaskForm):
     """
     class for handle music
@@ -110,3 +110,22 @@ class HandleMusic(FlaskForm):
     duration = StringField('Duration', validators=[DataRequired()])
     music = FileField('Upload Music', validators=[FileAllowed(['mp3'])])
     submit = SubmitField('Add')
+
+
+class CreatePlaylistForm(FlaskForm):
+    """
+    A form form that creates a playlist
+    """
+    title = StringField('Title', validators=[DataRequired()])
+    about = StringField('Description', validators=[DataRequired()])
+    image = StringField('Image', validators=[DataRequired()])
+    songs = SelectMultipleField(
+        'Select songs', coerce=int, validators=[DataRequired()])
+
+    def validate_songs(self, field):
+        song_ids = field.data  # Get user-selected song IDs
+        valid_songs = Song.query.filter_by(
+            id=song_ids).all()  # Check if IDs exist
+        if len(valid_songs) != len(song_ids):  # Check if all IDs are valid
+            raise ValidationError(
+                'Some selected songs are invalid or don\'t exist.')
