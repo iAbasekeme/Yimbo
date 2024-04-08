@@ -31,3 +31,19 @@ country = "Kenya"
 podcast_in_country = p_cls.display_sixpodcast(country)
 print("Six podcast channels in {}: {}".format(country, podcast_in_country))
 
+print()
+_dir = "/home/pc/Yimbo/model_podcast/static/r_music"
+file_list = p_cls.get_imageFile_name(_dir)
+file_info = p_cls.get_audio_link_from_file(3, file_list)
+print(file_info)
+print()
+
+audio_id = 6
+audio_dir = "/home/pc/Yimbo/model_podcast/static/r_music"
+audio_files = p_cls.get_audioFiles(audio_dir)
+fileName = p_cls.get_linkFromFile(audio_id, audio_files)
+print(fileName)
+print()
+
+audio_path = audio_dir + fileName
+print(audio_path)

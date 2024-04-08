@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS podcast (
     region_id INT NOT NULL,
     country_id INT NOT NULL,
     image_id INT NOT NULL DEFAULT 0,
+	audio_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(category_id) REFERENCES category(id),
     FOREIGN KEY(country_id) REFERENCES country(id),
@@ -100,3 +101,4 @@ VALUES
 
 -- Initialize image_id with the corresponding podcast id
 UPDATE podcast SET image_id = id;
+UPDATE audio_id SET audio_id = id;

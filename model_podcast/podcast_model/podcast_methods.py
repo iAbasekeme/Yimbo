@@ -88,7 +88,8 @@ class PodcastMethods():
                     "category_id": podcast.category_id,
                     "region_id": podcast.region_id,
                     "country_id": podcast.country_id,
-                    "image_id": podcast.image_id
+                    "image_id": podcast.image_id,
+                    "audio_id": podcast.audio_id
                 }   
 
         return podcast_info
@@ -145,7 +146,8 @@ class PodcastMethods():
                 podcasts_in_category[key] = {
                     "name": values["name"],
                     "description": values["description"],
-                    "image_id": values["image_id"]
+                    "image_id": values["image_id"],
+                    "audio_id": values["audio_id"]
                }
         return podcasts_in_category
 
@@ -166,7 +168,8 @@ class PodcastMethods():
                 podcasts_in_region[key] = {
                     "name": values["name"],
                     "description": values["description"],
-                    "image_id": values["image_id"]
+                    "image_id": values["image_id"],
+                    "audio_id": values["audio_id"]
                 }
         return podcasts_in_region
     
@@ -189,7 +192,8 @@ class PodcastMethods():
                 podcasts_in_country[key] = {
                     "name": values["name"],
                     "description": values["description"],
-                    "image_id": values["image_id"]
+                    "image_id": values["image_id"],
+                    "audio_id": values["audio_id"]
                 }
         return podcasts_in_country
 
@@ -219,24 +223,75 @@ class PodcastMethods():
         return image_file_names
     
     def get_linkFromFile(self, category_info, file_names):
-        """get the link"""
-        podcast_box = {}
-        for key, values in category_info.items():
-            for name in file_names:
-                try:
-                    digit_name = name.split('_')
-                    if len(digit_name) > 1:
-                        tokenized_num = digit_name[0]
-                        if tokenized_num.isdigit():
-                            if values["image_id"] == int(tokenized_num):
-                                image_path = name
-                                podcast_box[image_path] = {
-                                    "item_name": values["name"]
-                                }
-                except Exception as e:
-                    print(f"Error processing filename {name}: {e}")
-        return podcast_box
+        """Get the link"""
+        if not category_info:
+            return None
+        
+        if isinstance(category_info, dict):
+            podcast_box = {}
+            for key, values in category_info.items():
+                for name in file_names:
+                    try:
+                        digit_name = name.split('_')
+                        if len(digit_name) > 1:
+                            tokenized_num = digit_name[0]
+                            if tokenized_num.isdigit():
+                                if values["image_id"] == int(tokenized_num):
+                                    image_path = name
+                                    podcast_box[image_path] = {
+                                        "item_name": values["name"],
+                                        "audio_id": values["audio_id"],
+                                        "description": values["description"]
+                                    }
+                    except Exception as e:
+                        print(f"Error processing filename {name}: {e}")
+            return podcast_box
 
+
+    def get_audio_link_from_file(self, audio_id, audio_tracks):
+        """get the audio path"""
+        if audio_id is not None and audio_tracks is not None:
+            if isinstance(audio_id, int):
+                image_path = None
+                for name in audio_tracks:
+                    try:
+                        digit_name = name.split('_')
+                        if len(digit_name) > 1:
+                            tokenized_num = digit_name[0]
+                            if tokenized_num.isdigit():
+                                if audio_id == int(tokenized_num):
+                                    image_path = name
+                    except Exception as e:
+                        print(f"Error processing filename {name}: {e}")
+                if not image_path:
+                    image_path = "Audio content is Unavailable"
+                return image_path
+
+
+    def get_audioFiles(self, directory):
+        """
+        Retrieve the names of audio files (ending with .mp3) in the specified directory.
+
+        Args:
+        - directory: The path to the directory containing image files.
+
+        Returns:
+        - A list containing the names of image files.
+        """
+        # Initialize an empty list to store file names
+        audio_file_names = []
+        # Check if the directory exists
+        if os.path.exists(directory) and os.path.isdir(directory):
+            # Iterate over all files in the directory
+            for filename in os.listdir(directory):
+                # Check if the file ends with .mp3
+                if filename.lower().endswith(('.mp3')):
+                    # Append the file name to the list
+                    audio_file_names.append(filename)
+        else:
+            print(f"Directory '{directory}' does not exist or is not a valid directory.")
+
+        return audio_file_names
 
     def display_sixpodcast(self, country):
         """display podacst and radio in the landing page"""
@@ -248,7 +303,7 @@ class PodcastMethods():
             return {}
         else:
             # image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
-            image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics"
+            image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
             pic_names = self.get_imageFile_name(image_dir)
 
             pod_country = self.get_linkFromFile(pod_country_names, pic_names)
@@ -265,6 +320,7 @@ class PodcastMethods():
                 count += 1
             
             return Podcast_channel
+    
 
         # if pod_country_names is None:
         #    print(f"No podcasts found in region '{region}'")

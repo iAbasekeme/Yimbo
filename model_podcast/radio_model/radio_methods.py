@@ -49,7 +49,8 @@ class RadioMethods():
                     "description": data.description,
                     "region_id": data.region_id,
                     "country_id": data.country_id,
-                    "image_id": data.image_id
+                    "image_id": data.image_id,
+                    "audio_id": data.audio_id
                 }
         return radio_info
 
@@ -70,7 +71,8 @@ class RadioMethods():
                 radio_in_region[key] = {
                     "name": value["name"],
                     "description": value["description"],
-                    "image_id": value["image_id"]
+                    "image_id": value["image_id"],
+                    "audio_id": value["audio_id"]
                 }
         return radio_in_region
     
@@ -95,7 +97,8 @@ class RadioMethods():
                 radio_in_country[key] = {
                     "name": value["name"],
                     "description": value["description"],
-                    "image_id": value["image_id"]
+                    "image_id": value["image_id"],
+                    "audio_id": value["audio_id"]
                 }
         return radio_in_country
 
