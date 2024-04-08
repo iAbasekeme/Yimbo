@@ -59,9 +59,9 @@ class Like(db.Model):
     '''A like model'''
     __tablename__ = 'Likes'
     id = db.Column(db.Integer, primary_key=True)
-    song_ids = db.Column(db.Integer, ForeignKey(
+    song_ids = db.Column(db.Integer, db.ForeignKey(
         'music.id'), primary_key=True)
-    user_ids = db.Column(db.Integer, ForeignKey('user.id'), primary_key=True)
+    user_ids = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
 
 class Playlist(db.Model):
