@@ -11,6 +11,7 @@ description VARCHAR(256) NOT NULL,
 region_id INT NOT NULL,
 country_id INT NOT NULL,
 image_id INT NOT NULL DEFAULT 0,
+audio_id INT NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY(country_id) REFERENCES country(id),
 FOREIGN KEY(region_id) REFERENCES region(id)
@@ -59,3 +60,4 @@ VALUES
 
 -- initialize the image_id with the correspoing radio id
 UPDATE radio SET image_id = id;
+UPDATE radio SET audio_id = id;

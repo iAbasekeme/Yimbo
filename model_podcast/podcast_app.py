@@ -19,7 +19,7 @@ def sort_category():
     group_names = request.args.get("category")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachCategory(group_names)
-    pic_names = podcast_method.get_imageFile_name("/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics") # use the full path of the server
+    pic_names = podcast_method.get_imageFile_name("/home/pc/Yimbo/model_podcast/static/pics") # use the full path of the server
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
     
     # Render the template and pass the category and table names as context variables
@@ -35,7 +35,7 @@ def sort_region():
     group_names = request.args.get("region")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachRegion(group_names)
-    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics" # use the full path of the server
+    image_dir = "/home/pc/Yimbo/model_podcast/static/pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -54,7 +54,7 @@ def sort_country():
     group_names = request.args.get("country")
     table_names = request.args.get("table_names")
     category_info = podcast_method.get_podcastsInEachCountry(group_names)
-    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/pics" # use the full path of the server
+    image_dir = "/home/pc/Yimbo/model_podcast/static/pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -85,7 +85,7 @@ def sort_radioByRegion():
     group_names = request.args.get("region")
     table_names = request.args.get("table_names")
     category_info = radio_method.get_radioInEachRegion(group_names)
-    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics" # use the full path of the server
+    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -103,7 +103,7 @@ def sort_RadioByCountry():
     group_names = request.args.get("country")
     table_names = request.args.get("table_names")
     category_info = radio_method.get_radioInEachCountry(group_names)
-    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/model_podcast/static/r_pics" # use the full path of the server
+    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics" # use the full path of the server
     pic_names = podcast_method.get_imageFile_name(image_dir)
     radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
 
@@ -124,6 +124,54 @@ def home():
     return render_template("landing_page.html", podcast_kenya=podcast_kenya,
                            radio_sa=radio_sa)
 
+
+@app.route("/podcast_audio_player", methods=["GET", "POST"], strict_slashes=False)
+def podcast_audio_player():
+    """handles the audio_player"""
+    name = request.args.get("name")
+
+    description = request.args.get("description")
+
+    image = request.args.get("img")
+
+    audio_id = request.args.get("audio_id")
+    audio_dir = "/home/pc/Yimbo/model_podcast/static/p_music"
+    audio_files = podcast_method.get_audioFiles(audio_dir)
+    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+    errMessage = None
+ 
+    if fileName == "Audio content is Unavailable":
+        errMessage = fileName
+        return render_template("errMessage.html", errMessage=errMessage)
+    else:
+        return render_template("audio_player.html", name=name,
+                           image=str(image), audio_dir=audio_dir,
+                           description=description,
+                           fileName=fileName)
+    
+    
+@app.route("/radio_audio_player", methods=["GET", "POST"], strict_slashes=False)
+def radio_audio_player():
+    """handles the audio_player"""
+    name = request.args.get("name")
+    description = request.args.get("description")
+    image = request.args.get("img")
+    audio_id = request.args.get("audio_id")
+
+    audio_dir = "/home/pc/Yimbo/model_podcast/static/r_music"
+    audio_files = podcast_method.get_audioFiles(audio_dir)
+    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+
+    errMessage = None
+ 
+    if fileName == "Audio content is Unavailable":
+        errMessage = fileName
+        return render_template("errMessage.html", errMessage=errMessage)
+    else:
+        return render_template("audio_player.html", name=name,
+                           image=str(image), audio_dir=audio_dir,
+                           fileName=fileName,
+                           description=description)
 
 @app.route("/", methods=["GET", "POST"], strict_slashes=False)
 def podcast():
