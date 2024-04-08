@@ -5,6 +5,10 @@ from flask_login import UserMixin
 from time import time
 import jwt
 from yimbo_appli import app
+from sqlalchemy.orm import relationship
+
+from sqlalchemy import ForeignKey
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -60,20 +64,20 @@ class Like(db.Model):
     __tablename__ = 'Likes'
     id = db.Column(db.Integer, primary_key=True)
     song_ids = db.Column(db.Integer, db.ForeignKey(
-        'music.id'), primary_key=True)
-    user_ids = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+        'music.id'))
+    user_ids = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 class Playlist(db.Model):
     '''A playlist model'''
     __tablename__ = 'playlists'
 
-    id = db.Column(db.Integer, Primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60), nullable=False)
     description = db.Column(db.String(60), nullable=True)
     image = db.Column(db.String())
     songs = relationship(
-        "Music", secondary=playlist_tracks, backref="playlists", cascade="delete")
+        "Music", secondary="playlist_tracks", backref="playlists", cascade="delete")
 
     def __repr__(self):
         return f"Playlist name is {self.title}"
@@ -85,5 +89,5 @@ class playlist_tracks(db.Model):
 
     playlist_id = db.Column(db.Integer, ForeignKey(
         'playlists.id'), primary_key=True)
-    track_id = db.Column(db.Integer, ForeignKey('music.id', primary_key=True))
+    track_id = db.Column(db.Integer, ForeignKey('music.id'))
     sequence_number = db.Column(db.Integer, unique=True)

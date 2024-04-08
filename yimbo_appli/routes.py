@@ -7,10 +7,28 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 # for podcast
 from yimbo_appli.model import Category, Region, Country, Podcast
-from yimbo_appli.podcast_model import get_db
+from yimbo_appli.podcast_model.podcast_model import get_db
 from sqlalchemy import inspect
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
+
+# podcast method 
+from yimbo_appli.podcast_model.podcast_methods import PodcastMethods
+from yimbo_appli.radio_model.radio_methods import RadioMethods
+
+podcast_method = PodcastMethods()
+radio_method = RadioMethods()
+
+
+# database part
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from podcast_model.model import Base, Country, Region, Category, Podcast
+
+# music method
+from yimbo_appli.music_model.music_model import Genre, Music
+
 
 
 # to create a random secret token
@@ -55,13 +73,301 @@ oauth.register(
     server_metadata_url=f'{appConf.get("OAUTH2_META_URL")}',
 )
 
+# Connection to the database
+engine = create_engine('mysql+mysqldb://root:elpastore@localhost:3306/podcast_radio_database')
+Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+
+# music route
+
+@app.route('/add_genre', methods=['GET', 'POST'])
+def add_genre():
+    if request.method == 'POST':
+        new_genre = Genre(name=request.form['genre'])
+        session.add(new_genre)
+        session.commit()
+        flash("Genre added successfully")
+        return redirect('/add_genre')
+    return render_template('add_genre.html')
+
+def allowed_file(filename):
+    """
+    method to check if the file is allowed
+    """
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+@app.route('/add_music', methods=['GET', 'POST'])
+def add_music():
+    if request.method == 'POST':
+        # Check if the POST request has the file part
+        if 'file' not in request.files or 'picture' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        file = request.files['file']
+        picture = request.files['picture']
+
+        # If user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '' or picture.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+
+        # Check if the file is allowed
+        if file and allowed_file(file.filename) and allowed_file(picture.filename):
+            music_filename = secure_filename(file.filename)
+            picture_filename = secure_filename(picture.filename)
+            
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], music_filename))
+            picture.save(os.path.join(app.config['UPLOAD_FOLDER'], picture_filename))
+            
+            # Add song to database
+            new_song = Music(title=request.form['title'], artist_name=request.form['artist'], duration=request.form['duration'], genre_id=request.form['genre_id'],music_file=music_filename, picture=picture_filename)
+            session.add(new_song)
+            session.commit()
+            flash("File Uploaded Successfully")
+            return redirect('/add_music')  # Redirect after successful upload
+
+    return render_template('add_music.html')
+
+@app.route('/music')
+def music():
+    """
+    route for the music page display all genre of music
+    """
+    genres = session.query(Genre).all()
+    our_musics = session.query(Music).all()
+    return render_template('music_page.html', genres=genres,our_musics=our_musics)
+
+@app.route('/all_music')
+def all_music():
+    """
+    display all music in the database
+    """
+    our_musics = session.query(Music).all()
+    return render_template('music.html', our_musics=our_musics)
+
+
+@app.route('/player/<int:id>', methods=['GET','POST'])
+def player(id):
+    """
+    display the music player with a specific music
+    """
+    music = session.query(Music).filter_by(id=id).first()
+    musics = session.query(Music).all()
+    return render_template('spotify_player.html', music=music, musics=musics)
+
+
+@app.route('/music_by_genre/<int:genre_id>')
+def get_music_by_genre(genre_id):
+    """
+    display list of music of the specified genre
+    """
+    # Query all music objects with the specified genre_id
+    genre = session.query(Genre).filter(Genre.id==genre_id).first()
+    musics = session.query(Music).filter_by(genre_id=genre_id).all()
+    return render_template('index_2.html', genre=genre, musics=musics)
+
+
+
+
+
+
+
+# podcast route
+
+@app.route("/sort_category", methods=["GET", "POST"], strict_slashes=False)
+def sort_category():
+    """ retrieve the category name and get all podcasts belonging
+        to that group
+    """ 
+
+    # retrive the request
+    group_names = request.args.get("category")
+    table_names = request.args.get("table_names")
+    category_info = podcast_method.get_podcastsInEachCategory(group_names)
+    pic_names = podcast_method.get_imageFile_name("/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/pics") # use the full path of the server
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+    
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html", group_names=group_names,
+                           podcast_info=podcast_info)
+
+
+@app.route("/sort_region", methods=["GET", "POST"], strict_slashes=False)
+def sort_region():
+    """ retrieve the region name and get all podcasts belonging
+        to that group
+    """
+    group_names = request.args.get("region")
+    table_names = request.args.get("table_names")
+    category_info = podcast_method.get_podcastsInEachRegion(group_names)
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/pics" # use the full path of the server
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    return render_template("new.html",
+                           group_names=group_names,
+                           podcast_info=podcast_info)
+
+
+@app.route("/sort_country", methods=["GET", "POST"], strict_slashes=False)
+def sort_country():
+    """ retrieve the country name and get all podcasts belonging
+        to that group
+    """
+    
+    # retrive the request
+    group_names = request.args.get("country")
+    table_names = request.args.get("table_names")
+    category_info = podcast_method.get_podcastsInEachCountry(group_names)
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/pics" # use the full path of the server
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    podcast_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html",
+                           group_names=group_names,
+                           podcast_info=podcast_info,
+                           )
+
+
+@app.route("/user_radio", methods=["GET", "POST"], strict_slashes=False)
+def user_radio():
+    """This method defins the route to handle all radio streamings"""
+    table_names = podcast_method.get_table_name()
+    country_names = podcast_method.country_names()
+    region_names = podcast_method.region_names()
+    return render_template("podcast_page.html",
+                               table_names=table_names,
+                               country_names=country_names,
+                               region_names=region_names)
+
+
+@app.route("/sort_radioByRegion", methods=["GET", "POST"], strict_slashes=False)
+def sort_radioByRegion():
+    """ retrieve the region name and get all podcasts belonging
+        to that group
+    """
+    group_names = request.args.get("region")
+    table_names = request.args.get("table_names")
+    category_info = radio_method.get_radioInEachRegion(group_names)
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/r_pics" # use the full path of the server
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    return render_template("new.html",
+                           group_names=group_names,
+                           radio_info=radio_info)
+
+
+@app.route("/sort_RadioByCountry", methods=["GET", "POST"], strict_slashes=False)
+def sort_RadioByCountry():
+    """ retrieve the country name and get all podcasts belonging
+        to that group
+    """
+    # retrive the request
+    group_names = request.args.get("country")
+    table_names = request.args.get("table_names")
+    category_info = radio_method.get_radioInEachCountry(group_names)
+    image_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/r_pics" # use the full path of the server
+    pic_names = podcast_method.get_imageFile_name(image_dir)
+    radio_info =  podcast_method.get_linkFromFile(category_info, pic_names)
+
+    # Render the template and pass the category and table names as context variables
+    return render_template("new.html",
+                           group_names=group_names,
+                           radio_info=radio_info,
+                           )
+
+
+@app.route("/home", methods=["GET", "POST"], strict_slashes=False)
+def home():
+    """This method defins the route to handle all radio streamings"""
+    radio_country= "South Africa"
+    podcast_country = "Kenya"
+    podcast_kenya = podcast_method.display_sixpodcast(podcast_country)
+    radio_sa = radio_method.display_sixradio(radio_country)
+    return render_template("landing_page.html", podcast_kenya=podcast_kenya,
+                           radio_sa=radio_sa)
+
+
+@app.route("/podcast_audio_player", methods=["GET", "POST"], strict_slashes=False)
+def podcast_audio_player():
+    """handles the audio_player"""
+    name = request.args.get("name")
+
+    description = request.args.get("description")
+
+    image = request.args.get("img")
+
+    audio_id = request.args.get("audio_id")
+    audio_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/p_music"
+    audio_files = podcast_method.get_audioFiles(audio_dir)
+    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+    errMessage = None
+    dirName = "p_music"
+ 
+    if fileName == "Audio content is Unavailable":
+        errMessage = fileName
+        return render_template("errMessage.html", errMessage=errMessage)
+    else:
+        return render_template("audio_player.html", name=name,
+                           image=str(image), dirName=dirName,
+                           description=description,
+                           fileName=fileName)
+    
+    
+@app.route("/radio_audio_player", methods=["GET", "POST"], strict_slashes=False)
+def radio_audio_player():
+    """handles the audio_player"""
+    name = request.args.get("name")
+    description = request.args.get("description")
+    image = request.args.get("img")
+    audio_id = request.args.get("audio_id")
+
+    audio_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/r_music"
+    audio_files = podcast_method.get_audioFiles(audio_dir)
+    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+    dirName = "r_music"
+    
+
+    errMessage = None
+ 
+    if fileName == "Audio content is Unavailable":
+        errMessage = fileName
+        return render_template("errMessage.html", errMessage=errMessage)
+    else:
+        return render_template("audio_player.html", name=name,
+                           image=str(image), dirName=dirName,
+                           fileName=fileName,
+                           description=description)
+
+@app.route("/podcast_main", methods=["GET", "POST"], strict_slashes=False)
+def podcast_main():
+    category_names = podcast_method.category_names()
+    table_names = podcast_method.get_table_name()
+    country_names = podcast_method.country_names()
+    region_names = podcast_method.region_names()
+
+    return render_template("podcast_page.html",
+                           category_names=category_names,
+                           table_names=table_names,
+                           country_names=country_names,
+                           region_names=region_names)
+
+
+
+
+
 @app.route('/')
 @app.route('/home')
 def home_page():
     """
     route for the landing page define by wisdom
     """
-    return  render_template('two_clone.html',  session=session.get('user'))
+    return  render_template('two_clone.html')
     # return render_template('main_page.html', session=session.get('user'))
 
 @app.route('/google-login')
@@ -357,8 +663,8 @@ def podcast():
                            table_name=table_names, country_name=country_names,
                            region_name=region_names)
 
-@app.route('/music')
-def music():
+@app.route('/old_music')
+def old_music():
     """
     route for the music page
     """
