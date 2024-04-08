@@ -39,7 +39,7 @@ class User(db.Model, UserMixin):
     
     def __repr__(self):
         return f"User('{self.username}',' {self.email}')"
-
+    
 class Music(db.Model):
     __tablename__ = 'music'
 
@@ -49,6 +49,41 @@ class Music(db.Model):
     duration = db.Column(db.String(20), nullable=False)
     picture = db.Column(db.String(100), nullable=False, default='default.jpg')
     music_file = db.Column(db.String(100), nullable=False)
+    likes = db.relationship('Like', backref='song', cascade="delete")
 
     def __repr__(self):
         return f"Music(title='{self.title}', artist='{self.artist}', duration='{self.duration}')"
+
+
+class Like(db.Model):
+    '''A like model'''
+    __tablename__ = 'Likes'
+    id = db.Column(db.Integer, primary_key=True)
+    song_ids = db.Column(db.Integer, ForeignKey(
+        'music.id'), primary_key=True)
+    user_ids = db.Column(db.Integer, ForeignKey('user.id'), primary_key=True)
+
+
+class Playlist(db.Model):
+    '''A playlist model'''
+    __tablename__ = 'playlists'
+
+    id = db.Column(db.Integer, Primary_key=True)
+    title = db.Column(db.String(60), nullable=False)
+    description = db.Column(db.String(60), nullable=True)
+    image = db.Column(db.String())
+    songs = relationship(
+        "Music", secondary=playlist_tracks, backref="playlists", cascade="delete")
+
+    def __repr__(self):
+        return f"Playlist name is {self.title}"
+
+
+class playlist_tracks(db.Model):
+    '''A table for playlist_tracks'''
+    __tablename__ = 'playlist_tracks'
+
+    playlist_id = db.Column(db.Integer, ForeignKey(
+        'playlists.id'), primary_key=True)
+    track_id = db.Column(db.Integer, ForeignKey('music.id', primary_key=True))
+    sequence_number = db.Column(db.Integer, unique=True)

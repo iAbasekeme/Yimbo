@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS podcast_radio_database;
 -- Use the created database
 USE podcast_radio_database;
 
---create region table
+-- create region table
 CREATE TABLE IF NOT EXISTS region (
     id int NOT NULL AUTO_INCREMENT,
     name VARCHAR(65) NOT NULL,
