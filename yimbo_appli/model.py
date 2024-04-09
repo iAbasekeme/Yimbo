@@ -34,5 +34,6 @@ class Podcast(Base):
     category_id = Column(Integer, ForeignKey('category.id'))
     region_id = Column(Integer, ForeignKey('region.id'))
     country_id = Column(Integer, ForeignKey('country.id'))
+    picture = Column(String(250), nullable=False, default='none')
     category = relationship('Category', back_populates='podcasts')
     country = relationship('Country', back_populates='podcasts')

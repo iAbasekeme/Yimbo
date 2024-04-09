@@ -2,11 +2,12 @@
 from flask import render_template, url_for, flash, redirect, session, request
 from yimbo_appli import app, db, bcrypt, mail, UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm, UpdateAccountForm, HandleMusic, CreatePlaylistForm
-from yimbo_appli.models import User, Music, Playlist
+#from yimbo_appli.models import User, Music, Playlist
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 # for podcast
-from yimbo_appli.model import Category, Region, Country, Podcast
+from yimbo_appli.podcast_model.model import Category, Region, Country, Podcast
+from yimbo_appli.radio_model.r_model import Radio
 from yimbo_appli.podcast_model.podcast_model import get_db
 from sqlalchemy import inspect
 from werkzeug.security import generate_password_hash
@@ -21,7 +22,7 @@ radio_method = RadioMethods()
 
 
 # database part
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,  MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from podcast_model.model import Base, Country, Region, Category, Podcast
@@ -77,7 +78,7 @@ oauth.register(
 engine = create_engine('mysql+mysqldb://root:elpastore@localhost:3306/podcast_radio_database')
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
-session = Session()
+my_session = Session()
 
 
 # music route
@@ -86,8 +87,8 @@ session = Session()
 def add_genre():
     if request.method == 'POST':
         new_genre = Genre(name=request.form['genre'])
-        session.add(new_genre)
-        session.commit()
+        my_session.add(new_genre)
+        my_session.commit()
         flash("Genre added successfully")
         return redirect('/add_genre')
     return render_template('add_genre.html')
@@ -124,8 +125,8 @@ def add_music():
             
             # Add song to database
             new_song = Music(title=request.form['title'], artist_name=request.form['artist'], duration=request.form['duration'], genre_id=request.form['genre_id'],music_file=music_filename, picture=picture_filename)
-            session.add(new_song)
-            session.commit()
+            my_session.add(new_song)
+            my_session.commit()
             flash("File Uploaded Successfully")
             return redirect('/add_music')  # Redirect after successful upload
 
@@ -136,8 +137,8 @@ def music():
     """
     route for the music page display all genre of music
     """
-    genres = session.query(Genre).all()
-    our_musics = session.query(Music).all()
+    genres = my_session.query(Genre).all()
+    our_musics = my_session.query(Music).all()
     return render_template('music_page.html', genres=genres,our_musics=our_musics)
 
 @app.route('/all_music')
@@ -145,7 +146,7 @@ def all_music():
     """
     display all music in the database
     """
-    our_musics = session.query(Music).all()
+    our_musics = my_session.query(Music).all()
     return render_template('music.html', our_musics=our_musics)
 
 
@@ -154,8 +155,8 @@ def player(id):
     """
     display the music player with a specific music
     """
-    music = session.query(Music).filter_by(id=id).first()
-    musics = session.query(Music).all()
+    music = my_session.query(Music).filter_by(id=id).first()
+    musics = my_session.query(Music).all()
     return render_template('spotify_player.html', music=music, musics=musics)
 
 
@@ -165,9 +166,11 @@ def get_music_by_genre(genre_id):
     display list of music of the specified genre
     """
     # Query all music objects with the specified genre_id
-    genre = session.query(Genre).filter(Genre.id==genre_id).first()
-    musics = session.query(Music).filter_by(genre_id=genre_id).all()
-    return render_template('index_2.html', genre=genre, musics=musics)
+    genre = my_session.query(Genre).filter(Genre.id==genre_id).first()
+    if genre:
+        musics = my_session.query(Music).filter_by(genre_id=genre_id).all()
+        return render_template('index_2.html', genre=genre, musics=musics)
+    return "Not Found"
 
 
 
@@ -282,7 +285,7 @@ def sort_RadioByCountry():
                            )
 
 
-@app.route("/home", methods=["GET", "POST"], strict_slashes=False)
+@app.route("/official_home", methods=["GET", "POST"], strict_slashes=False)
 def home():
     """This method defins the route to handle all radio streamings"""
     radio_country= "South Africa"
@@ -305,7 +308,7 @@ def podcast_audio_player():
     audio_id = request.args.get("audio_id")
     audio_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/p_music"
     audio_files = podcast_method.get_audioFiles(audio_dir)
-    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+    fileName = podcast_method.get_audio_link_from_file(audio_id, audio_files)
     errMessage = None
     dirName = "p_music"
  
@@ -329,7 +332,7 @@ def radio_audio_player():
 
     audio_dir = "/home/elpastore/ALX-program/portifolio_project/Yimbo/yimbo_appli/static/r_music"
     audio_files = podcast_method.get_audioFiles(audio_dir)
-    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+    fileName = podcast_method.get_audio_link_from_file(audio_id, audio_files)
     dirName = "r_music"
     
 
@@ -357,7 +360,85 @@ def podcast_main():
                            country_names=country_names,
                            region_names=region_names)
 
+def check_table(table):
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    table_names = metadata.tables.keys()
+    
+    for name in table_names:
+        if name == table:
+            return True
+    return  False
 
+@app.route('/podcast_test', methods=["GET", "POST"])
+def podcast_test():
+    podcast = my_session.query(Podcast).filter_by(country_id=1).all()
+    categories = my_session.query(Category).all()
+    regions = my_session.query(Region).all()
+    countries = my_session.query(Country).all() 
+    
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    table_names = metadata.tables.keys()
+    table = metadata.tables['podcast']
+    return render_template('podcast_test.html', categories=categories, regions=regions, countries=countries, podcasts=podcast, table=table, table_names=table_names)
+
+
+@app.route('/categories/<int:category_id>', methods=["GET", "POST"])
+def categories(category_id):
+    category = my_session.query(Category).filter_by(id=category_id).first()
+    if category:
+        podcasts = my_session.query(Podcast).filter_by(category_id=category_id)
+        return render_template('categories.html', podcasts=podcasts, data=category)
+    return  jsonify({"message": "Not found."}), 404
+
+
+@app.route('/region/<int:region_id>', methods=["GET", "POST"])
+def region(region_id):
+    region = my_session.query(Region).filter_by(id=region_id).first()
+    if region:
+        podcasts_region = my_session.query(Podcast).filter_by(region_id=region_id)
+        return render_template('categories.html', podcasts=podcasts_region, data=region)
+    return  jsonify({"message": "Not found."}), 404
+
+@app.route('/country/<int:country_id>', methods=["GET", "POST"])
+def country(country_id):
+    country = my_session.query(Country).filter_by(id=country_id).first()
+    if country:
+        podcasts = my_session.query(Podcast).filter_by(country_id=country_id)
+        return render_template('categories.html', podcasts=podcasts, data=country)
+    return  jsonify({"message": "Not found."}), 404
+
+@app.route('/radio_test', methods=["GET", "POST"])
+def radio_test():
+    regions = my_session.query(Region).all()
+    countries = my_session.query(Country).all()
+    return render_template("radio_test.html", regions=regions, countries=countries)
+
+@app.route('/radio_country/<int:country_id>', methods=["GET", "POST"])
+def radio_country(country_id):
+    country = my_session.query(Country).filter_by(id=country_id).first()
+    if country:
+        radios = my_session.query(Radio).filter_by(country_id=country_id)
+        return render_template('radio.html', radios=radios, data=country)
+    return  jsonify({"message": "Not found."}), 404
+
+@app.route('/radio_region/<int:region_id>', methods=["GET", "POST"])
+def radio_region(region_id):
+    region = my_session.query(Region).filter_by(id=region_id).first()
+    if country:
+        radios = my_session.query(Radio).filter_by(region_id=region_id)
+        return render_template('radio.html', radios=radios, data=region)
+    return  jsonify({"message": "Not found."}), 404
+
+
+@app.route('/audio_play/<int:id>', methods=['GET', 'POST'])
+def audio_player(id):
+    """
+    route for the audio player
+    """
+    podcast = my_session.query(Podcast).filter_by(id=id).first()
+    return render_template('audio_player_test.html', podcast=podcast)
 
 
 
@@ -367,9 +448,8 @@ def home_page():
     """
     route for the landing page define by wisdom
     """
-    return  render_template('two_clone.html')
+    return  render_template('two_clone.html', session=session.get('user'))
     # return render_template('main_page.html', session=session.get('user'))
-
 @app.route('/google-login')
 def googleLogin():
     """
@@ -412,7 +492,6 @@ def googleCallback():
     login_user(user)
 
     return redirect(url_for('account'))
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """

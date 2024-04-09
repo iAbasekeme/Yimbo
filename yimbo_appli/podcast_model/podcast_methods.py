@@ -261,6 +261,7 @@ class PodcastMethods():
                             if tokenized_num.isdigit():
                                 if audio_id == int(tokenized_num):
                                     image_path = name
+                                    print(image_path)
                     except Exception as e:
                         print(f"Error processing filename {name}: {e}")
                 if not image_path:

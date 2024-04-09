@@ -34,6 +34,8 @@ class Podcast(Base):
     category_id = Column(Integer, ForeignKey('category.id'))
     image_id = Column(Integer, default=0)
     audio_id = Column(Integer)
+    picture = Column(String(250), nullable=False, default="default_podcast.jpg")
+    audio_file = Column(String(250))
     region_id = Column(Integer, ForeignKey('region.id'))
     country_id = Column(Integer, ForeignKey('country.id'))
     category = relationship('Category', back_populates='podcasts')
