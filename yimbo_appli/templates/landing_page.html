@@ -33,8 +33,23 @@
             	<li><a href="">Music</a></li>
             	<li><a href="">Podcast</a></li>
             	<li><a href="">Radio</a></li>
-            	<li class="signs"><button type="submit">Sign-in</button></li>
-            	<li class="signs"><button type="submit">Sign-up as Artist</button></li>
+            	{% if current_user.is_authenticated %}
+					<li class="signs">
+						<a href={{ url_for('logout') }}>Logout</a>
+            			<a href={{ url_for('account') }}>Account</a>
+          			</li>
+
+				{% else %}
+					<li class="signs">
+						<!--<button type="submit">Sign-in</button>-->
+						<a href={{ url_for('login') }}>Sign-in</a>
+					</li>
+					<li class="signs">
+						<!--<button type="submit">Sign-up as Artist</button>-->
+						<a href={{ url_for('register') }}>Sign-up</a>
+						
+					</li>
+				{% endif %}
         	</ul>
     	</nav>
     	<section id="welcome-section" class="welcome-section">

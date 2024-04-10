@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>podcast</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/play.css') }}"/>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+
+    .artist-header {
+      background-image: url('https://cdn.punchng.com/wp-content/uploads/2023/05/20120536/Rema.jpeg');
+      background-size: cover;
+      background-position: center;
+      height: 60vh;
+    }
+ 
+      #progressBar {
+          width: 100%;
+          height: 10px; /* Adjust height as needed */
+          background-color: #ddd; /* Gray background */
+          border-radius: 5px; /* Rounded corners */
+          margin-top: 10px; /* Adjust margin as needed */
+      }
+  
+      #progress {
+          height: 100%;
+          background-color: #4caf50; /* Green progress bar */
+          border-radius: 5px; /* Rounded corners */
+      }
+  </style>
+</head>
+<body class="bg-white text-white flex">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- yimbo Logo -->
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='r_pics/Yimbo-logo.jpg') }}" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
+    </div>
+
+
+
+    <!-- Top section of the sidebar -->
+	
+	<div class="sidebar-section">
+		<div class="logo-container">
+      <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+		</div>
+		<div class="user-profile">
+      <span class="username">Welcome {{ current_user.username }}!</span>
+  			<button class="dropdown-toggle">
+    			<i class="fas fa-caret-down"></i> </button>
+  			<ul class="dropdown-menu">
+    			<li><a href="{{url_for('edit')}}">Edit Profile</a></li>
+  			</ul>
+		</div>	
+		<a href="{{ url_for('home') }}" class="sidebar-link">Home</a>
+		<a href="/logout" class="logout-button">
+      <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome logout icon -->
+      Logout
+    </a>
+
+    </div>
+
+
+
+    <div class="sidebar-section">
+        <a href="{{ url_for('music') }}" class="sidebar-link">
+            Music
+        </a>
+        <a href="{{ url_for('podcast_test') }}" class="sidebar-link active">
+            Podcast
+        </a>
+        <a href="{{ url_for('radio_test') }}" class="sidebar-link">
+            radio
+        </a>
+		 <a href="#" class="sidebar-link">
+            location
+        </a>
+
+    </div>
+
+    <!-- Bottom section of the sidebar -->
+    <div class="sidebar-section">
+        <a href="#" class="sidebar-link active">
+            <span class="sidebar-link-icon">💜</span>
+            <span class="sidebar-link-text">Liked podcast</span>
+        </a>
+        <!-- Repeat for each item -->
+        <a href="#" class="sidebar-link">
+            <span class="sidebar-link-text">Create playlist</span>
+        </a>
+        <a href="#" class="sidebar-link"/>
+            <span class="sidebar-link-text">Follow Podcast channel</span>
+        </a>
+        <!-- ... more links ... -->
+    </div>
+</div>
+
+
+
+
+  <!-- Main Content -->
+  <div class="flex-1">
+      
+    <br>
+    <br>
+    <header class="header-container">
+      <div class="search-bar" style="width: 390px;">
+          <input type="search" placeholder="What do you want to listen to?" aria-label="Search">
+          <button type="submit" aria-label="Search">
+          </button>
+      </div>
+    </header>
+    
+		<!-- Popular Tracks Section -->
+  
+  <h3> Recent </h3>
+    <section id="trending" class="display_content">
+      <div class="container">
+        <img src="{{ url_for('static', filename='/music/' + music.picture) }}" alt="Artist Logo" class="podcast-logo">
+        <div class="description">
+            <h1><strong>{{  music.title }}</strong></h1>
+            <h2>{{ music.artist_name }}</h2>
+            <p>{{ music.duration }}</p>
+        </div>
+      </div>
+      <div class="buttons">
+        {% if music.audio_file is none %}
+        <p>No audio file found</p>
+        {% else %}
+            <audio id="audioPlayer" src="{{ url_for('static', filename='/music/' + music.music_file) }}"></audio>
+    
+        <button onclick="play()">Play ▶️</button>
+        <button onclick="pause()">Pause</button>
+        <button onclick="skipBackward()">Skip Backward</button>
+        <button onclick="skipForward()">Skip Forward</button>
+        <div id="progressBar">
+            <div id="progress" style="width: 0;"></div>
+        </div>
+        <div class="time-stamps">
+          <span id="current-time">0:00</span>
+          <span id="total-duration">{{ music.duration }}</span>
+      </div>
+        {% endif %}
+    </div>
+    
+    <script>
+            function play() {
+            var audio = document.getElementById('audioPlayer');
+            audio.play();
+        }
+
+        function pause() {
+            var audio = document.getElementById('audioPlayer');
+            audio.pause();
+        }
+
+        function skipForward() {
+            var audio = document.getElementById('audioPlayer');
+            audio.currentTime += 10; // Skip forward 10 seconds
+        }
+
+        function skipBackward() {
+            var audio = document.getElementById('audioPlayer');
+            audio.currentTime -= 10; // Skip backward 10 seconds
+        }
+
+        function updateProgressBar() {
+            var audio = document.getElementById('audioPlayer');
+            var progressBar = document.getElementById('progress');
+            var progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        // Update progress bar as audio plays
+        var audio = document.getElementById('audioPlayer');
+        audio.addEventListener('timeupdate', updateProgressBar);
+        function play() {
+          var audio = document.getElementById('audioPlayer');
+          audio.play();
+        }
+
+        function pause() {
+          var audio = document.getElementById('audioPlayer');
+          audio.pause();
+        }
+
+        function skipForward() {
+          var audio = document.getElementById('audioPlayer');
+          audio.currentTime += 10; // Skip forward 10 seconds
+        }
+
+        function skipBackward() {
+          var audio = document.getElementById('audioPlayer');
+          audio.currentTime -= 10; // Skip backward 10 seconds
+        }
+
+        function updateProgressBar() {
+          var audio = document.getElementById('audioPlayer');
+          var progressBar = document.getElementById('progress');
+          var progress = (audio.currentTime / audio.duration) * 100;
+          progressBar.style.width = progress + '%';
+        }
+
+        // Update progress bar as audio plays
+        var audio = document.getElementById('audioPlayer');
+        audio.addEventListener('timeupdate', updateProgressBar);
+
+        
+    </script>
+    </section>
+
+  </div>
+
+</body>
+</html>
+

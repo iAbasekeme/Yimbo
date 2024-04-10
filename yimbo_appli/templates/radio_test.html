@@ -1,0 +1,31 @@
+
+{% extends "user_page.html" %}
+<!-- Main Content -->
+
+{% block content %}
+	 <section class="display_content">
+        <h3><b>REGION</h3>
+        <nav class="category">
+            <ul>
+              {% for region in regions %}
+                <li>
+                  <a href="{{ url_for('radio_region', region_id=region.id) }}">{{ region.name }}</a>
+                </li>
+				      {% endfor %}
+            </ul>
+        </nav>
+    </section>
+	
+	 <section class="display_content">
+        <h3><b>COUNTRY</h3>
+        <nav class="category">
+            <ul>
+                {% for country in countries %}
+                  <li>
+                    <a href="{{ url_for('radio_country', country_id=country.id) }}">{{ country.name }}</a>
+                  </li>
+				        {% endfor %}
+            </ul>
+        </nav>
+    </section>
+{% endblock content %}
