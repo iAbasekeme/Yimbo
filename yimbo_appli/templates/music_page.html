@@ -7,6 +7,8 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/category_search.css') }}"/>
 
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
   <style>
 
     .artist-header {
@@ -29,15 +31,37 @@
 
     <!-- Top section of the sidebar -->
     <div class="sidebar-section">
-        <a href="#" class="sidebar-link active">Home</a>
-        <a href="#" class="sidebar-link">log-out</a>
+        <div class="logo-container">
+          <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+        </div>
+        <div class="user-profile">
+          <span class="username">Welcome {{ current_user.username }}!</span>
+          <button class="dropdown-toggle">
+            <i class="fas fa-caret-down"></i> </button>
+          <ul class="dropdown-menu">
+            <li><a href="{{url_for('edit')}}">Edit Profile</a></li>
+          </ul>
+        </div>
+        <a href="{{ url_for('home') }}" class="sidebar-link">Home</a>
+        <a href="/logout" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome logout icon -->
+                Logout
+        </a>
     </div>
 
     <div class="sidebar-section">
-        <a href="#" class="sidebar-link">Music</a>
-        <a href="#" class="sidebar-link active">Podcast</a>
-        <a href="#" class="sidebar-link">Radio</a>
-        <a href="#" class="sidebar-link">Location</a>
+      <a href="{{ url_for('music') }}" class="sidebar-link">
+        Music
+      </a>
+      <a href="{{ url_for('podcast_test') }}" class="sidebar-link active">
+          Podcast
+      </a>
+      <a href="{{ url_for('radio_test') }}" class="sidebar-link">
+          radio
+      </a>
+      <a href="#" class="sidebar-link">
+          location
+      </a>
     </div>
 
     <!-- Bottom section of the sidebar -->

@@ -33,68 +33,73 @@
 </head>
 <body class="bg-black text-white flex">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- yimbo Logo -->
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='r_pics/Yimbo-logo.jpg') }}" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
-        </div>
-    
-    
-    
-        <!-- Top section of the sidebar -->
-        
-        <div class="sidebar-section">
-            <div class="logo-container">
-                <img src="{{ url_for('static', filename='r_pics/profil.jpg') }}" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
-            </div>
-            <div class="user-profile">
-                  <span class="username">User Name</span>
-                  <button class="dropdown-toggle">
-                    <i class="fas fa-caret-down"></i> </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="edit-profile.html">Edit Profile</a></li>
-                  </ul>
-            </div>	
-            <a href="{{ url_for('home') }}" class="sidebar-link">Home</a>
-            <a href="#" class="sidebar-link">log-out</a>
-    
-        </div>
-    
-    
-    
-        <div class="sidebar-section">
-            <a href="#" class="sidebar-link">
-                Music
-            </a>
-            <a href="#" class="sidebar-link active">
-                Podcast
-            </a>
-            <a href="{{ url_for('user_radio') }}" class="sidebar-link">
-                radio
-            </a>
-             <a href="#" class="sidebar-link">
-                location
-            </a>
-    
-        </div>
-    
-        <!-- Bottom section of the sidebar -->
-        <div class="sidebar-section">
-            <a href="#" class="sidebar-link active">
-                <span class="sidebar-link-icon">💜</span>
-                <span class="sidebar-link-text">Liked podcast</span>
-            </a>
-            <!-- Repeat for each item -->
-            <a href="#" class="sidebar-link">
-                <span class="sidebar-link-text">Create playlist</span>
-            </a>
-            <a href="#" class="sidebar-link"/>
-                <span class="sidebar-link-text">Follow Podcast channel</span>
-            </a>
-            <!-- ... more links ... -->
-        </div>
+   <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- yimbo Logo -->
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='r_pics/Yimbo-logo.jpg') }}" alt="Spotify Logo" style="width: 100%; height: auto; padding: 20px; box-sizing: border-box;">
     </div>
+
+
+
+    <!-- Top section of the sidebar -->
+	
+	<div class="sidebar-section">
+		<div class="logo-container">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+            </div>
+		</div>
+		<div class="user-profile">
+  			<span class="username">Welcome {{ current_user.username }}!</span>
+  			<button class="dropdown-toggle">
+    			<i class="fas fa-caret-down"></i> </button>
+  			<ul class="dropdown-menu">
+    			<li><a href="{{url_for('edit')}}">Edit Profile</a></li>
+  			</ul>
+		</div>
+		<a href="{{ url_for('home') }}" class="sidebar-link">Home</a>
+		<a href="/logout" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome logout icon -->
+            Logout
+          </a>
+
+    </div>
+
+
+
+    <div class="sidebar-section">
+        <a href="#" class="sidebar-link">
+            Music
+        </a>
+        <a href="{{ url_for('podcast_test') }}" class="sidebar-link active">
+            Podcast
+        </a>
+        <a href="{{ url_for('radio_test') }}" class="sidebar-link">
+            radio
+        </a>
+		 <a href="#" class="sidebar-link">
+            location
+        </a>
+
+    </div>
+
+    <!-- Bottom section of the sidebar -->
+    <div class="sidebar-section">
+        <a href="#" class="sidebar-link active">
+            <span class="sidebar-link-icon">💜</span>
+            <span class="sidebar-link-text">Liked podcast</span>
+        </a>
+        <!-- Repeat for each item -->
+        <a href="#" class="sidebar-link">
+            <span class="sidebar-link-text">Create playlist</span>
+        </a>
+        <a href="#" class="sidebar-link"/>
+            <span class="sidebar-link-text">Follow Podcast channel</span>
+        </a>
+        <!-- ... more links ... -->
+    </div>
+</div>
 
 <!-- Main Content -->
 <div class="flex-1">

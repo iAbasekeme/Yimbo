@@ -249,3 +249,11 @@
   .buttons button:hover {
     background-color: #afb3af;;
   }
+
+
+  .time-stamps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2em;
+    color:rgba(0, 0, 0, 0.685)
+  }

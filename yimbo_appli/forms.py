@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from yimbo_appli.models import User
+from yimbo_appli import my_session
 from flask_login import current_user
 from wtforms.fields import SelectMultipleField
 

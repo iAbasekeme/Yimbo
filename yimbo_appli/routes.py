@@ -2,7 +2,7 @@
 from flask import render_template, url_for, flash, redirect, session, request
 from yimbo_appli import app, db, bcrypt, mail, UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from yimbo_appli.forms import RegistrationForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm, UpdateAccountForm, HandleMusic, CreatePlaylistForm
-#from yimbo_appli.models import User, Music, Playlist
+from yimbo_appli.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 # for podcast
@@ -27,10 +27,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from podcast_model.model import Base, Country, Region, Category, Podcast
 
+from yimbo_appli import my_session
+
 # music method
 from yimbo_appli.music_model.music_model import Genre, Music
 
-
+# user method
+#from yimbo_appli.user_model.user_model import User
 
 # to create a random secret token
 import secrets
@@ -74,11 +77,7 @@ oauth.register(
     server_metadata_url=f'{appConf.get("OAUTH2_META_URL")}',
 )
 
-# Connection to the database
-engine = create_engine('mysql+mysqldb://root:elpastore@localhost:3306/podcast_radio_database')
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-my_session = Session()
+
 
 
 # music route
@@ -157,7 +156,7 @@ def player(id):
     """
     music = my_session.query(Music).filter_by(id=id).first()
     musics = my_session.query(Music).all()
-    return render_template('spotify_player.html', music=music, musics=musics)
+    return render_template('music_player.html', music=music, musics=musics)
 
 
 @app.route('/music_by_genre/<int:genre_id>')
@@ -169,12 +168,9 @@ def get_music_by_genre(genre_id):
     genre = my_session.query(Genre).filter(Genre.id==genre_id).first()
     if genre:
         musics = my_session.query(Music).filter_by(genre_id=genre_id).all()
+        #return render_template('music_genre.html', genre=genre, musics=musics)
         return render_template('index_2.html', genre=genre, musics=musics)
     return "Not Found"
-
-
-
-
 
 
 
@@ -284,8 +280,8 @@ def sort_RadioByCountry():
                            radio_info=radio_info,
                            )
 
-
-@app.route("/official_home", methods=["GET", "POST"], strict_slashes=False)
+@app.route("/", methods=["GET", "POST"], strict_slashes=False)
+@app.route("/home", methods=["GET", "POST"], strict_slashes=False)
 def home():
     """This method defins the route to handle all radio streamings"""
     radio_country= "South Africa"
@@ -360,16 +356,6 @@ def podcast_main():
                            country_names=country_names,
                            region_names=region_names)
 
-def check_table(table):
-    metadata = MetaData()
-    metadata.reflect(bind=engine)
-    table_names = metadata.tables.keys()
-    
-    for name in table_names:
-        if name == table:
-            return True
-    return  False
-
 @app.route('/podcast_test', methods=["GET", "POST"])
 def podcast_test():
     podcast = my_session.query(Podcast).filter_by(country_id=1).all()
@@ -377,11 +363,8 @@ def podcast_test():
     regions = my_session.query(Region).all()
     countries = my_session.query(Country).all() 
     
-    metadata = MetaData()
-    metadata.reflect(bind=engine)
-    table_names = metadata.tables.keys()
-    table = metadata.tables['podcast']
-    return render_template('podcast_test.html', categories=categories, regions=regions, countries=countries, podcasts=podcast, table=table, table_names=table_names)
+
+    return render_template('podcast_test.html', categories=categories, regions=regions, countries=countries, podcasts=podcast)
 
 
 @app.route('/categories/<int:category_id>', methods=["GET", "POST"])
@@ -418,7 +401,7 @@ def radio_test():
 @app.route('/radio_country/<int:country_id>', methods=["GET", "POST"])
 def radio_country(country_id):
     country = my_session.query(Country).filter_by(id=country_id).first()
-    if country:
+    if country: 
         radios = my_session.query(Radio).filter_by(country_id=country_id)
         return render_template('radio.html', radios=radios, data=country)
     return  jsonify({"message": "Not found."}), 404
@@ -442,8 +425,7 @@ def audio_player(id):
 
 
 
-@app.route('/')
-@app.route('/home')
+@app.route('/old_home')
 def home_page():
     """
     route for the landing page define by wisdom
@@ -498,7 +480,7 @@ def register():
     method for registration"""
     
     if  current_user.is_authenticated:
-        return  redirect(url_for('home_page'))
+        return  redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         # let's crypt password to avoid  storing it as plain text in database
@@ -534,11 +516,11 @@ def login():
     return render_template('new_login.html',form=form)
 
 @app.route('/account')
-@login_required
+# @login_required
 def account():
-    # return render_template('user.html')
-    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template('new_user_page.html', image_file=image_file)
+    #image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template('user_page.html')
+    #return render_template('new_user_page.html', image_file=image_file)
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     """
@@ -550,7 +532,7 @@ def logout():
     elif 'user' in session:
         # If user is signed in with Google
         session.pop('user', None)
-    return redirect(url_for('home_page'))
+    return redirect(url_for('home'))
 
 
 def save_picture(form_picture):
@@ -741,41 +723,6 @@ def podcast():
     return render_template("podcast_page.html",  category_name=category_names,
                            table_name=table_names, country_name=country_names,
                            region_name=region_names)
-
-@app.route('/old_music')
-def old_music():
-    """
-    route for the music page
-    """
-    our_musics = Music.query.all()
-    musics = get_music()
-    return render_template('music.html', musics=musics, our_musics=our_musics)
-
-@app.route('/account/music')
-@login_required
-def account_music():
-    """
-    route for the music page
-    """
-    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    musics = get_music()
-    return render_template('user_music.html', musics=musics, image_file=image_file)
-
-@app.route('/artist/artist_id', methods=['GET'], strict_slashes=False)
-def get_track(artist_id):
-    key = os.environ.get('MY_API_KEY')
-    if key is None:
-        print("Error: API key not found in environment variables.")
-
-    api_endpoint = f"https://api.musixmatch.com/ws/1.1/artist.get?artist_id={artist_id}&apikey={key}"
-    headers = {"Authorization": f"Bearer {key}"}
-    response = requests.get(api_endpoint, headers=headers)
-    if response.status_code == 200:
-        artist_info = response.json()
-        # Process artist information
-        print(artist_info)
-    else:
-        print("Error:", response.status_code)
 
 
 @app.route('/playlists/create', methods=['GET', 'POST'], strict_slashes=False)

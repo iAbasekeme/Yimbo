@@ -75,7 +75,7 @@ class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60), nullable=False)
     description = db.Column(db.String(60), nullable=True)
-    image = db.Column(db.String())
+    image = db.Column(db.String(60))
     songs = relationship(
         "Music", secondary="playlist_tracks", backref="playlists", cascade="delete")
 

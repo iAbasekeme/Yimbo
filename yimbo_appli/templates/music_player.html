@@ -118,21 +118,21 @@
     
 		<!-- Popular Tracks Section -->
   
-	<h3> Recent </h3>
+  <h3> Recent </h3>
     <section id="trending" class="display_content">
       <div class="container">
-        <img src="{{ url_for('static', filename='/pics/' + podcast.picture) }}" alt="Podcast Logo" class="podcast-logo">
+        <img src="{{ url_for('static', filename='/music/' + music.picture) }}" alt="Artist Logo" class="podcast-logo">
         <div class="description">
-            <h1><strong>{{  podcast.name }}</strong></h1>
-            <h2>Episode Title</h2>
-            <p>{{ podcast.description }}</p>
+            <h1><strong>{{  music.title }}</strong></h1>
+            <h2>{{ music.artist_name }}</h2>
+            <p>{{ music.duration }}</p>
         </div>
       </div>
       <div class="buttons">
-        {% if podcast.audio_file is none %}
+        {% if music.audio_file is none %}
         <p>No audio file found</p>
         {% else %}
-            <audio id="audioPlayer" src="{{ url_for('static', filename='/p_music/' + podcast.audio_file) }}"></audio>
+            <audio id="audioPlayer" src="{{ url_for('static', filename='/music/' + music.music_file) }}"></audio>
     
         <button onclick="play()">Play ▶️</button>
         <button onclick="pause()">Pause</button>
@@ -141,6 +141,10 @@
         <div id="progressBar">
             <div id="progress" style="width: 0;"></div>
         </div>
+        <div class="time-stamps">
+          <span id="current-time">0:00</span>
+          <span id="total-duration">{{ music.duration }}</span>
+      </div>
         {% endif %}
     </div>
     
@@ -205,6 +209,8 @@
         // Update progress bar as audio plays
         var audio = document.getElementById('audioPlayer');
         audio.addEventListener('timeupdate', updateProgressBar);
+
+        
     </script>
     </section>
 
