@@ -1,0 +1,11 @@
+{% extends "user_page.html" %}
+
+{% block content %}
+    {% for playlist in playlists %}
+        <ul>
+            <a href=" {{ url_for('playlist_details', playlist_id=playlist.id) }} ">
+                <li style='color:black;'>{{ playlist.title }}</li>
+            </a>
+        </ul>
+    {% endfor %}
+{% endblock content %}

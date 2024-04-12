@@ -1,0 +1,50 @@
+{% extends "user_page.html" %}
+
+{% block content %}
+    <div class="flex-1" style="color:black;">
+            {% for song in musics %}
+            <ul> 
+                    <img src="{{ url_for('static', filename='music/' + song['music_picture']) }}" style="width:150px; height:100px">
+                    {{ song.get('music_name') }}
+                    {{ song.get('music_artist') }}
+                    {{ song.get('music_genre') }}
+                    {{ song.get('music_duration') }}
+                    
+            </ul>
+            {% endfor %}
+<script>
+        function play(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.play();
+        }
+
+        function pause(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.pause();
+        }
+
+        function stop(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0; // Reset the current time to start from the beginning
+        }
+
+        function next(index) {
+            // Implement logic to play the next song
+        }
+
+        function prev(index) {
+            // Implement logic to play the previous song
+        }
+
+        function skipForward(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.currentTime += 10; // Skip forward by 10 seconds (adjust as needed)
+        }
+
+        function skipBack(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.currentTime -= 10; // Skip backward by 10 seconds (adjust as needed)
+        }
+    </script>
+{% endblock content %}

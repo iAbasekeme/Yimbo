@@ -1,0 +1,93 @@
+{% extends "user_page.html" %}
+
+{% block content %}
+    <div class="flex-1" style="color:black;">
+            <br><br>
+        <table>
+            <thead>
+                <th><th/>
+                <tr>
+                    <th scope="row">Picture</th>
+                    <th scope="row">Name</th>
+                    <th scope="row">Artist</th>
+                    <th scope="row">Genre</th>
+                    <th scope="row">Duration</th>
+                    <th scope="row">Actions</th>  <!-- Add a column for actions -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in musics %}
+                    <tr>
+                        <td><img src="{{ url_for('static', filename='music/' + song['music_picture']) }}" style="width:150px; height:100px"></td>
+                        <td>{{ song.get('music_name') }}</td>
+                        <td>{{ song.get('music_artist') }}</td>
+                        <td>{{ song.get('music_genre') }}</td>
+                        <td>{{ song.get('music_duration') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%;">
+                            <audio id="audioPlayer{{ loop.index }}" src="{{ url_for('static', filename='/music/' + song['music_file'] ) }}"></audio>
+                            <button onclick="play('{{ loop.index }}')">Play ▶️</button>
+                            <button onclick="pause('{{ loop.index }}')">Pause ⏸️</button>
+                            <button onclick="stop('{{ loop.index }}')">Stop ⏹️</button>
+                            <button onclick="next('{{ loop.index }}')">Next ⏭️</button> <!-- Next button -->
+                            <button onclick="prev('{{ loop.index }}')">Prev ⏮️</button> <!-- Previous button -->
+                            <button onclick="skipForward('{{ loop.index }}')">Skip Forward ⏩</button> <!-- Skip forward button -->
+                            <button onclick="skipBack('{{ loop.index }}')">Skip Backward ⏪</button> <!-- Skip backward button -->
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Player Section -->
+        <div id="player-section">
+            <audio id="audioPlayer" src=""></audio>
+            <div class="play-controls">
+                <button onclick="play()">Play ▶️</button>
+                <button onclick="pause()">Pause ⏸️</button>
+                <button onclick="stop()">Stop ⏹️</button>
+                <button onclick="next()">Next ⏭️</button>
+                <button onclick="prev()">Prev ⏮️</button>
+                <button onclick="skipForward()">Skip Forward ⏩</button>
+                <button onclick="skipBack()">Skip Backward ⏪</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function play(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.play();
+        }
+
+        function pause(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.pause();
+        }
+
+        function stop(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0; // Reset the current time to start from the beginning
+        }
+
+        function next(index) {
+            // Implement logic to play the next song
+        }
+
+        function prev(index) {
+            // Implement logic to play the previous song
+        }
+
+        function skipForward(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.currentTime += 10; // Skip forward by 10 seconds (adjust as needed)
+        }
+
+        function skipBack(index) {
+            var audioPlayer = document.getElementById('audioPlayer' + index);
+            audioPlayer.currentTime -= 10; // Skip backward by 10 seconds (adjust as needed)
+        }
+    </script>
+{% endblock content %}

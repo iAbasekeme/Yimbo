@@ -30,13 +30,6 @@
           background-color: #4caf50; /* Green progress bar */
           border-radius: 5px; /* Rounded corners */
       }
-      #volumeControls {
-        margin-top: 10px;
-        display: flex;
-        justify-content: flex-end; /* Align items to the right */
-    }
-      
-      
   </style>
 </head>
 <body class="bg-white text-white flex">
@@ -145,10 +138,6 @@
         <button onclick="pause()">Pause</button>
         <button onclick="skipBackward()">Skip Backward</button>
         <button onclick="skipForward()">Skip Forward</button>
-        <div id="volumeControls">
-          <label style="color:black;" for="volume">Volume:</label>
-          <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
-        </div>
         <div id="progressBar">
             <div id="progress" style="width: 0;"></div>
         </div>
@@ -160,49 +149,68 @@
     </div>
     
     <script>
-      function play() {
+            function play() {
+            var audio = document.getElementById('audioPlayer');
+            audio.play();
+        }
+
+        function pause() {
+            var audio = document.getElementById('audioPlayer');
+            audio.pause();
+        }
+
+        function skipForward() {
+            var audio = document.getElementById('audioPlayer');
+            audio.currentTime += 10; // Skip forward 10 seconds
+        }
+
+        function skipBackward() {
+            var audio = document.getElementById('audioPlayer');
+            audio.currentTime -= 10; // Skip backward 10 seconds
+        }
+
+        function updateProgressBar() {
+            var audio = document.getElementById('audioPlayer');
+            var progressBar = document.getElementById('progress');
+            var progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        // Update progress bar as audio plays
         var audio = document.getElementById('audioPlayer');
-        audio.play();
-    }
+        audio.addEventListener('timeupdate', updateProgressBar);
+        function play() {
+          var audio = document.getElementById('audioPlayer');
+          audio.play();
+        }
 
-    function pause() {
+        function pause() {
+          var audio = document.getElementById('audioPlayer');
+          audio.pause();
+        }
+
+        function skipForward() {
+          var audio = document.getElementById('audioPlayer');
+          audio.currentTime += 10; // Skip forward 10 seconds
+        }
+
+        function skipBackward() {
+          var audio = document.getElementById('audioPlayer');
+          audio.currentTime -= 10; // Skip backward 10 seconds
+        }
+
+        function updateProgressBar() {
+          var audio = document.getElementById('audioPlayer');
+          var progressBar = document.getElementById('progress');
+          var progress = (audio.currentTime / audio.duration) * 100;
+          progressBar.style.width = progress + '%';
+        }
+
+        // Update progress bar as audio plays
         var audio = document.getElementById('audioPlayer');
-        audio.pause();
-    }
+        audio.addEventListener('timeupdate', updateProgressBar);
 
-    function skipForward() {
-        var audio = document.getElementById('audioPlayer');
-        audio.currentTime += 10; // Skip forward 10 seconds
-    }
-
-    function skipBackward() {
-        var audio = document.getElementById('audioPlayer');
-        audio.currentTime -= 10; // Skip backward 10 seconds
-    }
-
-    function updateProgressBar() {
-      var audio = document.getElementById('audioPlayer');
-      var progressBar = document.getElementById('progress');
-      var currentTimeDisplay = document.getElementById('current-time');
-      var progress = (audio.currentTime / audio.duration) * 100;
-      progressBar.style.width = progress + '%';
-  
-      // Convert current time to minutes and seconds format
-      var minutes = Math.floor(audio.currentTime / 60);
-      var seconds = Math.floor(audio.currentTime - minutes * 60);
-      var formattedTime = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-      currentTimeDisplay.textContent = formattedTime;
-  }
-    // Update progress bar and current time as audio plays
-    var audio = document.getElementById('audioPlayer');
-    audio.addEventListener('timeupdate', function() {
-        updateProgressBar();
-    });
-
-    var volumeControl = document.getElementById('volume');
-    volumeControl.addEventListener('input', function() {
-        audio.volume = volumeControl.value;
-    });
+        
     </script>
     </section>
 
