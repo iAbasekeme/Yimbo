@@ -118,7 +118,7 @@
 
     	<script>
         	function play() {
-            console.log("Audio Directory:", "{{ audio_dir }}");
+            console.log("Audio Directory:", "{{ dirName }}");
             console.log("File Name:", "{{ fileName }}");
             	var audio = new Audio("{{ audio_dir }}" + "{{ fileName }}");
               audio.play();

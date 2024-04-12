@@ -16,6 +16,7 @@ class Radio(Base):
     description = Column(String(1024), nullable=False)
     image_id = Column(Integer, default=0)
     audio_id = Column(Integer)
+    picture = Column(String(250), nullable=False)
     region_id = Column(Integer, ForeignKey('region.id'))
     country_id = Column(Integer, ForeignKey('country.id'))
 
