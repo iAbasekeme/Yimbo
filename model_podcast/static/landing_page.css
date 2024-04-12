@@ -292,16 +292,17 @@ font-size: 1.7rem;
   display: inline-block;
   }
 */
-.display_content{
+/* .display_content{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define grid columns */
-  gap: 20px; /* Gap between grid items */
+  gap: 20px; /* Gap between grid items 
   background-color: #45567d;
   padding: 8rem 2rem;
   margin: 0;
-
+*/
   }
   
+
 .category a {
   background: #e8effa;
   background: linear-gradient(#e8effa, #e8effa);
@@ -317,22 +318,6 @@ font-size: 1.7rem;
 }
 
 
-  .category-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    border-radius: 10px;
-    background: #eaf3da;
-    color: white;
-    text-align: center;
-    box-shadow: 0 0 8px rgba(0,0,0,0.5);
-    height: 190px;
-    width: 190px;
-    margin: auto
-  }
-  
   .category-card img {
     width: 100%;
     height: auto;
@@ -352,129 +337,14 @@ font-size: 1.7rem;
 
 
   }
-
-/*
-display_content {
-  display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next row */
-  gap: 10px; /* Gap between grid items */
-  background-color: #e8effa;
-  padding: 1rem 1rem;
-  margin: 0;
-}
-*/
-
-/*
-.category-card {
-  flex: 1 0 calc(25% - 10px); /* Set initial width of each item to 25% minus the gap */
-  max-width: calc(25% - 10px); /* Limit maximum width of each item to 25% minus the gap */
-  /* You can adjust the flex and max-width values based on your desired layout */
-  margin-bottom: 10px; /* Add margin at the bottom of each item */
-}
-*/
-
-/* Clear the margin for every fourth item to start a new row */
-/*
-.category-card:nth-child(6n) {
-  margin-right: 0;
-}
-*/
-
-/* Adjust styling for images and title as needed */
-/*
-.category-card img {
-  max-width: 100%;
-  height: auto;
-}
-*/
-
-/*
-.category-title {
-  margin-top: 10px;
-  font-weight: bold;
-}
-*/
-
-/*  
-  .display_content {
+  .browse-all {
     display: grid;
-    /*grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Define grid columns */
-    gap: 10px;
-    /* Gap between grid items */
-    background-color: #e8effa;
+    gap: 20px;
+    background-color: white;
     padding: 1rem 1rem;
     margin: 0;
+    width: 202vh;
   }
-  /*
-  .display_content>h3 {
-    color: #000;
-    text-transform: uppercase;
-  }
-  
-  .category {
-    display: flex;
-    justify-content: flex-start;
-    font: bold 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin: 5px;
-    text-transform: uppercase;
-  }
-  
-  /*.category > li {
-    display: inline-block;
-    }
-  */
-  /*
-  .category a {
-    background: #e8effa;
-    background: linear-gradient(#e8effa, #e8effa);
-    border-right: 1px solid #e2e7eb;
-    color: black;
-    padding: 12px 20px;
-    text-decoration: none;
-  }
-  
-  .category a:hover {
-    background: #d9dde0;
-    box-shadow: inset 0 0 10px 1px #e2e7eb;
-  }
-  
-  .category li:first-child a {
-    border-radius: 4px 0 0 4px;
-  }
-  
-  .category li:last-child a {
-    border-right: 0;
-    border-radius: 0 4px 4px 0;
-  }
-  
-  /* Horizontal alignment for navigation elements */
-  /* Vertical alignment for navigation elements 
-  .category>li {
-    display: inline-block;
-  }
-  */
-  /*
-  .category>ul {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .category a {
-    margin: 0 5px;
-    /* Add horizontal spacing between items */
-  }
-  /*
-  #trending {
-    display: inline-flex;
-    flex-direction: row;
-  }
-  
-  h3 {
-  font-size: 12px;
-  color: black;
-  text-transform: uppercase;
-  }
-  
   
   .category-card {
     display: flex;
@@ -489,24 +359,19 @@ display_content {
     box-shadow: 0 0 8px rgba(0,0,0,0.5);
     height: 190px;
     width: 190px;
-    margin: auto;
-  }
-  */
-  /*
-  .category-card img {
-    width: 100%;
-    height: auto;
-    margin-top: 12px;
-    margin-bottom: 10px;
-    border-radius: 4px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   
-  .category-title {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: #000;
+  @media (min-width: 768px) {
+    .browse-all {
+      grid-template-columns: repeat(5, 1fr); /* Adjust to 5 columns on larger screens */
+    }
   }
+  .display_content { 
+    width: auto;
+  }
+
   */
   .artist-name {
     color: #b3b3b3;
@@ -531,6 +396,8 @@ display_content {
 	overflow: hidden;
 	margin: auto;
 	display: inline-block;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .artist-card img {

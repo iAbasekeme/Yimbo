@@ -251,21 +251,24 @@ class PodcastMethods():
     def get_audio_link_from_file(self, audio_id, audio_tracks):
         """get the audio path"""
         if audio_id is not None and audio_tracks is not None:
-            if isinstance(audio_id, int):
-                image_path = None
+            if type(audio_id) is str:
+                audio_id = int(audio_id)
+
+            if type(audio_id) is int:
+                fileName = None
                 for name in audio_tracks:
                     try:
                         digit_name = name.split('_')
                         if len(digit_name) > 1:
-                            tokenized_num = digit_name[0]
-                            if tokenized_num.isdigit():
-                                if audio_id == int(tokenized_num):
-                                    image_path = name
+                            tokenized_num = int(digit_name[0])
+                            if audio_id == tokenized_num:
+                                fileName = name
+
                     except Exception as e:
-                        print(f"Error processing filename {name}: {e}")
-                if not image_path:
-                    image_path = "Audio content is Unavailable"
-                return image_path
+                            print(f"Error processing filename {name}: {e}")
+                    if not fileName:
+                        fileName = "Audio content is Unavailable"
+                return fileName
 
 
     def get_audioFiles(self, directory):
@@ -292,6 +295,53 @@ class PodcastMethods():
             print(f"Directory '{directory}' does not exist or is not a valid directory.")
 
         return audio_file_names
+
+
+    def search_engine(self, search_term, *args):
+        """Handles all search-related information and returns results for the given search term."""
+        if not isinstance(search_term, str):
+            raise TypeError(f"search_term must be of type <str>")
+
+        # Create a dictionary for quick lookup based on search term
+        search_dict = {}
+        for dictionary in args:
+            if not isinstance(dictionary, dict):
+                raise ValueError("Each argument must be of type dict")
+
+            for key, values in dictionary.items():
+                # Combine all data into a single dictionary
+                for item in values:
+                    if isinstance(item, dict):
+                        # Combine name and description for more comprehensive search results
+                        combined_text = f"{item.get('name', '')} {item.get('description', '')}".lower()
+                        search_dict.setdefault(combined_text, []).append(item)
+                    else:
+                         print(f"Skipping item of unexpected type: {type(item)} - {item}")
+
+        # Normalize the search term to lowercase for case-insensitive matching
+        search_term = search_term.lower()
+
+        # Initialize the result dictionary
+        search_result = {}
+
+        # Search for matching terms in the combined dictionary
+        for combined_text, items in search_dict.items():
+            if search_term in combined_text:
+                for item in items:
+                    item_id = item.get('name')
+                    if item_id not in search_result:
+                        search_result[item_id] = {
+                            "name": item.get("name"),
+                            "description": item.get("description"),
+                            "category": item.get("category_id"),
+                            "region_id": item.get("region_id"),
+                            "country_id": item.get("country_id"),
+                            "image_id": item.get("image_id"),
+                            "audio_id": item.get("audio_id"),
+                        }
+
+        return search_result
+
 
     def display_sixpodcast(self, country):
         """display podacst and radio in the landing page"""
@@ -320,7 +370,7 @@ class PodcastMethods():
                 count += 1
             
             return Podcast_channel
-    
+ 
 
         # if pod_country_names is None:
         #    print(f"No podcasts found in region '{region}'")
