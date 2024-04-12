@@ -135,9 +135,18 @@ def podcast_audio_player():
     image = request.args.get("img")
 
     audio_id = request.args.get("audio_id")
+    print(type(audio_id))
+    print()
+
     audio_dir = "/home/pc/Yimbo/model_podcast/static/p_music"
     audio_files = podcast_method.get_audioFiles(audio_dir)
-    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+    print(audio_files)
+    print()
+
+    fileName = podcast_method.get_audio_link_from_file(audio_id, audio_files)
+    print(fileName)
+    print()
+
     errMessage = None
  
     if fileName == "Audio content is Unavailable":
@@ -157,10 +166,13 @@ def radio_audio_player():
     description = request.args.get("description")
     image = request.args.get("img")
     audio_id = request.args.get("audio_id")
+    print(audio_id)
 
     audio_dir = "/home/pc/Yimbo/model_podcast/static/r_music"
     audio_files = podcast_method.get_audioFiles(audio_dir)
-    fileName = podcast_method.get_linkFromFile(audio_id, audio_files)
+    fileName = podcast_method.get_audio_link_from_file(audio_id, audio_files)
+    print(fileName)
+    print()
 
     errMessage = None
  
@@ -186,5 +198,11 @@ def podcast():
                            country_names=country_names,
                            region_names=region_names)
 
-
+@app.route("/search", methods=["GET", "POST"], strict_slashes=False)
+def search():
+    """ This method handles the seach eengine part of the application"""
+    search_term = request.args.get("search_term")
     
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
