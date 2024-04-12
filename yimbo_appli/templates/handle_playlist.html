@@ -1,0 +1,83 @@
+{% extends "user_page.html" %}
+
+{% block content %}
+    <div class="flex-1" style="color:black;">
+        <form action="" method="POST">
+            <br><br>
+            <label for="PlaylistName">Playlist Name:</label>
+            <input type="text" name="PlaylistName" id="PlaylistName">
+            <br><br>
+            <table>
+                <thead>
+                    <th><th/>
+                    <tr>
+                        <th scope="row">Picture</th>
+                        <th scope="row">Name</th>
+                        <th scope="row">Artist</th>
+                        <th scope="row">Genre</th>
+                        <th scope="row">Duration</th>
+                        <th scope="row">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for song in songs %}
+                        <tr>
+                            <td><img src="{{ url_for('static', filename='music/' + song.picture) }}" style="width:150px; height:100px"></td>
+                            <td>{{ song.title }}</td>
+                            <td>{{ song.artist_name }}</td>
+                            {% for genre in genres %}
+                                {% if song.genre_id == genre.id %}
+                                    <td>{{ genre.name }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            <td>{{ song.duration }}</td>
+                            <td>
+                                <input type="checkbox" id="song_{{ song.id }}" name="selected_songs[]" value="{{ song.id }}">
+                                <label for="song_{{ song.id }}"></label>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="button" id="add-selected-songs-btn">Add Selected Songs</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('add-selected-songs-btn').addEventListener('click', function() {
+            var selectedSongs = [];
+            var checkboxes = document.getElementsByName('selected_songs[]');
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    selectedSongs.push(checkbox.value);
+                }
+            });
+            var playlistName = document.getElementById('PlaylistName').value;
+            // Create an object with playlist data
+            var playlistData = {
+                name: playlistName,
+                songs: selectedSongs
+            };
+            // Print selected song IDs in the console
+            console.log(selectedSongs);
+            console.log(playlistData);
+
+            // Send selected song IDs to the backend
+            fetch('/add_selected_songs',    {
+                method: 'POST',
+                body: JSON.stringify(playlistData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                alert(data.message);
+                window.location.href = '/playlist';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+{% endblock content %}
