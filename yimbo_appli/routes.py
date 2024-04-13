@@ -25,7 +25,7 @@ radio_method = RadioMethods()
 from sqlalchemy import create_engine,  MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from podcast_model.model import Base, Country, Region, Category, Podcast
+from yimbo_appli.podcast_model.model import Base, Country, Region, Category, Podcast
 
 from yimbo_appli import my_session
 

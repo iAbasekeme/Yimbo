@@ -1,9 +1,9 @@
 #/usr/bin/python3
 """ radioi module to hadle all radio methods"""
 from .r_model import Radio
-from podcast_model.podcast_model import get_db
+from yimbo_appli.podcast_model.podcast_model import get_db
 from sqlalchemy import inspect
-from podcast_model.podcast_methods import PodcastMethods
+from yimbo_appli.podcast_model.podcast_methods import PodcastMethods
 import os
 
 podcast_cls = PodcastMethods()

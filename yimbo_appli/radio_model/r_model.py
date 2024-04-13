@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ module that contains a mirror of the radio table from the podcasst_radio db"""
 from sqlalchemy import Column, Integer, String, ForeignKey
-from podcast_model.model import Country, Region, Base
+from yimbo_appli.podcast_model.model import Country, Region, Base
 from sqlalchemy.orm import relationship
 
 

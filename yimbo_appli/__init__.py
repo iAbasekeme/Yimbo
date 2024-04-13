@@ -13,9 +13,9 @@ from sqlalchemy import create_engine,  MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 # Connection to the database
-from podcast_model.model import Base
+from yimbo_appli.podcast_model.model import Base
 
-engine = create_engine('mysql+mysqldb://root:elpastore@localhost:3306/podcast_radio_database')
+engine = create_engine('mysql+mysqldb://root:password@localhost:3306/podcast_radio_database')
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 my_session = Session()
@@ -29,7 +29,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config['SECRET_KEY'] = '80ab528d4604e4d073b613216f6a0822'
-app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+mysqldb://root:elpastore@localhost:3306/podcast_radio_database'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+mysqldb://root:password@localhost:3306/podcast_radio_database'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///yimbo.db'
@@ -63,5 +63,3 @@ from yimbo_appli import routes
 
 
 from yimbo_appli.models import User
-
-
