@@ -206,7 +206,7 @@ def playlist_details(playlist_id):
             'music_duration': data.duration
             })
     print(musics_info)
-    return render_template('playlist_details.html', musics=musics_info)
+    return render_template('playlist_details2.html', musics=musics_info)
 
 
 

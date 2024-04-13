@@ -1,0 +1,3 @@
+mysqldump -uroot -p podcast_radio_database > yimbo_database.sql
+1815  vi yimbo_database.sql
+1816  mysql -uroot -p podcast_radio_database < yimbo_database.sql
