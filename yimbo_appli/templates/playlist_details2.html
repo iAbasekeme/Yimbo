@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>podcast</title>
+  <title>Podcast</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/play.css') }}"/>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -16,27 +16,29 @@
       height: 60vh;
     }
  
-      #progressBar {
-          width: 100%;
-          height: 10px; /* Adjust height as needed */
-          background-color: #ddd; /* Gray background */
-          border-radius: 5px; /* Rounded corners */
-          margin-top: 10px; /* Adjust margin as needed */
-      }
-  
-      #progress {
-          height: 100%;
-          background-color: #4caf50; /* Green progress bar */
-          border-radius: 5px; /* Rounded corners */
-      }
-      #volumeControls {
-          margin-top: 10px;
-          display: flex;
-          justify-content: flex-end; /* Align items to the right */
-      }
-      .music-item {
-          cursor: pointer; /* Change cursor to pointer */
-      }
+    #progressBar {
+        width: 100%;
+        height: 10px; /* Adjust height as needed */
+        background-color: #ddd; /* Gray background */
+        border-radius: 5px; /* Rounded corners */
+        margin-top: 10px; /* Adjust margin as needed */
+    }
+
+    #progress {
+        height: 100%;
+        background-color: #4caf50; /* Green progress bar */
+        border-radius: 5px; /* Rounded corners */
+    }
+
+    #volumeControls {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end; /* Align items to the right */
+    }
+
+    .music-item {
+        cursor: pointer; /* Change cursor to pointer */
+    }
   </style>
 </head>
 <body class="bg-white text-white flex">
@@ -50,21 +52,21 @@
 
     <!-- Top section of the sidebar -->
     <div class="sidebar-section">
-		<div class="logo-container">
-      <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
-		</div>
-		<div class="user-profile">
-      <span class="username">Welcome {{ current_user.username }}!</span>
-  			<button class="dropdown-toggle">
-    			<i class="fas fa-caret-down"></i> </button>
-  			<ul class="dropdown-menu">
-    			<li><a href="{{url_for('edit')}}">Edit Profile</a></li>
-  			</ul>
-		</div>	
-		<a href="{{ url_for('home') }}" class="sidebar-link">Home</a>
-		<a href="/logout" class="logout-button">
-      <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome logout icon -->
-      Logout
+        <div class="logo-container">
+        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" alt="User picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+        </div>
+        <div class="user-profile">
+        <span class="username">Welcome {{ current_user.username }}!</span>
+            <button class="dropdown-toggle">
+                <i class="fas fa-caret-down"></i> </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{url_for('edit')}}">Edit Profile</a></li>
+            </ul>
+        </div>   
+        <a href="{{ url_for('home') }}" class="sidebar-link">Home</a>
+        <a href="/logout" class="logout-button">
+        <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome logout icon -->
+        Logout
     </a>
 
     </div>
@@ -79,7 +81,7 @@
         <a href="{{ url_for('radio_test') }}" class="sidebar-link">
             radio
         </a>
-		 <a href="#" class="sidebar-link">
+        <a href="#" class="sidebar-link">
             location
         </a>
     </div>
@@ -114,27 +116,31 @@
     </header>
     
     <!-- Popular Tracks Section -->
-	<h3> Recent </h3>
+    <h3> Recent </h3>
     <section id="trending" class="display_content">
         <div class="container">
-            <img src="{{ url_for('static', filename='/pics/' + " ") }}" alt="Podcast Logo" class="podcast-logo">
+            <img id="music_picture" alt="Podcast Logo" class="podcast-logo">
             <div class="description">
                 <h1 id="music_name"><strong> </strong></h1>
-                <p id="music_artist"> </p>
+                <h2 id="music_artist"> </h2>
+                <p id="music_duration"></p>
             </div>
           </div>
           <div class="buttons">
-            <audio id="audioPlayer" src="{{ url_for('static', filename='/p_music/' + " ") }}"></audio>
+            <audio id="audioPlayer"> </audio>
         
             <button onclick="play()">Play ▶️</button>
             <button onclick="pause()">Pause</button>
             <button onclick="skipBackward()">Skip Backward</button>
             <button onclick="skipForward()">Skip Forward</button>
+            <button onclick="playPrevious()">Previous</button>
+            <button onclick="playNext()">Next</button>
+            <button onclick="stop()">Stop</button>
             <div id="volumeControls">
               <label style="color: black;"for="volume">Volume:</label>
               <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
             </div>
-            <div id="progressBar">
+            <div id="progressBar" onclick="setProgress(event)">
               <div id="progress" style="width: 0;"></div>
             </div>
             <div class="time-stamps">
@@ -146,56 +152,119 @@
     <div>
         <ul style="color:black;">
             {% for music in musics %}
-                <li class="music-item" data-music-name="{{ music.get('music_name') }}" d>{{ music.get('music_name') }}</li>
+                <li class="music-item" data-music-name="{{ music.get('music_name') }}"
+                data-music-picture="{{ music.get('music_picture') }}"
+                data-music-duration="{{ music.get('music_duration') }}"
+                data-music-artist="{{ music.get('music_artist') }}"
+                data-music-file="{{ music.get('music_file') }}"
+                >{{ music.get('music_name') }}</li>
             {% endfor %}
         </ul>
     </div>
 
     <script>
+        // Define functions in the global scope
+        function play() {
+            var audio = document.getElementById('audioPlayer');
+            audio.play();
+        }
+
+        function pause() {
+            var audio = document.getElementById('audioPlayer');
+            audio.pause();
+        }
+
+        function skipForward() {
+            var audio = document.getElementById('audioPlayer');
+            audio.currentTime += 10; // Skip forward 10 seconds
+        }
+
+        function skipBackward() {
+            var audio = document.getElementById('audioPlayer');
+            audio.currentTime -= 10; // Skip backward 10 seconds
+        }
+
+        function playPrevious() {
+            var musicItems = document.querySelectorAll('.music-item');
+            var currentMusicIndex = Array.from(musicItems).findIndex(item => item.classList.contains('active'));
+            if (currentMusicIndex > 0) {
+                var prevMusicItem = musicItems[currentMusicIndex - 1];
+                prevMusicItem.click(); // Simulate a click event to play the previous music
+            }
+        }
+
+        function playNext() {
+            var musicItems = document.querySelectorAll('.music-item');
+            var currentMusicIndex = Array.from(musicItems).findIndex(item => item.classList.contains('active'));
+            if (currentMusicIndex < musicItems.length - 1) {
+                var nextMusicItem = musicItems[currentMusicIndex + 1];
+                nextMusicItem.click(); // Simulate a click event to play the next music
+            }
+        }
+
+        function stop() {
+            var audio = document.getElementById('audioPlayer');
+            audio.pause();
+            audio.currentTime = 0;
+        }
+
+        function jumpToTime() {
+            var audio = document.getElementById('audioPlayer');
+            var time = document.getElementById('jumpToTime').value;
+            audio.currentTime = time;
+        }
+
+        function updateProgressBar() {
+            var audio = document.getElementById('audioPlayer');
+            var progressBar = document.getElementById('progress');
+            var currentTimeDisplay = document.getElementById('current-time');
+            var progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = progress + '%';
+
+            // Convert current time to minutes and seconds format
+            var minutes = Math.floor(audio.currentTime / 60);
+            var seconds = Math.floor(audio.currentTime - minutes * 60);
+            var formattedTime = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            currentTimeDisplay.textContent = formattedTime;
+        }
+
+        function setProgress(event) {
+            var progressBar = document.getElementById('progressBar');
+            var audio = document.getElementById('audioPlayer');
+            var progress = (event.offsetX / progressBar.clientWidth) * audio.duration;
+            audio.currentTime = progress;
+        }
+        // Attach event listeners and other code inside DOMContentLoaded
         document.addEventListener('DOMContentLoaded', function() {
             const musicItems = document.querySelectorAll('.music-item');
+            var currentMusicIndex = 0;
 
-            musicItems.forEach(function(item) {
+            musicItems.forEach(function(item, index) {
                 item.addEventListener('click', function() {
+                    currentMusicIndex = index; // Update the current music index
                     const musicName = this.dataset.musicName;
+                    const musicArtist = this.dataset.musicArtist;
+                    const musicDuration = this.dataset.musicDuration;
+                    const musicFile = this.dataset.musicFile; 
+                    const musicPicture = this.dataset.musicPicture; 
+                    // Retrieve music file attribute
+
                     document.getElementById('music_name').innerText = musicName;
-                    // You can also load other details of the music here if needed
+                    document.getElementById('music_artist').innerText = musicArtist;
+                    document.getElementById('music_duration').innerText = musicDuration;
+                    document.getElementById('audioPlayer').src = "{{ url_for('static', filename='/music/') }}" + musicFile;
+                    document.getElementById('music_picture').src = "{{ url_for('static', filename='/music/') }}" + musicPicture;
+
+                    // Remove the 'active' class from all music items
+                    musicItems.forEach(function(item) {
+                        item.classList.remove('active');
+                    });
+                    // Add the 'active' class to the clicked music item
+                    this.classList.add('active');
+
+                    play(); // Start playing the selected music
                 });
             });
-
-            function play() {
-                var audio = document.getElementById('audioPlayer');
-                audio.play();
-            }
-
-            function pause() {
-                var audio = document.getElementById('audioPlayer');
-                audio.pause();
-            }
-
-            function skipForward() {
-                var audio = document.getElementById('audioPlayer');
-                audio.currentTime += 10; // Skip forward 10 seconds
-            }
-
-            function skipBackward() {
-                var audio = document.getElementById('audioPlayer');
-                audio.currentTime -= 10; // Skip backward 10 seconds
-            }
-
-            function updateProgressBar() {
-                var audio = document.getElementById('audioPlayer');
-                var progressBar = document.getElementById('progress');
-                var currentTimeDisplay = document.getElementById('current-time');
-                var progress = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = progress + '%';
-
-                // Convert current time to minutes and seconds format
-                var minutes = Math.floor(audio.currentTime / 60);
-                var seconds = Math.floor(audio.currentTime - minutes * 60);
-                var formattedTime = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-                currentTimeDisplay.textContent = formattedTime;
-            }
 
             // Update progress bar and current time as audio plays
             var audio = document.getElementById('audioPlayer');
