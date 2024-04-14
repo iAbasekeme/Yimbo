@@ -91,8 +91,9 @@
         <a href="#" class="sidebar-link active">
             <span class="sidebar-link-icon">💜</span>
             <span class="sidebar-link-text">Liked podcast</span>
+        <a href="{{ url_for('playlist') }}" class="sidebar-link">
+            <span class="sidebar-link-text">Playlist</span>
         </a>
-        <!-- Repeat for each item -->
         <a href="{{ url_for('create_playlist') }}" class="sidebar-link">
             <span class="sidebar-link-text">Create playlist</span>
         </a>
