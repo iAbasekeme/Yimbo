@@ -239,7 +239,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const musicItems = document.querySelectorAll('.music-item');
             var currentMusicIndex = 0;
-
+        
             musicItems.forEach(function(item, index) {
                 item.addEventListener('click', function() {
                     currentMusicIndex = index; // Update the current music index
@@ -249,30 +249,40 @@
                     const musicFile = this.dataset.musicFile; 
                     const musicPicture = this.dataset.musicPicture; 
                     // Retrieve music file attribute
-
+        
                     document.getElementById('music_name').innerText = musicName;
                     document.getElementById('music_artist').innerText = musicArtist;
                     document.getElementById('music_duration').innerText = musicDuration;
                     document.getElementById('audioPlayer').src = "{{ url_for('static', filename='/music/') }}" + musicFile;
                     document.getElementById('music_picture').src = "{{ url_for('static', filename='/music/') }}" + musicPicture;
-
+        
                     // Remove the 'active' class from all music items
                     musicItems.forEach(function(item) {
                         item.classList.remove('active');
                     });
                     // Add the 'active' class to the clicked music item
                     this.classList.add('active');
-
+        
                     play(); // Start playing the selected music
                 });
             });
-
+        
             // Update progress bar and current time as audio plays
             var audio = document.getElementById('audioPlayer');
             audio.addEventListener('timeupdate', function() {
                 updateProgressBar();
             });
-
+        
+            // Play the next music when the current one ends
+            audio.addEventListener('ended', function() {
+                // Check if there's a next music item in the list
+                if (currentMusicIndex < musicItems.length - 1) {
+                    currentMusicIndex++; // Move to the next music item
+                    const nextMusicItem = musicItems[currentMusicIndex];
+                    nextMusicItem.click(); // Simulate a click event to play the next music
+                }
+            });
+        
             var volumeControl = document.getElementById('volume');
             volumeControl.addEventListener('input', function() {
                 audio.volume = volumeControl.value;
