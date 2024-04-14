@@ -95,12 +95,12 @@
             <span class="sidebar-link-text">Liked podcast</span>
         </a>
         <!-- Repeat for each item -->
-        <a href="#" class="sidebar-link">
-            <span class="sidebar-link-text">Create playlist</span>
-        </a>
-        <a href="#" class="sidebar-link"/>
-            <span class="sidebar-link-text">Follow Podcast channel</span>
-        </a>
+        <a href="{{ url_for('create_playlist') }}" class="sidebar-link">
+          <span class="sidebar-link-text">Create playlist</span>
+      </a>
+      <a href="#" class="sidebar-link"/>
+          <span class="sidebar-link-text">Follow Podcast channel</span>
+      </a>
         <!-- ... more links ... -->
     </div>
 </div>
