@@ -15,67 +15,82 @@
         <form method="POST">
             {{ form.hidden_tag() }}
             <div class="form-group">
-                    {{ form.username.label(class="form-control-label") }}
-
-                    {% if form.username.errors %}
-                        {{ form.username(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.username.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.username(class="form-control form-control-lg") }}
-                    {% endif %}
+                {{ form.username.label(class="form-control-label") }}
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.username(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.email.label(class="form-control-label") }}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class="form-control-label") }}
+                <div class="input-group">
+                    {{ form.password(class="form-control form-control-lg", id="password-field") }}
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="toggle-password">Show</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
-                    {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.email(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.password.label(class="form-control-label") }}
-                    {% if form.password.errors %}
-                        {{ form.password(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.password.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.password(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.confirm_password.label(class="form-control-label") }}
-                    {% if form.confirm_password.errors %}
-                        {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.confirm_password.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.confirm_password(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
+                {% if form.password.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label(class="form-control-label") }}
+                {% if form.confirm_password.errors %}
+                    {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.confirm_password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.confirm_password(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
             <div class="form-group">
                 {{ form.submit(class="btn btn-primary") }}
             </div>
-            
-     
             <small>
                 Already Have An Account? <a href="{{ url_for('login')  }}">Login Here</a>
             </small>
         </form>
     </div>
+    
+    <script>
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            var passwordField = document.getElementById('password-field');
+            var toggleButton = document.getElementById('toggle-password');
+    
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordField.type = 'password';
+                toggleButton.textContent = 'Show';
+            }
+        });
+    </script>
 </body>
 </html>
