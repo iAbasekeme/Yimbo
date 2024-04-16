@@ -82,3 +82,12 @@ span {
 .social i{
   margin-right: 4px;
 }
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group-append {
+  margin-left: auto;
+}
