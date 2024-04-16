@@ -112,10 +112,12 @@
     </header>
     
 		<!-- Popular Tracks Section -->
-  {% if request.endpoint == 'user_radio' %}
+  {% if request.endpoint == 'radio_test' %}
     <h2 class="text-2xl font-bold mb-4">Radio</h2>
+  {% elif  request.endpoint == 'podcast_test' %}
+    <h2 class="text-2xl font-bold mb-4">Podcast</h2>
   {% else %}
-	  <h2 class="text-2xl font-bold mb-4">Podcast</h2>
+	  <h2 class="text-2xl font-bold mb-4">Welcome to Yimbo app, let's connect to africa rhythm</h2>
   {% endif %}
 
 	<h3> Recent </h3>

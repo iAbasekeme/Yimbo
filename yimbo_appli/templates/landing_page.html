@@ -30,8 +30,8 @@
 	<body>
     	<nav id="navbar">
         	<ul id="nav-list">
-            	<li><a href="">Music</a></li>
-            	<li><a href="">Podcast</a></li>
+            	<li><a href="{{ url_for('music') }}">Music</a></li>
+            	<li><a href="{{ url_for('podcast_test') }}">Podcast</a></li>
             	<li><a href="">Radio</a></li>
             	{% if current_user.is_authenticated %}
 					<li class="signs">
