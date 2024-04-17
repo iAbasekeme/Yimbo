@@ -264,6 +264,14 @@ def home():
     return render_template("landing_page.html", podcast_kenya=podcast_kenya,
                            radio_sa=radio_sa)
 
+# search functionality
+@app.route('/search', methods=["GET", "POST"])
+def search():
+    q = request.args.get("q")
+    print(q)
+
+    if q:
+        results = my_session.querry.filter(Podcast.name.icontains(q) | podcast.description.icontains(q))
 
 @app.route('/podcast', methods=["GET", "POST"])
 @login_required
@@ -325,7 +333,7 @@ def radio_country(country_id):
 @login_required
 def radio_region(region_id):
     region = my_session.query(Region).filter_by(id=region_id).first()
-    if country:
+    if region:
         radios = my_session.query(Radio).filter_by(region_id=region_id)
         return render_template('radio.html', radios=radios, data=region)
     return  jsonify({"message": "Not found."}), 404
