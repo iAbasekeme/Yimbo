@@ -9,8 +9,6 @@ Yimbo is a platform for streaming African content powered by the Python Flask fr
 Wanna know more about yimbo? checkout this insightful blog post by Abdoulaye: [Link here](https://shorturl.at/rsD14).
 
 # <span style="font-size: 17;">Features</span>
-
----
 - user Authentication
 - Tracks
 - Podcasts
@@ -22,7 +20,6 @@ Wanna know more about yimbo? checkout this insightful blog post by Abdoulaye: [L
 
 # <span style="font-size: 17;">Authors</span>
 
----
 - [Aboulaye sadio](https://www.linkedin.com/in/abdoulaye-sadio-4b951a225/)
 - [Abasiekeme Etim](https://www.linkedin.com/in/abas03/)
 - Wisdom Honest
@@ -35,7 +32,6 @@ Wanna know more about yimbo? checkout this insightful blog post by Abdoulaye: [L
 
 # <span style="font-size: 17;">Usage</span>
 
-***
 You can get this project's link [here](https://www.yimboafrica.site/).
 
 This link will lead you to the yimbo application site.
@@ -46,8 +42,7 @@ This link will lead you to the yimbo application site.
 4. Explore other features.
 
 # <span style="font-size: 17;">Contributing</span>
-***
 We welcome contributions from the community to help make *Yimbo* even better! If you have any bug reports, feature requests, or suggestions for improvements, please submit them through the [Github issues](https://github.com/iAbasekeme/Yimbo/issues).
 
 # <span style="font-size: 17;">License</span>
-We have no license yet, we are yet to get in the future
+We have no license yet, we are yet to get one in the future
