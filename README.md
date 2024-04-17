@@ -1,5 +1,5 @@
 # Yimbo
----
+
 ## *Introduction*
 
 Yimbo is a platform for streaming African content powered by the Python Flask framework that provides the main functions you'd expect from a streaming platform, such as podcasts, music playlists, etc.
