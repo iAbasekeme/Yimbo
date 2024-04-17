@@ -6,7 +6,7 @@ from .model import Base
 from contextlib import contextmanager
 
 # Create an engine to connect to the database
-engine = create_engine('mysql+mysqldb://root:elpastore24@localhost:3306/podcast_radio_database')
+engine = create_engine('mysql+mysqldb://root:elpastore@localhost:3306/podcast_radio_database')
 
 # Create a sessionmaker
 SessionLocal = sessionmaker(bind=engine)
