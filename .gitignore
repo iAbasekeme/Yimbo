@@ -2,3 +2,6 @@
 yimbo_appli/flask_config.env
 yimbo_appli/.env
 .env
+# Ignore Python bytecode files
+__pycache__/
+*.pyc

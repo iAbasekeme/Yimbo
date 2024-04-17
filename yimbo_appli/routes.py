@@ -87,6 +87,11 @@ oauth.register(
 @app.route('/add_genre', methods=['GET', 'POST'])
 @login_required
 def add_genre():
+    """method that add a new genre in the database
+
+    Returns:
+        _type_: a html page
+    """
     if request.method == 'POST':
         new_genre = Genre(name=request.form['genre'])
         my_session.add(new_genre)
@@ -98,12 +103,20 @@ def add_genre():
 def allowed_file(filename):
     """
     method to check if the file is allowed
+    arguments:
+        -filename: string , name of the file
+    return:  Boolean, True if the file is allowed else
     """
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/add_music', methods=['GET', 'POST'])
 @login_required
 def add_music():
+    """method that allow the admin/user to add a new audio file
+        in the database
+    Returns:
+        _type_: html file
+    """
     if request.method == 'POST':
         # Check if the POST request has the file part
         if 'file' not in request.files or 'picture' not in request.files:
@@ -151,18 +164,31 @@ def music():
 def player(id):
     """
     display the music player with a specific music
+    argument: id: int, id of the music in the database
     """
     music = my_session.query(Music).filter_by(id=id).first()
     musics = my_session.query(Music).all()
     return render_template('music_player.html', music=music, musics=musics)
 
 def get_song_name(id):
+    """a function that return the song name from the database
+
+    Args:
+        id (int): id of the given music
+
+    Returns:
+        _type_: dict: a dictionary of the music's information
+    """
     songs = my_session.query(Music).filter_by(id=id).first()
     return songs
 
 def get_genre(id):
     """
-    method to get the genre
+    method to get the genre name
+    Arguments:
+        id: int -- id of the genre
+    Return:
+        dict -- informations(name and id) of the genre
     """
     genre = my_session.query(Genre).filter_by(id=id).first()
     return genre
@@ -172,6 +198,9 @@ def get_genre(id):
 def get_music_by_genre(genre_id):
     """
     display list of music of the specified genre
+    argument:
+        -int: genre's id
+    return: a html file with the list of music with the specific genre
     """
     # Query all music objects with the specified genre_id
     genre = my_session.query(Genre).filter(Genre.id==genre_id).first()
@@ -184,6 +213,10 @@ def get_music_by_genre(genre_id):
 @app.route('/playlist', methods=['GET', 'POST'])
 @login_required
 def playlist():
+    """route of the playlist page
+
+    Returns: the html file with all created playlist
+    """
     playlists = my_session.query(Playlist).all()
 
     return render_template('playlist_page.html', playlists=playlists)
@@ -191,6 +224,14 @@ def playlist():
 @app.route('/playlist/<int:playlist_id>')
 @login_required
 def playlist_details(playlist_id):
+    """ display the list of music in the playlist
+
+    Args:
+        playlist_id (int): the id of the playlist
+
+    Returns:
+        the html page with the list of music and play option
+    """
     # Query PlaylistTrack objects by playlist_id
     musics = my_session.query(PlaylistTrack).filter_by(playlist_id=playlist_id).all()
     musics_info = []
@@ -213,6 +254,9 @@ def playlist_details(playlist_id):
 @app.route('/playlist/create', methods=['GET', 'POST'])
 @login_required
 def create_playlist():
+    """
+    route that allow user to create a playlist and add songs into
+    """
     songs = my_session.query(Music).all()
     
     genres = []
@@ -227,6 +271,11 @@ def create_playlist():
 @app.route('/add_selected_songs', methods=['POST', 'GET'])
 @login_required
 def add_selected_songs():
+    """method that take post request from user when trying to create playlist and
+        save added song in the datbase
+    Returns:
+        dict: a json response with status of operation (ok or error) and
+    """
     selected_songs = request.json
     
     playlist_name = selected_songs.get('name')
@@ -248,7 +297,6 @@ def add_selected_songs():
     my_session.close()
     
     return jsonify({'message': 'Selected songs added successfully'})
-
 
 
 
@@ -335,7 +383,9 @@ def radio_region(region_id):
 @login_required
 def audio_player(id):
     """
-    route for the audio player
+    route for the audio player page to play a specific podcast
+    argument:
+        -int: id of the podcast
     """
     podcast = my_session.query(Podcast).filter_by(id=id).first()
     return render_template('audio_player_test.html', podcast=podcast)
@@ -352,12 +402,10 @@ def googleLogin():
 @app.route('/sigin_google')
 def googleCallback():
     """
-    the callback function
-    
-    token = oauth.Yimbo.authorize_access_token()
-    session['user'] = token
-    return redirect(url_for('account')) 
-    #return redirect(url_for("home_page"))"""
+    the callback function for the google login
+    it will get the access token and user information from google
+    then create an account or log in into the user account
+    """
     token = oauth.Yimbo.authorize_access_token()
     session['user'] = token
     userinfo_endpoint = oauth.Yimbo.server_metadata.get('userinfo_endpoint')
@@ -389,7 +437,8 @@ def googleCallback():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """
-    method for registration"""
+    method for registration of the user
+    """
     
     if  current_user.is_authenticated:
         return  redirect(url_for('home'))
@@ -409,7 +458,8 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    route for the login"""
+    route for the login
+    """
     
     if  current_user.is_authenticated:
         return  redirect(url_for('home_page'))
@@ -427,12 +477,13 @@ def login():
             flash('Login Unsuccessful. Please check your email and your password', 'danger')
     return render_template('new_login.html',form=form)
 
+
 @app.route('/account')
 @login_required
 def account():
-    #image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    """user account page with all information
+    """
     return render_template('user_page.html')
-    #return render_template('new_user_page.html', image_file=image_file)
 
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -452,6 +503,9 @@ def logout():
 def save_picture(form_picture):
     """
     method to save the picture
+    argument:
+        -form_picture: file, the picture to save
+    returns: string, the name of the picture saved with the path
     """
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -464,17 +518,6 @@ def save_picture(form_picture):
     #i.save(picture_path)
     form_picture.save(picture_path)
     return picture_fn
-
-def save_audio(form_music):
-    """
-    method to save the audio
-    """
-    random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(form_music.filename)
-    music_fn = random_hex + f_ext
-    music_path = os.path.join(app.root_path, 'static/music', music_fn)
-    form_music.save(music_path)
-    return music_fn
 
 
 @app.route('/account/edit', methods=['GET', 'POST'])
@@ -504,51 +547,13 @@ def edit():
     return render_template('edit.html', user=user ,image_file=image_file, form=form)
 
 
-def allowed_file(filename):
-    """
-    method to check if the file is allowed
-    """
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/handle_music', methods=['GET', 'POST'])
-@login_required
-def handle_music():
-    if request.method == 'POST':
-        # Check if the POST request has the file part
-        if 'file' not in request.files or 'picture' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-
-        file = request.files['file']
-        picture = request.files['picture']
-
-        # If user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '' or picture.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-
-        # Check if the file is allowed
-        if file and allowed_file(file.filename) and allowed_file(picture.filename):
-            music_filename = secure_filename(file.filename)
-            picture_filename = secure_filename(picture.filename)
-            
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], music_filename))
-            picture.save(os.path.join(app.config['UPLOAD_FOLDER'], picture_filename))
-            
-            # Add song to database
-            new_song = Music(title=request.form['title'], artist=request.form['artist'], duration=request.form['duration'], music_file=music_filename, picture=picture_filename)
-            db.session.add(new_song)
-            db.session.commit()
-            flash("File Uploaded Successfully")
-            return redirect('/handle_music')  # Redirect after successful upload
-
-    return render_template('handle_music.html')
-
 
 def send_mail(user):
     """
     method to send mail
+    arguments:
+        -user: User, the user to send the mail
+    return: None
     """
     token = user.get_reset_token()
     msg = Message('Password Reset Request', sender='abdoulayesadio@gmail.com', recipients=[user.email])
@@ -582,6 +587,8 @@ def reset_request():
 def reset_password(token):
     """
     method for reset password
+    argument:
+        -token: string, the token to reset the password
     """
     if current_user.is_authenticated:
         return redirect(url_for('home_page'))

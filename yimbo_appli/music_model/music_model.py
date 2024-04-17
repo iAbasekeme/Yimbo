@@ -24,6 +24,9 @@ class Genre(Base):
     region = relationship('Region', backref='genre')"""
     
 class Music(Base):
+    """
+    class Music: contains a mirror of music table from podcast_radio db
+        args: Base inherited from the model file in the podcast_model module"""
     __tablename__ = 'music'
     id = Column(Integer, primary_key=True)
     title = Column(String(250), nullable=False)
