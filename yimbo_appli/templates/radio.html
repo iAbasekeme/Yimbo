@@ -86,6 +86,9 @@
                 <span class="sidebar-link-text">Liked podcast</span>
             </a>
             <!-- Repeat for each item -->
+          
+            <a href="#" class="sidebar-link">
+
             <a href="{{ url_for('playlist') }}" class="sidebar-link">
                 <span class="sidebar-link-text">Playlist</span>
             </a>
@@ -93,6 +96,7 @@
                 <span class="sidebar-link-text">Playlist</span>
             </a>
             <a href="{{ url_for('create_playlist') }}" class="sidebar-link">
+
                 <span class="sidebar-link-text">Create playlist</span>
             </a>
             <a href="#" class="sidebar-link"/>
@@ -115,7 +119,11 @@
     </header>
     
     <!-- Popular Tracks Section -->
+
+    <h2 class="text-2xl font-bold mb-4">Podcast</h2>
+
     <h2 class="text-2xl font-bold mb-4">Radio</h2>
+ 
     <h3>{{ data.name }}</h3>
     <section id="trending" class="display_content">
         {% for radio in radios %}
