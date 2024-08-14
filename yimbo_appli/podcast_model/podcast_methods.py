@@ -29,44 +29,225 @@ class PodcastMethods():
             new_podcast.image_id = new_podcast.id
             db.commit()
 
-    def get_category(self):
-        """Retrieve the category name"""
-        with get_db() as db:
-            category_data = db.query(Category).all()
-            category_info = {}
-
-            for category in category_data:
-                category_info[category.id] = {
-                    "name": category.name
-                }
-
-        return category_info
-
-    def get_region(self):
-        """Retrieve the region name"""
-        with get_db() as db:
-            region_data = db.query(Region).all()
+    def process_data(data):
+        """
+        Process data and extract the ID and cat_id string from the data.
+        
+        Returns:
+            A list containing the extracted ID (as an integer) and cat_id (as a string),
+            or None if the data is empty or invalid.
+        """
+       
+        if not data:
+            return None
+        
+        extracted_list = []
+        # Find the index of the underscore
+        underscore_index = data.find('_')
+        
+        # If an underscore is found
+        if underscore_index != -1:
+            # Extract the ID portion (before the underscore)
+            id_str = data[:underscore_index]
             
-            region_info = {}
-            for region in region_data:
-                region_info[region.id] = {
-                    "name": region.name
-                }
-
-        return region_info
-
-    def get_country(self):
-        """Retrieve the country names and returns a dictionary"""
-        with get_db() as db:
-            country_data = db.query(Country).all()
-            country_info = {}
+            try:
+                extracted_id = int(id_str)
+            except ValueError:
+                print("Invalid ID: Cannot convert to integer.")
+                return None
             
-            for country in country_data:
-                country_info[country.id] = {
-                    "name": country.name,
-                    "region_id": country.region_id
-                }
-        return country_info
+            extracted_list.append(extracted_id)
+            
+            # Extract the cat_id portion (after the underscore)
+            extracted_str = data[underscore_index + 1:]
+            
+            # Add the cat_id to the list
+            extracted_list.append(extracted_str)
+        
+        # Return the list containing the extracted ID and cat_id
+        return extracted_list
+
+    def get_category(self, category_id):
+        """
+        Retrieve the category name and its associated items.
+
+        args:
+            category_id (int): The ID of the category to retrieve.
+
+        Returns:
+            dict: A dictionary containing the category and its items.
+                The keys are the item IDs and the values are dictionaries
+                with a key "name" for each item's name.
+
+        Note:
+            get_db() returns a context manager for a database session,
+            and Category is a SQLAlchemy model class representing a category in the database.
+        """
+        # Ensure category_id is an integer
+        if not isinstance(category_id, int):
+            raise TypeError(f"{category_id} must be of type int")
+
+        category = {}
+        try:
+           with get_db() as db:
+                queried_category = db.query(Category).filter_by(id=category_id).first()
+                if not queried_category:
+                    raise ValueError("")
+                    category[queried_category.id] = {"name": queried_category.name}
+          
+        except Exception as e:
+            # Handle any exception that may occur during the database operation
+            print(f"An error occurred: {e}")
+            return None
+
+        return category
+
+    def get_podcast(self, data):
+        """
+        Retrieve podcasts based on the provided data.
+
+        Parameters:
+            data (list): A list containing a string value representing 
+            the category/region/country identifier.
+
+        Returns:
+            dict: A dictionary containing data of the podcasts with the specified ID.
+                The keys are the podcast IDs, and the values are dictionaries containing
+                various attributes of each podcast, such as name, description, category ID,
+                region, country ID, image ID, audio ID, picture, and audio file.
+
+        Raises:
+            ValueError: If no podcasts are found for the specified ID.
+            TypeError: If `data` is not in the expected format or the data types are invalid.
+        """
+        if not data or not isinstance(data, list):
+            raise TypeError("data should be a list")
+
+        data_list = self.process_data(data)
+        if not data_list or not isinstance(data_list, list):
+            raise TypeError("Processed data is invalid")
+
+        # Initialize data ID and category/region/country ID variables
+        data_id = data_list[0]
+
+        # 'cat_id', 'reg_id', or 'coun_id'
+        data_type = data_list[1]
+
+        if not isinstance(data_id, int):
+            raise TypeError(f"data_id should be an integer, got {type(data_id)}")
+
+        # Initialize podcasts dictionary
+        podcasts = {}
+
+        try:
+            # Establish database connection
+            with get_db() as db:
+                if data_type == "cat_id":
+                    queried_podcasts = db.query(Podcast).filter_by(category_id=data_id).all()
+                elif data_type == "reg_id":
+                    queried_podcasts = db.query(Podcast).filter_by(region_id=data_id).all()
+                elif data_type == "coun_id":
+                    queried_podcasts = db.query(Podcast).filter_by(country_id=data_id).all()
+                else:
+                    raise ValueError("Invalid data type")
+
+                if not queried_podcasts:
+                    raise ValueError(f"No podcasts found for ID: {data_id} of type {data_type}")
+
+                # Construct dictionary with podcast information
+                for podcast in queried_podcasts:
+                    podcasts[podcast.id] = {
+                        "name": podcast.name,
+                        "description": podcast.description,
+                        "category_id": podcast.category_id,
+                        "region": podcast.region_id,
+                        "country_id": podcast.country_id,
+                        "image_id": podcast.image_id,
+                        "audio_id": podcast.audio_id,
+                        "picture": podcast.picture,
+                        "audio_file": podcast.audio_file
+                    }
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+
+        return podcasts
+
+
+    def get_region(self, region_id):
+        """
+        Retrieve the region name and its associated id.
+
+        args:
+            category_id (int): The ID of the region to retrieve.
+
+        Returns:
+            dict: A dictionary containing the category and its items.
+                The keys are the item IDs and the values are dictionaries
+                with a key "name" for each item's name.
+
+        Note:
+            get_db() returns a context manager for a database session,
+            and Region is a SQLAlchemy model class representing a Region in the database.
+        """
+        # Ensure category_id is an integer
+        if not isinstance(region_id, int):
+            raise TypeError(f"{region_id} must be of type int")
+
+        region = {}
+        try:
+           with get_db() as db:
+                queried_category = db.query(Region).filter_by(id=region_id).first()
+                if not queried_category:
+                    raise ValueError(f"No region found with the region_id: {region_id}")
+                
+                region[queried_category.id] = {"name": queried_category.name}
+          
+        except Exception as e:
+            # Handle any exception that may occur during the database operation
+            print(f"An error occurred: {e}")
+            return None
+
+        return region
+
+    def get_country(self, country_id):
+        """
+        Retrieve the country name and its associated id.
+
+        args:
+            country_id (int): The ID of the country to retrieve.
+
+        Returns:
+            dict: A dictionary containing the country and its items.
+                The keys are the item IDs and the values are dictionaries
+                with a key "name" for each item's name.
+
+        Note:
+            get_db() returns a context manager for a database session,
+            and Country is a SQLAlchemy model class representing a Region in the database.
+        """
+        # Ensure category_id is an integer
+        if not isinstance(country_id, int):
+            raise TypeError(f"{country_id} must be of type int")
+
+        country = {}
+        try:
+           with get_db() as db:
+                queried_country = db.query(country).filter_by(id=country_id).first()
+                if not queried_country:
+                    raise ValueError(f"No country found with the country_id: {country_id}")
+                
+                country[queried_country.id] = {"name": queried_country.name}
+          
+        except Exception as e:
+            # Handle any exception that may occur during the database operation
+            print(f"An error occurred: {e}")
+            return None
+
+        return country
+
+
 
     def get_table_name(self):
         """Retrieve the table name of the database"""
