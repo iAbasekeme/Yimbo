@@ -485,7 +485,9 @@ class PodcastMethods():
             return {}
         else:
             # image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
-            image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+            #image_dir = "/home/pc/Yimbo/model_podcast/static/pics"
+            image_dir = "/home/elpastore/Yimbo/yimbo_appli/pics"
+
             pic_names = self.get_imageFile_name(image_dir)
 
             pod_country = self.get_linkFromFile(pod_country_names, pic_names)
@@ -518,6 +520,7 @@ class PodcastMethods():
         #    pod_country = {}
         # else:
         #    image_dir = "/home/pc/Yimbo/model_podcast/static/r_pics"
+        #    image_dir = "/home/elpastore/Yimbo/yimbo_appli/r_pics"
         #    pic_names = self.get_imageFile_name(image_dir)
 
         #    pod_country = self.get_linkFromFile(pod_country_names, pic_names)
